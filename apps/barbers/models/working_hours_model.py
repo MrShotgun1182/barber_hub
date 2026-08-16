@@ -1,5 +1,5 @@
 from django.db import models
-from barbers.models import BarberModel
+from barbers import models
 
 
 class WorkingHoursModel(models.Model):
@@ -14,7 +14,7 @@ class WorkingHoursModel(models.Model):
     )
 
     barber = models.ForeignKey(
-        BarberModel,
+        models.BarberModel,
         on_delete=models.CASCADE,
         related_name='working_hours',
         verbose_name='آرایشگر',
