@@ -1,0 +1,1 @@
+from .barber_model import BarberModel
