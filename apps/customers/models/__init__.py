@@ -1,1 +1,2 @@
 from .customer_model import CustomerModel
+from .customer_hairstyle_model import CustomerHairstyleModel

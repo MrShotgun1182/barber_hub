@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'management',
     'barbers',
     'customers',
-    'bookings',
+    'booking',
     'salon_services',
     
 ]
