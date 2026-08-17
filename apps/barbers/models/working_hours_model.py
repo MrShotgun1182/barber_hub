@@ -1,5 +1,5 @@
 from django.db import models
-from barbers import models
+from barbers import models as barbers_models
 
 
 class WorkingHoursModel(models.Model):

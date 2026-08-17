@@ -1,6 +1,6 @@
 from django.db import models
 from barbers.models import BarberModel
-from salon_services import models
+from salon_services import models as salon_services_model
 
 
 class BarberServiceModel(models.Model):
@@ -11,7 +11,7 @@ class BarberServiceModel(models.Model):
         verbose_name='آرایشگر',
     )
     service = models.ForeignKey(
-        models.ServiceModel,
+        salon_services_model.ServiceModel,
         on_delete=models.CASCADE,
         related_name='barber_services',
         verbose_name='خدمت',
