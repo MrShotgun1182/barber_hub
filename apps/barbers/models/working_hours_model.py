@@ -14,7 +14,7 @@ class WorkingHoursModel(models.Model):
     )
 
     barber = models.ForeignKey(
-        models.BarberModel,
+        barbers_models.BarberModel,
         on_delete=models.CASCADE,
         related_name='working_hours',
         verbose_name='آرایشگر',
