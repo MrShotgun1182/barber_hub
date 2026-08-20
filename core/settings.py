@@ -30,9 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'accounts',
-    'management',
     'barbers',
-    'customers',
+    'customers'
+    'admin_panel',
     'booking',
     'salon_services',
     
