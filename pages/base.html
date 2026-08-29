@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/favicon.jpg' %}">
     <title>{% block title %}Barber Hub{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.jpg' %}">
     <link rel="stylesheet" href="{% static 'dist/output.css' %}">
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col justify-between">
-
-    <main class="flex-grow">
-        {% block content %}
-        {% endblock %}
-    </main>
-
+<body class="bg-gray-100 text-gray-900">
+    {% block content %}
+    {% endblock %}
 </body>
 </html>
