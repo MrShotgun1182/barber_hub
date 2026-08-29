@@ -34,5 +34,6 @@
   }
 }
 
-@source "../../../templates/**/*.html";
-@source "../../../apps/**/*.html";
+@source "../../../**/*.html";
+@source "../../templates/**/*.html";
+@source "../**/*.html";

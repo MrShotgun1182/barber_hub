@@ -1,11 +1,11 @@
 {
   "name": "barber_hub",
   "version": "1.0.0",
-  "description": "",
+  "description": "Frontend for Barber Hub",
   "main": "index.js",
   "scripts": {
     "dev": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css --watch",
-    "build": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css"
+    "build": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css --minify"
   },
   "keywords": [],
   "author": "",
