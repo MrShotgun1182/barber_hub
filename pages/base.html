@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Barber Hub{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'image/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'dist/output.css' %}">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col justify-between">
+
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>
