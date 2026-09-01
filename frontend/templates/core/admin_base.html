@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="flex min-h-screen">
+    <!-- سیدبار پنل مدیریت -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col p-4 shadow-lg">
+        <div class="text-lg font-bold pb-4 border-b border-slate-700 mb-4 text-center">
+            پنل مدیریت سالن
+        </div>
+        <nav class="flex-grow space-y-2">
+            <a href="#" class="block py-2 px-4 rounded hover:bg-slate-800 transition">داشبورد اصلی</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-slate-800 transition">مدیریت کاربران</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-slate-800 transition">مدیریت آرایشگران</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-slate-800 transition">خدمات سالن</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-slate-800 transition">گزارشات و رزروها</a>
+        </nav>
+    </aside>
+
+    <!-- محتوای اصلی صفحات مدیریت -->
+    <section class="flex-1 p-6 bg-gray-50">
+        {% block admin_content %}{% endblock %}
+    </section>
+</div>
+{% endblock %}

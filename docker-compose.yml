@@ -1,14 +1,43 @@
 services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=barber_db
+      - POSTGRES_USER=barber_user
+      - POSTGRES_PASSWORD=barber_pass
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U barber_user -d barber_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
     volumes:
       - .:/app
-      - /app/frontend/node_modules  # جلوگیری از overwrite شدن node_modules
+      - /app/frontend/node_modules
     ports:
       - "8000:8000"
     environment:
       - NODE_ENV=development
       - DEBUG=1
+      - DB_NAME=barber_db
+      - DB_USER=barber_user
+      - DB_PASSWORD=barber_pass
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      db:
+        condition: service_healthy
     command: >
       sh -c "cd /app/frontend && npm install && npm run build && npm run dev &
-             cd /app && python manage.py runserver 0.0.0.0:8000"
+             cd /app && python manage.py migrate &&
+             python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin1234', role='MANAGER')\" &&
+             python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  postgres_data:
