@@ -1,1 +1,39 @@
 @import "tailwindcss";
+
+@theme {
+  /* --- طیف کرم و بژ (پس‌زمینه و کارت‌ها) --- */
+  --color-cream-50: #fdfbf7;   /* پس‌زمینه اصلی سایت */
+  --color-cream-100: #f7f3e9;  /* پس‌زمینه کارت‌ها و بخش‌های مجزا */
+  --color-cream-200: #efe6d5;  /* حاشیه‌ها و خطوط جداکننده */
+  --color-cream-300: #e2d3b8;  /* دکمه‌های ثانویه و المان‌های خاص */
+  --color-cream-400: #cbb48f;
+
+  /* --- طیف سبز ملایم / مریم‌گلی (Sage Green - رنگ برند و Accent) --- */
+  --color-sage-50: #f4f7f4;    /* پس‌زمینه روشن بج‌ها و حالت‌های Hover */
+  --color-sage-100: #e4ede6;
+  --color-sage-200: #c7d9cb;
+  --color-sage-500: #5b7e67;   /* سبز ملایم اصلی (دکمه‌ها، آیکون‌ها و لینک‌ها) */
+  --color-sage-600: #486653;   /* حالت Hover دکمه‌های سبز */
+  --color-sage-700: #395242;
+  --color-sage-800: #293b30;   /* سبز تیره برای متن‌های شاخص و هدرها */
+  --color-sage-900: #1a2820;
+
+  /* --- رنگ‌های تیره متون و کنتراست --- */
+  --color-dark-main: #181c19;  /* رنگ اصلی متون (خوانایی بالا) */
+  --color-dark-muted: #3a403c; /* متون فرعی و توضیحات */
+
+  /* فونت استاندارد */
+  --font-sans: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-cream-50);
+    color: var(--color-dark-main);
+    font-family: var(--font-sans);
+  }
+}
+
+@source "../../../**/*.html";
+@source "../../templates/**/*.html";
+@source "../**/*.html";

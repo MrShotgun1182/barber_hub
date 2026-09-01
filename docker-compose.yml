@@ -1,10 +1,14 @@
-version: '3.8'
-
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+      - /app/frontend/node_modules  # جلوگیری از overwrite شدن node_modules
     ports:
       - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=1
+    command: >
+      sh -c "cd /app/frontend && npm install && npm run build && npm run dev &
+             cd /app && python manage.py runserver 0.0.0.0:8000"

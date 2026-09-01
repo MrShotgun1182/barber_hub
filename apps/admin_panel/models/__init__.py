@@ -1,1 +1,1 @@
-from admin_panel_model import AdminPanelModel
+from .admin_panel_model import AdminPanelModel
