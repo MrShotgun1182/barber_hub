@@ -1,8 +1,122 @@
 {% extends 'core/admin_base.html' %}
 
 {% block admin_content %}
-<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-    <h1 class="text-2xl font-bold text-green-600 mb-2">ورود موفقیت‌آمیز!</h1>
-    <p class="text-gray-600">صفحه داشبورد مدیریت با موفقیت بارگذاری شد.</p>
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- هدر صفحه -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">داشبورد مدیریت</h1>
+            <p class="text-slate-500 text-sm mt-1">مدیریت و مشاهده کلیه نوبت‌های امروز سالن</p>
+        </div>
+    </div>
+
+    <!-- بخش جدول / کارت‌های نوبت‌های امروز -->
+    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+        
+        <!-- بالای جدول: تعداد کل سفارش‌های امروز -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-200 gap-2">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <span>📋</span> نوبت‌های امروز سالن
+            </h2>
+            <div class="bg-slate-100 text-slate-800 text-sm font-medium px-3 py-1.5 rounded-lg border border-slate-200 w-fit">
+                تعداد کل سفارش‌های امروز: 
+                <span class="font-bold text-slate-900">{{ dashboard.today_appointments_count }}</span>
+            </div>
+        </div>
+
+        {% if dashboard.error %}
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+                {{ dashboard.error }}
+            </div>
+        {% endif %}
+
+        <!-- نمایش به صورت جدول در دسکتاپ -->
+        <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full text-sm text-right">
+                <thead>
+                    <tr class="text-slate-500 border-b border-slate-200 bg-slate-50">
+                        <th class="py-3 px-3 font-semibold">ساعت</th>
+                        <th class="py-3 px-3 font-semibold">نام مشتری</th>
+                        <th class="py-3 px-3 font-semibold">آرایشگر</th>
+                        <th class="py-3 px-3 font-semibold">نوع خدمت</th>
+                        <th class="py-3 px-3 font-semibold">وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    {% for appointment in dashboard.today_appointments %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3 px-3 font-medium text-slate-800">{{ appointment.start_time|time:"H:i" }}</td>
+                        <td class="py-3 px-3 text-slate-800">
+                            {{ appointment.customer.user.get_full_name|default:appointment.customer.user.username }}
+                        </td>
+                        <td class="py-3 px-3 text-slate-800">
+                            {{ appointment.barber.user.get_full_name|default:appointment.barber.user.username }}
+                        </td>
+                        <td class="py-3 px-3 text-slate-600">{{ appointment.service.name }}</td>
+                        <td class="py-3 px-3">
+                            {% if appointment.status == 'COMPLETED' %}
+                                <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">انجام شده</span>
+                            {% elif appointment.status == 'CANCELLED' %}
+                                <span class="bg-red-100 text-red-800 text-xs px-2.5 py-1 rounded-full font-medium">لغو شده</span>
+                            {% elif appointment.status == 'CONFIRMED' %}
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-medium">تایید شده</span>
+                            {% else %}
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-medium">در انتظار</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-6 text-center text-slate-500">
+                            هیچ نوبتی برای امروز ثبت نشده است.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- نمایش به صورت کارت در موبایل -->
+        <div class="block sm:hidden space-y-3">
+            {% for appointment in dashboard.today_appointments %}
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="font-bold text-slate-800">
+                            {{ appointment.customer.user.get_full_name|default:appointment.customer.user.username }}
+                        </div>
+                        <div class="text-xs text-slate-500 mt-0.5">
+                            آرایشگر: {{ appointment.barber.user.get_full_name|default:appointment.barber.user.username }}
+                        </div>
+                        <div class="text-xs text-slate-500 mt-0.5">خدمت: {{ appointment.service.name }}</div>
+                    </div>
+                    <span class="text-xs font-semibold bg-slate-200 text-slate-800 px-2.5 py-1 rounded-md">
+                        {{ appointment.start_time|time:"H:i" }}
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between pt-2 border-t border-slate-200">
+                    <span class="text-xs">
+                        {% if appointment.status == 'COMPLETED' %}
+                            <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full">انجام شده</span>
+                        {% elif appointment.status == 'CANCELLED' %}
+                            <span class="bg-red-100 text-red-800 px-2 py-0.5 rounded-full">لغو شده</span>
+                        {% elif appointment.status == 'CONFIRMED' %}
+                            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">تایید شده</span>
+                        {% else %}
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">در انتظار</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-4 text-center text-slate-500 text-sm bg-slate-50 rounded-lg border border-slate-200">
+                هیچ نوبتی برای امروز ثبت نشده است.
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
 </div>
 {% endblock %}

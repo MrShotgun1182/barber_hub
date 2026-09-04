@@ -15,7 +15,7 @@ def CreateSalonServiceAction(
     ایجاد و ثبت خدمت جدید سالن در یک تراکنش اتمیک
     """
     with transaction.atomic():
-        service = salon_services_services.CreateSalonServiceService(
+        service = salon_services_services.CreateServiceService(
             name=name,
             base_price=base_price,
             description=description,

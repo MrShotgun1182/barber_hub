@@ -1,0 +1,75 @@
+{% extends 'core/admin_base.html' %}
+
+{% block admin_content %}
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- هدر صفحه -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">
+                {% if service %}ویرایش خدمت "{{ service.name }}"{% else %}افزودن خدمت جدید{% endif %}
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">
+                {% if service %}اطلاعات خدمت سالن را ویرایش کنید.{% else %}مشخصات خدمت جدید سالن را وارد کنید.{% endif %}
+            </p>
+        </div>
+        <a href="{% url 'admin_panel:salon_services_list' %}" class="text-sm font-medium text-slate-600 hover:text-slate-800 transition">
+            بازگشت به لیست
+        </a>
+    </div>
+
+    <!-- فرم ایجاد / ویرایش -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+        <form method="POST" class="space-y-5">
+            {% csrf_token %}
+
+            <!-- عنوان خدمت -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-slate-700 mb-1">عنوان خدمت <span class="text-red-500">*</span></label>
+                <input type="text" id="name" name="name" required value="{{ service.name|default:'' }}"
+                       class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sm">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- قیمت پایه -->
+                <div>
+                    <label for="base_price" class="block text-sm font-medium text-slate-700 mb-1">قیمت پایه (تومان) <span class="text-red-500">*</span></label>
+                    <input type="number" id="base_price" name="base_price" required min="0" value="{{ service.base_price|default:'' }}"
+                           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sm">
+                </div>
+
+                <!-- مدت زمان پیش‌فرض -->
+                <div>
+                    <label for="default_duration_minutes" class="block text-sm font-medium text-slate-700 mb-1">مدت زمان پیش‌فرض (دقیقه) <span class="text-red-500">*</span></label>
+                    <input type="number" id="default_duration_minutes" name="default_duration_minutes" required min="1" value="{{ service.default_duration_minutes|default:45 }}"
+                           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sm">
+                </div>
+            </div>
+
+            <!-- توضیحات -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-slate-700 mb-1">توضیحات</label>
+                <textarea id="description" name="description" rows="3"
+                          class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent text-sm">{{ service.description|default:'' }}</textarea>
+            </div>
+
+            <!-- وضعیت فعال بودن -->
+            <div class="flex items-center gap-2 pt-2">
+                <input type="checkbox" id="is_active" name="is_active" {% if service is None or service.is_active %}checked{% endif %}
+                       class="w-4 h-4 text-sage-500 border-slate-300 rounded focus:ring-sage-500">
+                <label for="is_active" class="text-sm font-medium text-slate-700">این خدمت فعال باشد</label>
+            </div>
+
+            <!-- دکمه‌های فرم -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+                <a href="{% url 'admin_panel:salon_services_list' %}" class="px-4 py-2 border border-slate-300 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition">
+                    انصراف
+                </a>
+                <button type="submit" class="bg-sage-500 hover:bg-sage-600 text-cream-100 px-5 py-2 rounded-lg text-sm font-medium transition shadow-sm">
+                    {% if service %}ذخیره تغییرات{% else %}افزودن خدمت{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

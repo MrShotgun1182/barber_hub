@@ -4,3 +4,4 @@ from .get_appointment_service import GetAppointmentService
 from .get_barber_appointments_service import GetBarberAppointmentsService
 from .get_customer_appointments_service import GetCustomerAppointmentsService
 from .update_appointment_status_service import UpdateAppointmentStatusService
+from .get_today_appointments_service import GetTodayAppointmentsService

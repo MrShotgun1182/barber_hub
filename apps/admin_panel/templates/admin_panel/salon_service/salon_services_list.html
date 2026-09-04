@@ -1,0 +1,94 @@
+{% extends 'core/admin_base.html' %}
+
+{% block admin_content %}
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- هدر صفحه -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">مدیریت خدمات سالن</h1>
+            <p class="text-slate-500 text-sm mt-1">مشاهده و مدیریت لیست کلیه خدمات سالن</p>
+        </div>
+        <div>
+            <a href="{% url 'admin_panel:create_salon_service' %}" class="inline-flex items-center gap-2 bg-sage-500 hover:bg-sage-600 text-cream-100 text-sm font-medium px-4 py-2.5 rounded-lg shadow-sm transition">
+                <span>+</span>
+                <span>افزودن سرویس جدید</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- جدول خدمات -->
+    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+        
+        <!-- نمایش دسکتاپ -->
+        <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full text-sm text-right">
+                <thead>
+                    <tr class="text-slate-500 border-b border-slate-200 bg-slate-50">
+                        <th class="py-3 px-3 font-semibold">عنوان خدمت</th>
+                        <th class="py-3 px-3 font-semibold">قیمت پایه (تومان)</th>
+                        <th class="py-3 px-3 font-semibold">مدت زمان پیش‌فرض</th>
+                        <th class="py-3 px-3 font-semibold">وضعیت</th>
+                        <th class="py-3 px-3 font-semibold">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    {% for service in services %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3 px-3 font-medium text-slate-800">{{ service.name }}</td>
+                        <td class="py-3 px-3 text-slate-800">{{ service.base_price }}</td>
+                        <td class="py-3 px-3 text-slate-600">{{ service.default_duration_minutes }} دقیقه</td>
+                        <td class="py-3 px-3">
+                            {% if service.is_active %}
+                                <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">فعال</span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 text-xs px-2.5 py-1 rounded-full font-medium">غیرفعال</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-3">
+                            <a href="{% url 'admin_panel:edit_salon_service' service.id %}" class="text-sage-600 hover:text-sage-800 font-medium text-xs">
+                                ویرایش
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-6 text-center text-slate-500">
+                            هیچ خدمتی در سیستم تعریف نشده است.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- نمایش کارت‌های موبایل -->
+        <div class="block sm:hidden space-y-3">
+            {% for service in services %}
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2">
+                <div class="flex justify-between items-start">
+                    <div class="font-bold text-slate-800">{{ service.name }}</div>
+                    {% if service.is_active %}
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full font-medium">فعال</span>
+                    {% else %}
+                        <span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full font-medium">غیرفعال</span>
+                    {% endif %}
+                </div>
+                <div class="text-xs text-slate-600">قیمت پایه: {{ service.base_price }} تومان</div>
+                <div class="text-xs text-slate-600">مدت زمان پیش‌فرض: {{ service.default_duration_minutes }} دقیقه</div>
+                <div class="pt-2 border-t border-slate-200 text-left">
+                    <a href="{% url 'admin_panel:edit_salon_service' service.id %}" class="text-xs text-sage-600 hover:text-sage-800 font-medium">
+                        ویرایش خدمت
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-4 text-center text-slate-500 text-sm bg-slate-50 rounded-lg border border-slate-200">
+                هیچ خدمتی در سیستم تعریف نشده است.
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

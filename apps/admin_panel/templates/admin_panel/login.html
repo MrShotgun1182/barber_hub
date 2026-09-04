@@ -1,0 +1,69 @@
+{% extends "core/base.html" %}
+
+{% block title %}ورود مدیران{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-cream-50">
+    <div class="max-w-md w-full space-y-8 bg-cream-100 p-8 rounded-2xl shadow-sm border border-cream-200">
+        
+        <!-- هدر فرم -->
+        <div class="text-center">
+            <h2 class="text-2xl font-bold text-sage-800">ورود به پنل مدیریت</h2>
+            <p class="mt-2 text-sm text-dark-muted">جهت مدیریت مجموعه و نظارت بر عملکرد سالن وارد شوید</p>
+        </div>
+
+        <!-- نمایش خطا -->
+        {% if error %}
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <!-- فرم ورود -->
+        <form class="mt-6 space-y-5" method="POST">
+            {% csrf_token %}
+
+            <!-- فیلد نام کاربری -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-dark-main mb-1">
+                    نام کاربری
+                </label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="username"
+                    required
+                    class="w-full px-4 py-2.5 rounded-lg border border-cream-200 bg-cream-50 text-dark-main focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition"
+                    placeholder="نام کاربری مدیریتی را وارد کنید"
+                >
+            </div>
+
+            <!-- فیلد رمز عبور -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-dark-main mb-1">
+                    رمز عبور
+                </label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="password"
+                    required
+                    class="w-full px-4 py-2.5 rounded-lg border border-cream-200 bg-cream-50 text-dark-main focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition"
+                    placeholder="رمز عبور خود را وارد کنید"
+                >
+            </div>
+
+            <!-- دکمه ارسال -->
+            <div>
+                <button 
+                    type="submit" 
+                    class="w-full py-3 px-4 rounded-lg bg-sage-500 hover:bg-sage-600 text-white font-medium shadow-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500"
+                >
+                    ورود به پنل مدیریت
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
