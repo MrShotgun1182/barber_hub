@@ -1,0 +1,164 @@
+{% extends 'core/barber_base.html' %}
+
+{% block title %}تنظیم ساعات کاری{% endblock %}
+
+{% block barber_content %}
+<div class="max-w-4xl mx-auto">
+    <!-- هدر صفحه -->
+    <div class="mb-6 pb-4 border-b border-cream-200">
+        <h1 class="text-2xl font-bold text-sage-800">تنظیم ساعات کاری هفتگی</h1>
+        <p class="text-sm text-dark-muted mt-1">
+            ساعات کاری و شیفت‌های روزانه خود را تنظیم کنید. می‌توانید برای هر روز چند شیفت کاری ثبت کنید.
+        </p>
+    </div>
+
+    <!-- پیغام موفقیت -->
+    {% if success_message %}
+    <div class="mb-6 p-4 rounded-lg bg-sage-50 border border-sage-200 text-sage-800 text-sm">
+        {{ success_message }}
+    </div>
+    {% endif %}
+
+    <!-- فرم ساعات کاری -->
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        {% for day in weekly_data %}
+        <div class="bg-cream-100 border border-cream-200 rounded-xl p-5 transition hover:border-sage-200" id="day-card-{{ day.day_code }}">
+            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                
+                <!-- عنوان روز و وضعیت تعطیلی -->
+                <div class="flex items-center gap-4 min-w-[160px] pt-2">
+                    <span class="font-bold text-dark-main text-base w-20">
+                        {{ day.day_name }}
+                    </span>
+                    <label class="inline-flex items-center gap-2 cursor-pointer text-xs text-dark-muted">
+                        <input type="checkbox" 
+                               name="is_closed_{{ day.day_code }}" 
+                               onchange="toggleDayStatus({{ day.day_code }})"
+                               id="closed-checkbox-{{ day.day_code }}"
+                               {% if day.is_closed %}checked{% endif %}
+                               class="w-4 h-4 rounded border-cream-300 text-sage-500 focus:ring-sage-500 cursor-pointer">
+                        <span>روز تعطیل</span>
+                    </label>
+                </div>
+
+                <!-- بخش شیفت‌های کاری -->
+                <div class="flex-1 border-t lg:border-t-0 border-cream-200 pt-3 lg:pt-0">
+                    <div id="shifts-container-{{ day.day_code }}" class="space-y-3 {% if day.is_closed %}hidden{% endif %}">
+                        {% for shift in day.shifts %}
+                        <div class="shift-row flex items-center gap-3">
+                            <div class="flex-1 grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-dark-muted mb-1">ساعت شروع</label>
+                                    <input type="time" 
+                                           name="start_time_{{ day.day_code }}[]" 
+                                           value="{{ shift.start_time }}"
+                                           required
+                                           class="w-full text-sm px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-dark-muted mb-1">ساعت پایان</label>
+                                    <input type="time" 
+                                           name="end_time_{{ day.day_code }}[]" 
+                                           value="{{ shift.end_time }}"
+                                           required
+                                           class="w-full text-sm px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500">
+                                </div>
+                            </div>
+                            <button type="button" 
+                                    onclick="removeShift(this)" 
+                                    class="mt-5 text-red-500 hover:text-red-700 text-xs font-medium px-2 py-2 transition"
+                                    title="حذف شیفت">
+                                حذف
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- دکمه افزودن شیفت -->
+                    <div id="add-shift-btn-container-{{ day.day_code }}" class="mt-3 {% if day.is_closed %}hidden{% endif %}">
+                        <button type="button" 
+                                onclick="addShift({{ day.day_code }})" 
+                                class="text-xs font-medium text-sage-600 hover:text-sage-800 transition flex items-center gap-1 cursor-pointer">
+                            + افزودن شیفت کاری جدید
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- دکمه ثبت -->
+        <div class="flex justify-end pt-4">
+            <button type="submit" 
+                    class="bg-sage-500 hover:bg-sage-600 text-white font-medium px-6 py-2.5 rounded-lg transition cursor-pointer text-sm shadow-sm">
+                ذخیره تغییرات
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleDayStatus(dayCode) {
+    const isClosed = document.getElementById(`closed-checkbox-${dayCode}`).checked;
+    const container = document.getElementById(`shifts-container-${dayCode}`);
+    const addBtn = document.getElementById(`add-shift-btn-container-${dayCode}`);
+
+    if (isClosed) {
+        container.classList.add('hidden');
+        addBtn.classList.add('hidden');
+    } else {
+        container.classList.remove('hidden');
+        addBtn.classList.remove('hidden');
+        if (container.children.length === 0) {
+            addShift(dayCode);
+        }
+    }
+}
+
+function addShift(dayCode) {
+    const container = document.getElementById(`shifts-container-${dayCode}`);
+    const shiftRow = document.createElement('div');
+    shiftRow.className = 'shift-row flex items-center gap-3';
+    shiftRow.innerHTML = `
+        <div class="flex-1 grid grid-cols-2 gap-3">
+            <div>
+                <label class="block text-xs font-medium text-dark-muted mb-1">ساعت شروع</label>
+                <input type="time" 
+                       name="start_time_${dayCode}[]" 
+                       value="09:00"
+                       required
+                       class="w-full text-sm px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-dark-muted mb-1">ساعت پایان</label>
+                <input type="time" 
+                       name="end_time_${dayCode}[]" 
+                       value="18:00"
+                       required
+                       class="w-full text-sm px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500">
+            </div>
+        </div>
+        <button type="button" 
+                onclick="removeShift(this)" 
+                class="mt-5 text-red-500 hover:text-red-700 text-xs font-medium px-2 py-2 transition"
+                title="حذف شیفت">
+            حذف
+        </button>
+    `;
+    container.appendChild(shiftRow);
+}
+
+function removeShift(button) {
+    const row = button.closest('.shift-row');
+    const container = row.parentElement;
+    if (container.children.length > 1) {
+        row.remove();
+    } else {
+        alert('حداقل باید یک شیفت کاری وجود داشته باشد یا روز را به عنوان تعطیل علامت بزنید.');
+    }
+}
+</script>
+{% endblock %}

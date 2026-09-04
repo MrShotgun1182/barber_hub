@@ -30,9 +30,8 @@ class WorkingHoursModel(models.Model):
     is_closed = models.BooleanField(default=False, verbose_name='تعطیل است')
 
     class Meta:
-        unique_together = ('barber', 'day_of_week')
         verbose_name = 'ساعت کاری'
         verbose_name_plural = 'ساعات کاری'
 
     def __str__(self):
-        return f"{self.barber.user.username} - {self.get_day_of_week_display()}"
+        return f"{self.barber.user.username} - {self.get_day_of_week_display()} ({self.start_time} تا {self.end_time})"

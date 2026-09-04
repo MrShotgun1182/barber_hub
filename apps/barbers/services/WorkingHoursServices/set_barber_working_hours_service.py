@@ -1,26 +1,35 @@
-from datetime import time
-from barbers import models
+from typing import List, Dict, Any
+from django.db import transaction
+from barbers import models as barbers_models
 
 
 def SetBarberWorkingHoursService(
-    barber: models.BarberModel,
+    barber: barbers_models.BarberModel,
     day_of_week: int,
-    start_time: time,
-    end_time: time,
-    slot_duration: int = 30,
+    shifts: List[Dict[str, Any]],
     is_closed: bool = False,
-) -> models.WorkingHoursModel:
+) -> List[barbers_models.WorkingHoursModel]:
     """
-    ثبت یا بروزرسانی ساعت کاری روزانه برای یک آرایشگر
+    حذف شیفت‌های قبلی روز مشخص‌شده و ثبت شیفت‌های جدید برای آن روز
     """
-    working_hours, _ = models.WorkingHoursModel.objects.update_or_create(
-        barber=barber,
-        day_of_week=day_of_week,
-        defaults={
-            'start_time': start_time,
-            'end_time': end_time,
-            'slot_duration': slot_duration,
-            'is_closed': is_closed,
-        },
-    )
-    return working_hours
+    with transaction.atomic():
+        barbers_models.WorkingHoursModel.objects.filter(
+            barber=barber, day_of_week=day_of_week
+        ).delete()
+
+        if is_closed:
+            return []
+
+        created_shifts = []
+        for shift in shifts:
+            wh = barbers_models.WorkingHoursModel.objects.create(
+                barber=barber,
+                day_of_week=day_of_week,
+                start_time=shift['start_time'],
+                end_time=shift['end_time'],
+                slot_duration=shift.get('slot_duration', 30),
+                is_closed=False,
+            )
+            created_shifts.append(wh)
+
+        return created_shifts

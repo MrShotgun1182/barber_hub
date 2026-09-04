@@ -8,5 +8,6 @@ urlpatterns = [
     path('dashboard/', views.BarberDashboardView, name='barbers_dashboard'),
     path('appointments/<int:appointment_id>/status/',views.UpdateAppointmentStatusView,name='update_appointment_status'),
     path('services/', views.ManageBarberServicesView, name='manage_services'),
+    path('working-hours/', views.SetBarberWorkingHoursView, name='manage_working_hours'),
     
 ]

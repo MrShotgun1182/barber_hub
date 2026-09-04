@@ -10,7 +10,7 @@
         <nav class="flex-grow space-y-2">
             <a href="{% url 'barbers:barbers_dashboard' %}" class="block py-2 px-4 rounded hover:bg-neutral-700 transition">داشبورد</a>
             <a href="#" class="block py-2 px-4 rounded hover:bg-neutral-700 transition">جدول نوبت‌های من</a>
-            <a href="#" class="block py-2 px-4 rounded hover:bg-neutral-700 transition">تنظیم ساعات کاری</a>
+            <a href="{% url 'barbers:manage_working_hours' %}" class="block py-2 px-4 rounded hover:bg-neutral-700 transition">تنظیم ساعات کاری</a>
             <a href="{% url 'barbers:manage_services' %}" class="block py-2 px-4 rounded hover:bg-neutral-700 transition">مدیریت خدمات من</a>
         </nav>
     </aside>
