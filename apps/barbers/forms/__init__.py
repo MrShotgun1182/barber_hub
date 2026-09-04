@@ -1,0 +1,1 @@
+from .barber_login_form import BarberLoginForm

@@ -1,0 +1,151 @@
+{% extends 'core/barber_base.html' %}
+
+{% block barber_content %}
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- هدر صفحه -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-dark-main">داشبورد آرایشگر</h1>
+            <p class="text-dark-muted text-sm mt-1">مدیریت و مشاهده نوبت‌های امروز</p>
+        </div>
+    </div>
+
+    <!-- بخش جدول / کارت‌های نوبت‌های امروز -->
+    <div class="bg-cream-100 rounded-xl p-5 border border-cream-200 shadow-sm">
+        
+        <!-- بالای جدول: تعداد کل سفارش‌های امروز -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-cream-200 gap-2">
+            <h2 class="text-lg font-bold text-dark-main flex items-center gap-2">
+                <span>📋</span> نوبت‌های امروز
+            </h2>
+            <div class="bg-sage-100 text-sage-800 text-sm font-medium px-3 py-1.5 rounded-lg border border-sage-200 w-fit">
+                تعداد کل سفارش‌های امروز: 
+                <span class="font-bold text-sage-900">{{ dashboard.today_appointments_count }}</span>
+            </div>
+        </div>
+
+        {% if dashboard.error %}
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+                {{ dashboard.error }}
+            </div>
+        {% endif %}
+
+        <!-- نمایش به صورت جدول در دسکتاپ -->
+        <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full text-sm text-right">
+                <thead>
+                    <tr class="text-dark-muted border-b border-cream-200 bg-cream-50/50">
+                        <th class="py-3 px-3 font-semibold">ساعت</th>
+                        <th class="py-3 px-3 font-semibold">نام مشتری</th>
+                        <th class="py-3 px-3 font-semibold">نوع خدمت</th>
+                        <th class="py-3 px-3 font-semibold">وضعیت</th>
+                        <th class="py-3 px-3 font-semibold text-center">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-cream-200">
+                    {% for appointment in dashboard.today_appointments %}
+                    <tr class="hover:bg-cream-50 transition">
+                        <td class="py-3 px-3 font-medium text-dark-main">{{ appointment.start_time|time:"H:i" }}</td>
+                        <td class="py-3 px-3 text-dark-main">
+                            {{ appointment.customer.user.get_full_name|default:appointment.customer.user.username }}
+                        </td>
+                        <td class="py-3 px-3 text-dark-muted">{{ appointment.service.name }}</td>
+                        <td class="py-3 px-3">
+                            {% if appointment.status == 'COMPLETED' %}
+                                <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">انجام شده</span>
+                            {% elif appointment.status == 'CANCELLED' %}
+                                <span class="bg-red-100 text-red-800 text-xs px-2.5 py-1 rounded-full font-medium">لغو شده</span>
+                            {% elif appointment.status == 'CONFIRMED' %}
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-medium">تایید شده</span>
+                            {% else %}
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-medium">در انتظار</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-3">
+                            <div class="flex items-center justify-center gap-2">
+                                <form method="POST" action="{% url 'barbers:update_appointment_status' appointment.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="COMPLETED">
+                                    <button type="submit" class="bg-sage-500 hover:bg-sage-600 text-white text-xs px-3 py-1.5 rounded-lg transition font-medium">
+                                        انجام شد
+                                    </button>
+                                </form>
+                                <form method="POST" action="{% url 'barbers:update_appointment_status' appointment.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="CANCELLED">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-lg transition font-medium">
+                                        لغو نوبت
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-6 text-center text-dark-muted">
+                            هیچ نوبتی برای امروز ثبت نشده است.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- نمایش به صورت کارت در موبایل -->
+        <div class="block sm:hidden space-y-3">
+            {% for appointment in dashboard.today_appointments %}
+            <div class="bg-cream-50 p-4 rounded-lg border border-cream-200 space-y-3">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="font-bold text-dark-main">
+                            {{ appointment.customer.user.get_full_name|default:appointment.customer.user.username }}
+                        </div>
+                        <div class="text-xs text-dark-muted mt-0.5">{{ appointment.service.name }}</div>
+                    </div>
+                    <span class="text-xs font-semibold bg-cream-200 text-dark-main px-2.5 py-1 rounded-md">
+                        {{ appointment.start_time|time:"H:i" }}
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between pt-2 border-t border-cream-200">
+                    <span class="text-xs">
+                        {% if appointment.status == 'COMPLETED' %}
+                            <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full">انجام شده</span>
+                        {% elif appointment.status == 'CANCELLED' %}
+                            <span class="bg-red-100 text-red-800 px-2 py-0.5 rounded-full">لغو شده</span>
+                        {% elif appointment.status == 'CONFIRMED' %}
+                            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">تایید شده</span>
+                        {% else %}
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">در انتظار</span>
+                        {% endif %}
+                    </span>
+
+                    <div class="flex gap-2">
+                        <form method="POST" action="{% url 'barbers:update_appointment_status' appointment.id %}" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="COMPLETED">
+                            <button type="submit" class="bg-sage-500 hover:bg-sage-600 text-white text-xs px-2.5 py-1.5 rounded-lg transition font-medium">
+                                انجام شد
+                            </button>
+                        </form>
+                        <form method="POST" action="{% url 'barbers:update_appointment_status' appointment.id %}" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="CANCELLED">
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-xs px-2.5 py-1.5 rounded-lg transition font-medium">
+                                لغو نوبت
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-4 text-center text-dark-muted text-sm bg-cream-50 rounded-lg border border-cream-200">
+                هیچ نوبتی برای امروز ثبت نشده است.
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

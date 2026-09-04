@@ -18,7 +18,7 @@ def BarberLoginView(request):
             )
 
             if result['success']:
-                return redirect('barber_dashboard')
+                return redirect('barbers:barbers_dashboard')
 
             form.add_error(None, result['error'])
     else:
