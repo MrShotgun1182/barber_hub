@@ -1,3 +1,4 @@
 from .barber_login_view import BarberLoginView
 from .barber_dashboard_view import BarberDashboardView
 from .update_appointment_status_view import UpdateAppointmentStatusView
+from .manage_barber_services_view import ManageBarberServicesView

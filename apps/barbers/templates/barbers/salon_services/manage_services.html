@@ -1,0 +1,92 @@
+{% extends 'core/barber_base.html' %}
+
+{% block title %}مدیریت خدمات من{% endblock %}
+
+{% block barber_content %}
+<div class="max-w-4xl mx-auto">
+    <!-- هدر صفحه -->
+    <div class="mb-6 pb-4 border-b border-cream-200">
+        <h1 class="text-2xl font-bold text-sage-800">مدیریت خدمات من</h1>
+        <p class="text-sm text-dark-muted mt-1">
+            خدمات مورد نظر خود را انتخاب کرده و در صورت نیاز، قیمت و زمان انجام اختصاصی را تنظیم کنید.
+        </p>
+    </div>
+
+    <!-- پیغام موفقیت -->
+    {% if success_message %}
+    <div class="mb-6 p-4 rounded-lg bg-sage-50 border border-sage-200 text-sage-800 text-sm">
+        {{ success_message }}
+    </div>
+    {% endif %}
+
+    <!-- فرم مدیریت خدمات -->
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        {% for item in services_data %}
+        <div class="bg-cream-100 border border-cream-200 rounded-xl p-5 transition hover:border-sage-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                
+                <!-- انتخاب و اطلاعات پایه خدمت -->
+                <div class="flex items-start gap-3">
+                    <input type="checkbox" 
+                           name="selected_services" 
+                           value="{{ item.service.id }}" 
+                           id="service_{{ item.service.id }}"
+                           {% if item.is_selected %}checked{% endif %}
+                           class="mt-1 w-5 h-5 rounded border-cream-300 text-sage-500 focus:ring-sage-500 cursor-pointer">
+                    <div>
+                        <label for="service_{{ item.service.id }}" class="font-bold text-dark-main cursor-pointer text-base">
+                            {{ item.service.name }}
+                        </label>
+                        {% if item.service.description %}
+                        <p class="text-xs text-dark-muted mt-1">
+                            {{ item.service.description }}
+                        </p>
+                        {% endif %}
+                        <div class="flex items-center gap-4 mt-2 text-xs text-dark-muted">
+                            <span>قیمت پایه سالن: <strong class="text-dark-main">{{ item.service.base_price }} تومان</strong></span>
+                            <span>زمان پایه سالن: <strong class="text-dark-main">{{ item.service.default_duration_minutes }} دقیقه</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تنظیمات اختصاصی قیمت و زمان -->
+                <div class="grid grid-cols-2 gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-cream-200">
+                    <div>
+                        <label class="block text-xs font-medium text-dark-muted mb-1">
+                            قیمت اختصاصی (تومان)
+                        </label>
+                        <input type="number" 
+                               name="price_{{ item.service.id }}" 
+                               value="{{ item.custom_price|default_if_none:'' }}"
+                               placeholder="{{ item.service.base_price }}"
+                               class="w-full text-sm px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-dark-muted mb-1">
+                            زمان اختصاصی (دقیقه)
+                        </label>
+                        <input type="number" 
+                               name="duration_{{ item.service.id }}" 
+                               value="{{ item.custom_duration_minutes|default_if_none:'' }}"
+                               placeholder="{{ item.service.default_duration_minutes }}"
+                               class="w-full text-sm px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- دکمه ثبت -->
+        <div class="flex justify-end pt-4">
+            <button type="submit" 
+                    class="bg-sage-500 hover:bg-sage-600 text-white font-medium px-6 py-2.5 rounded-lg transition cursor-pointer text-sm shadow-sm">
+                ذخیره تغییرات
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

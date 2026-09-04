@@ -7,5 +7,6 @@ urlpatterns = [
     path('login/', views.BarberLoginView, name='barbers_login'),
     path('dashboard/', views.BarberDashboardView, name='barbers_dashboard'),
     path('appointments/<int:appointment_id>/status/',views.UpdateAppointmentStatusView,name='update_appointment_status'),
+    path('services/', views.ManageBarberServicesView, name='manage_services'),
     
 ]
