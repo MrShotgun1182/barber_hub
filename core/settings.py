@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'admin_panel',
     'booking',
     'salon_services',
+    'OTP',
 ]
 
 AUTH_USER_MODEL = 'accounts.UserModel'
