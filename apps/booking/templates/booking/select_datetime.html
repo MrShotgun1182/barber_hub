@@ -1,0 +1,261 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}انتخاب زمان رزرو | Barber Hub{% endblock %}
+
+{% block content %}
+<div class="min-h-[85vh] flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-2xl space-y-6">
+
+        <!-- نوار پیشرفت گام‌های رزرو (Wizard Steps) -->
+        <div class="bg-cream-100 border border-cream-200 rounded-2xl p-4 shadow-sm flex items-center justify-between text-xs sm:text-sm font-medium text-dark-muted">
+            <div class="flex items-center gap-2 text-sage-600">
+                <span class="w-6 h-6 rounded-full bg-sage-200 text-sage-800 flex items-center justify-center font-bold text-xs">✓</span>
+                <span>۱. احراز هویت</span>
+            </div>
+            <div class="w-8 h-[2px] bg-sage-200"></div>
+            <div class="flex items-center gap-2 text-sage-600">
+                <span class="w-6 h-6 rounded-full bg-sage-200 text-sage-800 flex items-center justify-center font-bold text-xs">✓</span>
+                <span>۲. آرایشگر و خدمات</span>
+            </div>
+            <div class="w-8 h-[2px] bg-sage-200"></div>
+            <div class="flex items-center gap-2 text-sage-800 font-bold">
+                <span class="w-6 h-6 rounded-full bg-sage-500 text-white flex items-center justify-center text-xs">۳</span>
+                <span>۳. زمان رزرو</span>
+            </div>
+        </div>
+
+        <!-- کارت اصلی انتخاب زمان -->
+        <div class="bg-cream-100 border border-cream-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-sage-900/5 transition-all">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-sage-800 tracking-tight mb-2">انتخاب تاریخ و ساعت نوبت</h1>
+                <p class="text-sm text-dark-muted">تاریخ روز مورد نظر را انتخاب کرده و یکی از سانس‌های آزاد را برگزینید.</p>
+            </div>
+
+            <!-- پیام هشدار خطا یا عدم وجود سانس -->
+            <div id="alertBox" class="hidden mb-6 p-3.5 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span id="alertMessage">خطایی در دریافت سانس‌ها رخ داده است.</span>
+            </div>
+
+            <div class="space-y-8">
+                
+                <!-- بخش ۱: اسلایدر/لیست روزهای قابل رزرو (۷ روز آینده) -->
+                <div>
+                    <label class="block text-sm font-bold text-sage-800 mb-3">۱. انتخاب تاریخ</label>
+                    <div id="datesContainer" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                        <!-- روزها به صورت کارت‌های افقی توسط JS ساخته می‌شوند -->
+                    </div>
+                </div>
+
+                <!-- بخش ۲: شبکه سانس‌های ساعتی آزاد -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="text-sm font-bold text-sage-800">۲. انتخاب سانس زمانی آزاد</label>
+                        <span id="slotsCountBadge" class="hidden text-xs bg-sage-200 text-sage-800 font-bold px-2.5 py-1 rounded-full">
+                            ۰ سانس موجود
+                        </span>
+                    </div>
+
+                    <!-- حالت Loading در زمان Fetch -->
+                    <div id="loadingState" class="hidden p-8 text-center">
+                        <div class="inline-block w-8 h-8 border-4 border-sage-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+                        <p class="text-xs text-dark-muted font-medium">در حال استعلام سانس‌های خالی...</p>
+                    </div>
+
+                    <!-- حالت خالی / عدم وجود سانس -->
+                    <div id="noSlotsState" class="hidden p-6 text-center border-2 border-dashed border-cream-300 rounded-2xl text-dark-muted text-sm bg-cream-50">
+                        در این تاریخ هیچ سانس آزادی برای خدمات انتخاب‌شده وجود ندارد. لطفاً روز دیگری را انتخاب کنید.
+                    </div>
+
+                    <!-- گرید نمایش سانس‌ها -->
+                    <div id="slotsContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        <!-- کارت‌های زمان توسط JS اضافه می‌شوند -->
+                    </div>
+                </div>
+
+                <!-- دکمه‌های ناوبری -->
+                <div class="pt-4 border-t border-cream-200 flex items-center justify-between gap-4">
+                    <a href="{% url 'barbers:select_service' %}" class="px-5 py-3 rounded-2xl bg-cream-200 text-dark-muted hover:text-sage-800 text-sm font-semibold transition-all">
+                        قبلی
+                    </a>
+                    
+                    <button type="button" id="nextStepBtn" disabled
+                            class="flex-1 py-3.5 px-4 bg-sage-500 hover:bg-sage-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-2xl shadow-md shadow-sage-500/20 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2">
+                        <span>ادامه و پیش‌نمایش فاکتور</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // ۱. خواندن داده‌های ذخیره‌شده از گام دوم
+    const barberId = sessionStorage.getItem('barber_id');
+    const serviceIds = sessionStorage.getItem('barber_service_ids');
+
+    // اگر داده‌های گام قبلی وجود نداشت، هدایت به گام ۲
+    if (!barberId || !serviceIds) {
+        window.location.href = "{% url 'barbers:select_service' %}";
+        return;
+    }
+
+    const datesContainer = document.getElementById('datesContainer');
+    const slotsContainer = document.getElementById('slotsContainer');
+    const loadingState = document.getElementById('loadingState');
+    const noSlotsState = document.getElementById('noSlotsState');
+    const slotsCountBadge = document.getElementById('slotsCountBadge');
+    const alertBox = document.getElementById('alertBox');
+    const alertMessage = document.getElementById('alertMessage');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+
+    let selectedDate = null;
+    let selectedSlot = null;
+
+    // ۲. تولید روزهای ۷ روز آینده برای تقویم افقی
+    function generateDays() {
+        datesContainer.innerHTML = '';
+        const today = new Date();
+        const daysOfWeek = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+
+        for (let i = 0; i < 7; i++) {
+            const currentDate = new Date(today);
+            currentDate.setDate(today.getDate() + i);
+
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+
+            const dayName = i === 0 ? 'امروز' : (i === 1 ? 'فردا' : daysOfWeek[currentDate.getDay()]);
+            const isSelected = selectedDate === dateStr;
+
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = `min-w-[90px] p-3 rounded-2xl border text-center transition-all cursor-pointer shrink-0 ${
+                isSelected 
+                    ? 'bg-sage-500 text-white border-sage-500 shadow-md shadow-sage-500/20 font-bold' 
+                    : 'bg-cream-50 border-cream-300 text-dark-main hover:border-sage-300'
+            }`;
+
+            card.innerHTML = `
+                <span class="block text-xs opacity-80 mb-1">${dayName}</span>
+                <span class="block text-sm font-extrabold">${month}/${day}</span>
+            `;
+
+            card.addEventListener('click', () => selectDate(dateStr));
+            datesContainer.appendChild(card);
+
+            // انتخاب پیش‌فرض اولین روز (امروز)
+            if (i === 0 && !selectedDate) {
+                selectDate(dateStr);
+            }
+        }
+    }
+
+    // ۳. انتخاب تاریخ و ارسال درخواست AJAX به ویوی جنگو
+    function selectDate(dateStr) {
+        selectedDate = dateStr;
+        selectedSlot = null;
+        nextStepBtn.disabled = true;
+        
+        generateDays(); // به‌روزرسانی استایل کارت تاریخ‌ها
+        fetchSlots(dateStr);
+    }
+
+    // ۴. دریافت آنلاین سانس‌های آزاد از سرور (AJAX)
+    function fetchSlots(dateStr) {
+        loadingState.classList.remove('hidden');
+        slotsContainer.classList.add('hidden');
+        noSlotsState.classList.add('hidden');
+        slotsCountBadge.classList.add('hidden');
+        alertBox.classList.add('hidden');
+
+        const queryParams = new URLSearchParams({
+            barber_id: barberId,
+            service_ids: serviceIds,
+            date: dateStr,
+            format: 'json'
+        });
+
+        fetch(`?${queryParams.toString()}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingState.classList.add('hidden');
+            
+            if (data.status === 'error') {
+                alertMessage.textContent = data.message || 'خطایی رخ داده است.';
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            renderSlots(data.slots || []);
+        })
+        .catch(err => {
+            loadingState.classList.add('hidden');
+            alertMessage.textContent = 'ارتباط با سرور برقرار نشد. دوباره تلاش کنید.';
+            alertBox.classList.remove('hidden');
+        });
+    }
+
+    // ۵. رندر کارت‌های سانس‌های ساعتی
+    function renderSlots(slots) {
+        slotsContainer.innerHTML = '';
+
+        if (slots.length === 0) {
+            noSlotsState.classList.remove('hidden');
+            return;
+        }
+
+        slotsCountBadge.textContent = `${slots.length} سانس موجود`;
+        slotsCountBadge.classList.remove('hidden');
+        slotsContainer.classList.remove('hidden');
+
+        slots.forEach(slot => {
+            const isSelected = selectedSlot && selectedSlot.start_time === slot.start_time;
+            const card = document.createElement('div');
+            card.className = `p-3 rounded-2xl border text-center transition-all cursor-pointer font-semibold text-sm ${
+                isSelected 
+                    ? 'bg-sage-50 border-sage-500 text-sage-800 ring-2 ring-sage-500/20' 
+                    : 'bg-cream-50 border-cream-300 text-dark-main hover:border-sage-300'
+            }`;
+
+            card.textContent = slot.display_text;
+
+            card.addEventListener('click', () => {
+                selectedSlot = slot;
+                renderSlots(slots); // رندر مجدد برای اعمال استایل انتخاب‌شده
+                nextStepBtn.disabled = false;
+            });
+
+            slotsContainer.appendChild(card);
+        });
+    }
+
+    // ۶. ذخیره‌سازی داده‌های زمان در sessionStorage و انتقال به گام چهارم
+    nextStepBtn.addEventListener('click', () => {
+        if (!selectedDate || !selectedSlot) return;
+
+        sessionStorage.setItem('booking_date', selectedDate);
+        sessionStorage.setItem('start_time', selectedSlot.start_time);
+        sessionStorage.setItem('end_time', selectedSlot.end_time);
+
+        // انتقال به گام چهارم (پیش‌نمایش فاکتور و ثبت نهایی)
+        window.location.href = "{% url 'booking:review_booking' %}";
+    });
+});
+</script>
+{% endblock %}
