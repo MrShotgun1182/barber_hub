@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -96,3 +97,10 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'staticfiles'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+load_dotenv(BASE_DIR / '.env')
+
+# خواندن اطلاعات پنل پیامک
+MELIPAYAMAK_USERNAME = os.getenv('MELIPAYAMAK_USERNAME')
+MELIPAYAMAK_PASSWORD = os.getenv('MELIPAYAMAK_PASSWORD')
+MELIPAYAMAK_FROM = os.getenv('MELIPAYAMAK_FROM')

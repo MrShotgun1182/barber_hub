@@ -1,0 +1,254 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}تایید کد یک‌بارمصرف | Barber Hub{% endblock %}
+
+{% block content %}
+<div class="min-h-[85vh] flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-md">
+        
+        <!-- کارت اصلی ورود کد OTP -->
+        <div class="bg-cream-100 border border-cream-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-sage-900/5 transition-all duration-300">
+            
+            <!-- هدر و آیکون -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-sage-50 border border-sage-200 text-sage-600 mb-4 shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-sage-800 tracking-tight mb-2">تایید شماره موبایل</h1>
+                <p class="text-sm text-dark-muted leading-relaxed">
+                    کد تأیید به شماره 
+                    <span id="displayPhoneNumber" class="font-semibold dir-ltr inline-block text-sage-800 bg-cream-200 px-2 py-0.5 rounded-md">
+                        {{ phone_number|default:"۰۹۱۲xxx۳۴۵۶" }}
+                    </span> 
+                    ارسال شد.
+                </p>
+            </div>
+
+            <!-- باکس نمایش پیغام‌های دینامیک (خطا / موفقیت) -->
+            <div id="alertContainer" class="hidden mb-6 p-3.5 rounded-xl text-sm font-medium flex items-center gap-2 border transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="alertMessage"></span>
+            </div>
+
+            <!-- فرم ورود کد OTP -->
+            <form id="otpForm" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- ۶ باکس ورودی عدد -->
+                <div class="flex items-center justify-between gap-2 sm:gap-3 dir-ltr" id="otpInputsContainer">
+                    <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-dark-main bg-cream-50 border border-cream-300 rounded-xl focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 outline-none transition-all duration-150" autoFocus />
+                    <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-dark-main bg-cream-50 border border-cream-300 rounded-xl focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 outline-none transition-all duration-150" />
+                    <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-dark-main bg-cream-50 border border-cream-300 rounded-xl focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 outline-none transition-all duration-150" />
+                    <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-dark-main bg-cream-50 border border-cream-300 rounded-xl focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 outline-none transition-all duration-150" />
+                    <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-dark-main bg-cream-50 border border-cream-300 rounded-xl focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 outline-none transition-all duration-150" />
+                    <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-digit w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-dark-main bg-cream-50 border border-cream-300 rounded-xl focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 outline-none transition-all duration-150" />
+                </div>
+
+                <!-- دکمه تایید -->
+                <button type="submit" id="submitBtn"
+                        class="w-full py-3.5 px-4 bg-sage-500 hover:bg-sage-600 text-white font-semibold rounded-2xl shadow-md shadow-sage-500/20 hover:shadow-lg hover:shadow-sage-600/30 active:scale-[0.99] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2">
+                    <span id="submitBtnText">تأیید و ورود به Barber Hub</span>
+                    <svg id="submitBtnIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </form>
+
+            <!-- بخش تایمر و ارسال مجدد -->
+            <div class="mt-8 pt-6 border-t border-cream-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+                
+                <!-- لینک ویرایش شماره -->
+                <a href="{% url 'accounts:login' %}" class="text-dark-muted hover:text-sage-800 transition-colors flex items-center gap-1.5 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>ویرایش شماره</span>
+                </a>
+
+                <!-- تایمر و دکمه ارسال مجدد -->
+                <div class="flex items-center gap-2 text-dark-muted">
+                    <span id="timerContainer" class="flex items-center gap-1 bg-cream-200 px-3 py-1 rounded-lg text-sage-800 font-mono font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-sage-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="countdownTimer">02:00</span>
+                    </span>
+
+                    <button type="button" id="resendBtn" disabled 
+                            class="text-sage-500 font-semibold hover:text-sage-700 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-sage-500 transition-all cursor-pointer">
+                        ارسال مجدد کد
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- اسکریپت تعاملی ورودی‌ها، ارسال AJAX و تایمر -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const inputs = document.querySelectorAll('.otp-digit');
+    const form = document.getElementById('otpForm');
+    const resendBtn = document.getElementById('resendBtn');
+    const countdownElement = document.getElementById('countdownTimer');
+    const timerContainer = document.getElementById('timerContainer');
+    const alertContainer = document.getElementById('alertContainer');
+    const alertMessage = document.getElementById('alertMessage');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitBtnText = document.getElementById('submitBtnText');
+
+    // دریافت شماره موبایل (از بَایند جنگو یا sessionStorage)
+    const rawPhoneNumber = "{{ phone_number|default:'' }}";
+    const phoneNumber = rawPhoneNumber || sessionStorage.getItem('phone_number') || "";
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let timerInterval = null;
+
+    // ۱. نمایش پیام به کاربر با رنگ‌های تم اختصاصی
+    function showAlert(message, isError = true) {
+        alertContainer.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200', 'bg-sage-50', 'text-sage-800', 'border-sage-200');
+        if (isError) {
+            alertContainer.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+        } else {
+            alertContainer.classList.add('bg-sage-50', 'text-sage-800', 'border-sage-200');
+        }
+        alertMessage.textContent = message;
+    }
+
+    // ۲. مدیریت اینپوت‌ها و حرکت فوکوس
+    inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (val.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedData = (e.clipboardData || window.clipboardData).getData('text').trim();
+            if (/^\d{6}$/.test(pastedData)) {
+                pastedData.split('').forEach((char, i) => {
+                    if (inputs[i]) inputs[i].value = char;
+                });
+                inputs[inputs.length - 1].focus();
+            }
+        });
+    });
+
+    // ۳. ارسال کد OTP از طریق AJAX
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        let otpCode = '';
+        inputs.forEach(input => otpCode += input.value);
+
+        if (otpCode.length !== 6) {
+            showAlert('لطفاً کد ۶ رقمی را به طور کامل وارد کنید.');
+            return;
+        }
+
+        // تغییر حالت دکمه به در حال بررسی
+        submitBtn.disabled = true;
+        submitBtnText.textContent = 'در حال بررسی...';
+
+        try {
+            const response = await fetch("{% url 'accounts:verify_otp' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    phone_number: phoneNumber,
+                    otp_code: otpCode
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.is_authenticated) {
+                showAlert(data.message || 'کد با موفقیت تایید شد.', false);
+
+                // ذخیره‌سازی در sessionStorage طبق سند Wizard Booking Flow
+                sessionStorage.setItem('phone_number', phoneNumber);
+
+                // انتقال به گام دوم (انتخاب آرایشگر و خدمت)
+                setTimeout(() => {
+                    window.location.href = "{% url 'booking:select_barber_service' %}";
+                }, 1000);
+            } else {
+                showAlert(data.message || 'کد وارد شده اشتباه یا منقضی شده است.');
+                submitBtn.disabled = false;
+                submitBtnText.textContent = 'تأیید و ورود به Barber Hub';
+            }
+        } catch (error) {
+            showAlert('خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.');
+            submitBtn.disabled = false;
+            submitBtnText.textContent = 'تأیید و ورود به Barber Hub';
+        }
+    });
+
+    // ۴. مدیریت تایمر معکوس
+    function startTimer(durationSeconds = 120) {
+        clearInterval(timerInterval);
+        let timeLeft = durationSeconds;
+        resendBtn.disabled = true;
+        timerContainer.classList.remove('hidden');
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+            const seconds = String(timeLeft % 60).padStart(2, '0');
+            countdownElement.textContent = `${minutes}:${seconds}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                resendBtn.removeAttribute('disabled');
+                timerContainer.classList.add('hidden');
+            }
+        }, 1000);
+    }
+
+    startTimer(120);
+
+    // ۵. ارسال مجدد کد OTP به صورت AJAX
+    resendBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch("{% url 'accounts:resend_otp' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ phone_number: phoneNumber })
+            });
+
+            const data = await response.json();
+            if (response.ok && data.status === 'success') {
+                showAlert('کد جدید با موفقیت ارسال شد.', false);
+                startTimer(120);
+            } else {
+                showAlert(data.message || 'خطا در ارسال مجدد کد.');
+            }
+        } catch (err) {
+            showAlert('خطا در ارتباط با سرور.');
+        }
+    });
+});
+</script>
+{% endblock %}
