@@ -1,7 +1,6 @@
 from django.db import models
 from barbers import models as barbers_models
 from customers import models as customers_models
-from salon_services import models as salon_services_models
 
 
 class AppointmentModel(models.Model):
@@ -24,17 +23,20 @@ class AppointmentModel(models.Model):
         related_name='appointments',
         verbose_name='آرایشگر',
     )
-    service = models.ForeignKey(
-        salon_services_models.ServiceModel,
-        on_delete=models.PROTECT,
+    # اتصال چندبه‌چند به خدمات اختصاصی آرایشگر
+    services = models.ManyToManyField(
+        barbers_models.BarberServiceModel,
         related_name='appointments',
-        verbose_name='خدمت',
+        verbose_name='خدمات انتخاب‌شده',
     )
     date = models.DateField(verbose_name='تاریخ نوبت')
     start_time = models.TimeField(verbose_name='ساعت شروع')
     end_time = models.TimeField(verbose_name='ساعت پایان')
-    price = models.PositiveIntegerField(
-        verbose_name='قیمت ثبت‌شده (تومان)'
+    total_price = models.PositiveIntegerField(
+        default=0, verbose_name='مجموع قیمت ثبت‌شده (تومان)'
+    )
+    total_duration_minutes = models.PositiveIntegerField(
+        default=0, verbose_name='مجموع مدت زمان (دقیقه)'
     )
     status = models.CharField(
         max_length=20,
