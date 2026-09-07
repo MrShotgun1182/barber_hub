@@ -1,5 +1,5 @@
-import random
+import secrets
 
-def GenerateOTPCodeService(length: int = 5) -> str:
-    """تولید کد یکبار مصرف عددی"""
-    return "".join([str(random.randint(0, 9)) for _ in range(length)])
+def GenerateOTPCodeService(length: int = 6) -> str:
+    """تولید کد یکبار مصرف عددی ۶ رقمی"""
+    return "".join([str(secrets.randbelow(10)) for _ in range(length)])

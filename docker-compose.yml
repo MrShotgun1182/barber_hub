@@ -1,4 +1,5 @@
 services:
+  # 1. دیتابیس PostgreSQL
   db:
     image: postgres:15-alpine
     volumes:
@@ -15,6 +16,18 @@ services:
       timeout: 5s
       retries: 5
 
+  # 2. 브روکر Redis برای Celery
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. وب‌سرور اصلی Django & Frontend
   web:
     build: .
     volumes:
@@ -30,14 +43,40 @@ services:
       - DB_PASSWORD=barber_pass
       - DB_HOST=db
       - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     command: >
       sh -c "cd /app/frontend && npm install && npm run build && npm run dev &
              cd /app && python manage.py migrate &&
              python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin1234', role='MANAGER')\" &&
              python manage.py runserver 0.0.0.0:8000"
+
+  # 4. پردازشگر تاسک‌های غیرهمزمان Celery Worker
+  celery_worker:
+    build: .
+    volumes:
+      - .:/app
+      - /app/frontend/node_modules
+    environment:
+      - DEBUG=1
+      - DB_NAME=barber_db
+      - DB_USER=barber_user
+      - DB_PASSWORD=barber_pass
+      - DB_HOST=db
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A core worker --loglevel=info
 
 volumes:
   postgres_data:

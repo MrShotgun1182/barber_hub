@@ -3,7 +3,7 @@ from OTP import models, services, tasks
 def SendOTPAction(phone_number: str) -> dict:
     """اکشن مدیریت فرآیند درخواست و ارسال کد OTP"""
     # ۱. تولید کد
-    code = services.GenerateOTPCodeService(length=5)
+    code = services.GenerateOTPCodeService(length=6)
     
     # ۲. ثبت در دیتابیس
     models.OTPModel.objects.create(

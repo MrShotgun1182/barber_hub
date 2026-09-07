@@ -77,13 +77,12 @@ DATABASES = {
 }
 
 # Password validation
-AUTH_PASSWORD_VALIDATORS = [
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -104,3 +103,13 @@ load_dotenv(BASE_DIR / '.env')
 MELIPAYAMAK_USERNAME = os.getenv('MELIPAYAMAK_USERNAME')
 MELIPAYAMAK_PASSWORD = os.getenv('MELIPAYAMAK_PASSWORD')
 MELIPAYAMAK_FROM = os.getenv('MELIPAYAMAK_FROM')
+
+# ==============================================================================
+# ⚡ Celery & Redis Configuration
+# ==============================================================================
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://redis:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE

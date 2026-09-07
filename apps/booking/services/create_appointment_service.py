@@ -1,9 +1,8 @@
 from datetime import datetime
 from django.db import transaction
-from appointments.models.appointment_model import AppointmentModel
-from barbers.models.barber_model import BarberModel
-from barbers.models.barber_service_model import BarberServiceModel
-from customers.models.customer_model import CustomerModel
+from booking import models as booking_models
+from barbers import models as barbers_models
+from customers import models as customers_models
 
 
 def CreateAppointmentService(
@@ -13,18 +12,18 @@ def CreateAppointmentService(
     booking_date: str,
     start_time_str: str,
     end_time_str: str,
-) -> AppointmentModel:
+) -> booking_models.AppointmentModel:
     """
     ثبت اتمیک نوبت رزرو به همراه بررسی صحت داده‌ها و محاسبه قیمت کل
     """
     with transaction.atomic():
         # ۱. دریافت یا ایجاد پروفایل مشتری
-        customer, _ = CustomerModel.objects.get_or_create(user=user)
+        customer, _ = customers_models.CustomerModel.objects.get_or_create(user=user)
 
         # ۲. اعتبارسنجی آرایشگر و خدمات
-        barber = BarberModel.objects.get(id=barber_id, is_active=True)
+        barber = barbers_models.BarberModel.objects.get(id=barber_id, is_active=True)
         barber_services = list(
-            BarberServiceModel.objects.filter(
+            barbers_models.BarberServiceModel.objects.filter(
                 id__in=barber_service_ids, barber=barber, is_active=True
             ).select_related('service')
         )
@@ -52,7 +51,7 @@ def CreateAppointmentService(
         end_time_obj = datetime.strptime(end_time_str, '%H:%M').time()
 
         # ۵. بررسی مجدد تداخل زمانی (جلوگیری از Double Booking در رزرو هم‌زمان)
-        has_overlap = AppointmentModel.objects.filter(
+        has_overlap = booking_models.AppointmentModel.objects.filter(
             barber=barber,
             date=date_obj,
             status__in=['PENDING', 'CONFIRMED'],
@@ -66,7 +65,7 @@ def CreateAppointmentService(
             )
 
         # ۶. ثبت نوبت
-        appointment = AppointmentModel.objects.create(
+        appointment = booking_models.AppointmentModel.objects.create(
             customer=customer,
             barber=barber,
             date=date_obj,

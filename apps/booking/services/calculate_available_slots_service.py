@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta, date
 from django.utils import timezone
-from barbers.models.working_hours_model import WorkingHoursModel
-from barbers.models.barber_service_model import BarberServiceModel
-from appointments.models.appointment_model import AppointmentModel
+from barbers import models as barbers_models
+from booking import models as booking_models
 
 
 def CalculateAvailableSlotsService(
@@ -13,7 +12,7 @@ def CalculateAvailableSlotsService(
     ساعات کاری آرایشگر و عدم تداخل با نوبت‌های قبلی.
     """
     # ۱. محاسبه مجموع مدت‌زمان خدمات انتخابی
-    services = BarberServiceModel.objects.filter(
+    services = barbers_models.BarberServiceModel.objects.filter(
         id__in=barber_service_ids, barber_id=barber_id, is_active=True
     ).select_related('service')
 
@@ -34,17 +33,17 @@ def CalculateAvailableSlotsService(
     model_day_of_week = (target_date.weekday() + 2) % 7
 
     try:
-        working_hours = WorkingHoursModel.objects.get(
+        working_hours = barbers_models.WorkingHoursModel.objects.get(
             barber_id=barber_id,
             day_of_week=model_day_of_week,
             is_closed=False,
         )
-    except WorkingHoursModel.DoesNotExist:
+    except barbers_models.WorkingHoursModel.DoesNotExist:
         return []  # آرایشگر در این روز تعطیل است
 
     # ۳. دریافت نوبت‌های فعال ثبت‌شده در این روز (جلوگیری از N+1)
     booked_appointments = list(
-        AppointmentModel.objects.filter(
+        booking_models.AppointmentModel.objects.filter(
             barber_id=barber_id,
             date=target_date,
             status__in=['PENDING', 'CONFIRMED'],
