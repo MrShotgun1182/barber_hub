@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.shortcuts import render
-from appointments.actions.get_available_slots_action import GetAvailableSlotsAction
+from booking import actions as booking_actions
 
 
 def SelectDatetimeView(request):
@@ -30,7 +30,7 @@ def SelectDatetimeView(request):
                 status=400,
             )
 
-        result = GetAvailableSlotsAction(
+        result = booking_actions.GetAvailableSlotsAction(
             barber_id=barber_id,
             barber_service_ids=service_ids,
             date_str=date_str,
