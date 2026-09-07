@@ -1,0 +1,233 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}انتخاب آرایشگر و خدمت | Barber Hub{% endblock %}
+
+{% block content %}
+<div class="min-h-[85vh] flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-2xl space-y-6">
+
+        <!-- نوار پیشرفت گام‌های رزرو (Wizard Steps) -->
+        <div class="bg-cream-100 border border-cream-200 rounded-2xl p-4 shadow-sm flex items-center justify-between text-xs sm:text-sm font-medium text-dark-muted">
+            <div class="flex items-center gap-2 text-sage-600">
+                <span class="w-6 h-6 rounded-full bg-sage-200 text-sage-800 flex items-center justify-center font-bold text-xs">✓</span>
+                <span>۱. احراز هویت</span>
+            </div>
+            <div class="w-8 h-[2px] bg-sage-200"></div>
+            <div class="flex items-center gap-2 text-sage-800 font-bold">
+                <span class="w-6 h-6 rounded-full bg-sage-500 text-white flex items-center justify-center text-xs">۲</span>
+                <span>۲. آرایشگر و خدمت</span>
+            </div>
+            <div class="w-8 h-[2px] bg-cream-300"></div>
+            <div class="flex items-center gap-2 opacity-50">
+                <span class="w-6 h-6 rounded-full bg-cream-200 text-dark-muted flex items-center justify-center text-xs">۳</span>
+                <span>۳. زمان رزرو</span>
+            </div>
+        </div>
+
+        <!-- کارت اصلی انتخاب آرایشگر و خدمت -->
+        <div class="bg-cream-100 border border-cream-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-sage-900/5 transition-all duration-300">
+            
+            <!-- هدر بخش -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-sage-800 tracking-tight mb-2">انتخاب آرایشگر و نوع خدمت</h1>
+                <p class="text-sm text-dark-muted">ابتدا آرایشگر مورد نظر و سپس خدمت درخواستی را انتخاب کنید.</p>
+            </div>
+
+            <!-- باکس هشدار انتخاب -->
+            <div id="alertBox" class="hidden mb-6 p-3.5 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200 items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span id="alertMessage">لطفاً هم آرایشگر و هم خدمت مورد نظر را انتخاب کنید.</span>
+            </div>
+
+            <div class="space-y-8">
+                
+                <!-- بخش ۱: انتخاب آرایشگر -->
+                <div>
+                    <label class="block text-sm font-bold text-sage-800 mb-3">۱. انتخاب آرایشگر</label>
+                    <div id="barbersContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- کارت‌های آرایشگران به صورت دینامیک اینجا رندر می‌شوند -->
+                    </div>
+                </div>
+
+                <!-- بخش ۲: انتخاب خدمت (دینامیک بر اساس آرایشگر) -->
+                <div>
+                    <label class="block text-sm font-bold text-sage-800 mb-3">۲. انتخاب خدمت</label>
+                    
+                    <!-- پیام راهنما قبل از انتخاب آرایشگر -->
+                    <div id="noBarberSelected" class="p-6 text-center border-2 border-dashed border-cream-300 rounded-2xl text-dark-muted text-sm bg-cream-50">
+                        برای مشاهده لیست خدمات و قیمت‌ها، ابتدا یک آرایشگر را انتخاب کنید.
+                    </div>
+
+                    <!-- لیست خدمات -->
+                    <div id="servicesContainer" class="grid grid-cols-1 gap-3 hidden">
+                        <!-- کارت‌های خدمات به صورت دینامیک اینجا رندر می‌شوند -->
+                    </div>
+                </div>
+
+                <!-- دکمه ادامه -->
+                <div class="pt-4 border-t border-cream-200 flex items-center justify-between gap-4">
+                    <a href="{% url 'booking:otp_page' %}" class="px-5 py-3 rounded-2xl bg-cream-200 text-dark-muted hover:text-sage-800 text-sm font-semibold transition-all">
+                        قبلی
+                    </a>
+                    
+                    <button type="button" id="nextStepBtn" disabled
+                            class="flex-1 py-3.5 px-4 bg-sage-500 hover:bg-sage-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-2xl shadow-md shadow-sage-500/20 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2">
+                        <span>ادامه و انتخاب زمان</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- تزریق بهینه JSON داده‌های آرایشگران از جنگو -->
+{{ barbers_json|json_script:"barbers-data" }}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // دریافت دیتای JSON لود شده از سمت جنگو
+    const barbersData = JSON.parse(document.getElementById('barbers-data').textContent || "[]");
+
+    const barbersContainer = document.getElementById('barbersContainer');
+    const servicesContainer = document.getElementById('servicesContainer');
+    const noBarberSelected = document.getElementById('noBarberSelected');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    const alertBox = document.getElementById('alertBox');
+
+    let selectedBarberId = null;
+    let selectedServiceId = null;
+
+    // تبدیل اعداد به فرمت جداکننده ۳ رقمی (تومان)
+    function formatPrice(price) {
+        return new Intl.NumberFormat('fa-IR').format(price);
+    }
+
+    // ۱. رندر اولیه لیست آرایشگران
+    function renderBarbers() {
+        barbersContainer.innerHTML = '';
+        
+        if (barbersData.length === 0) {
+            barbersContainer.innerHTML = `<p class="text-sm text-dark-muted col-span-2 text-center py-4">هیچ آرایشگر فعالی یافت نشد.</p>`;
+            return;
+        }
+
+        barbersData.forEach(barber => {
+            const isSelected = selectedBarberId === barber.barber_id;
+            const card = document.createElement('div');
+            card.className = `p-4 rounded-2xl border transition-all cursor-pointer flex items-center gap-3 ${
+                isSelected 
+                    ? 'bg-sage-50 border-sage-500 ring-2 ring-sage-500/20' 
+                    : 'bg-cream-50 border-cream-300 hover:border-sage-300'
+            }`;
+
+            card.innerHTML = `
+                <div class="w-10 h-10 rounded-xl ${isSelected ? 'bg-sage-500 text-white' : 'bg-cream-200 text-sage-800'} flex items-center justify-center font-bold text-base shrink-0">
+                    ${barber.name.charAt(0)}
+                </div>
+                <div class="overflow-hidden">
+                    <h3 class="font-bold text-sage-800 text-sm truncate">${barber.name}</h3>
+                    <p class="text-xs text-dark-muted truncate">${barber.bio || 'آرایشگر حرفه‌ای Barber Hub'}</p>
+                </div>
+            `;
+
+            card.addEventListener('click', () => selectBarber(barber.barber_id));
+            barbersContainer.appendChild(card);
+        });
+    }
+
+    // ۲. انتخاب آرایشگر و به‌روزرسانی لیست خدمات
+    function selectBarber(barberId) {
+        selectedBarberId = barberId;
+        selectedServiceId = null; // ریست کردن خدمت در صورت تغییر آرایشگر
+        nextStepBtn.disabled = true;
+
+        renderBarbers();
+        renderServices();
+    }
+
+    // ۳. رندر لیست خدمات آرایشگر انتخاب‌شده
+    function renderServices() {
+        const currentBarber = barbersData.find(b => b.barber_id === selectedBarberId);
+        
+        if (!currentBarber) {
+            noBarberSelected.classList.remove('hidden');
+            servicesContainer.classList.add('hidden');
+            return;
+        }
+
+        noBarberSelected.classList.add('hidden');
+        servicesContainer.classList.remove('hidden');
+        servicesContainer.innerHTML = '';
+
+        if (!currentBarber.services || currentBarber.services.length === 0) {
+            servicesContainer.innerHTML = `<p class="text-sm text-dark-muted text-center py-4">این آرایشگر در حال حاضر خدماتی ارائه نمی‌دهد.</p>`;
+            return;
+        }
+
+        currentBarber.services.forEach(service => {
+            const isSelected = selectedServiceId === service.service_id;
+            const card = document.createElement('div');
+            card.className = `p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 ${
+                isSelected 
+                    ? 'bg-sage-50 border-sage-500 ring-2 ring-sage-500/20' 
+                    : 'bg-cream-50 border-cream-300 hover:border-sage-300'
+            }`;
+
+            card.innerHTML = `
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-bold text-dark-main text-sm">${service.name}</h4>
+                        <span class="text-[11px] px-2 py-0.5 rounded-md bg-cream-200 text-sage-800 font-medium">
+                            ${service.duration_minutes} دقیقه
+                        </span>
+                    </div>
+                    ${service.description ? `<p class="text-xs text-dark-muted">${service.description}</p>` : ''}
+                </div>
+                <div class="text-left shrink-0">
+                    <span class="text-base font-extrabold text-sage-800">${formatPrice(service.price)}</span>
+                    <span class="text-xs text-dark-muted block">تومان</span>
+                </div>
+            `;
+
+            card.addEventListener('click', () => selectService(service.service_id));
+            servicesContainer.appendChild(card);
+        });
+    }
+
+    // ۴. انتخاب خدمت
+    function selectService(serviceId) {
+        selectedServiceId = serviceId;
+        renderServices();
+        nextStepBtn.disabled = false; // فعال‌سازی دکمه گام بعدی
+        alertBox.classList.add('hidden');
+    }
+
+    // ۵. کلیک روی دکمه ثبت و رفتن به گام سوم (ذخیره در sessionStorage)
+    nextStepBtn.addEventListener('click', () => {
+        if (!selectedBarberId || !selectedServiceId) {
+            alertBox.classList.remove('hidden');
+            return;
+        }
+
+        // ذخیره‌سازی داده‌های گام دوم در sessionStorage طبق سند Wizard Booking Flow
+        sessionStorage.setItem('barber_id', selectedBarberId);
+        sessionStorage.setItem('service_id', selectedServiceId);
+
+        // انتقال به گام سوم (انتخاب تاریخ و زمان)
+        window.location.href = "{% url 'booking:select_datetime' %}";
+    });
+
+    // لود اولیه
+    renderBarbers();
+});
+</script>
+{% endblock %}
