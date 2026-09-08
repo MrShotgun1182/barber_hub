@@ -1,4 +1,5 @@
-FROM python:3.11-slim
+# ۱. استفاده از میرور داکر برای دریافت ایمیج پایه پایتون
+FROM mirror-docker.runflare.com/library/python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -12,21 +13,27 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# کپی فایل‌های requirements و نصب پکیج‌های پایتون
+# کپی فایل‌های requirements و تنظیم میرور pip برای نصب سریع پکیج‌های پایتون
 COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip config set global.index-url https://mirror-pypi.runflare.com/simple \
+    && pip config set global.trusted-host mirror-pypi.runflare.com \
+    && pip install --upgrade pip \
+    && pip install -r requirements.txt
 
 # کپی کل پروژه
 COPY . /app/
 
-# نصب وابستگی‌های Node.js و Build اولیه Tailwind
+# ۲. تنظیم میرور npm، نصب وابستگی‌های فرانت‌اند و Build اولیه Tailwind
 WORKDIR /app/frontend
-RUN npm install && npm run build
+RUN npm config set registry https://mirror-npm.runflare.com \
+    && npm config set strict-ssl false \
+    && npm install \
+    && npm run build
 
 # برگشت به دایرکتوری اصلی
 WORKDIR /app
 
 EXPOSE 8000
 
-# از CMD به جای ENTRYPOINT استفاده می‌کنیم چون در compose command داریم
+# اجرای سرور توسعه جنگو
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
