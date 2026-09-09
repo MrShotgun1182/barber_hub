@@ -4,7 +4,6 @@ from accounts import services as accounts_services
 
 def VerifyOTPAction(request, phone_number: str, otp_code: str) -> dict:
     """اکشن تایید OTP و احراز هویت نهایی کاربر"""
-    # ۱. اعتبارسنجی کد
     if not OTP_services.VerifyOTPCodeService(phone_number, otp_code):
         return {
             'status': 'error',
@@ -12,11 +11,11 @@ def VerifyOTPAction(request, phone_number: str, otp_code: str) -> dict:
             'is_authenticated': False
         }
 
-    # ۲. دریافت یا ساخت کاربر و پروفایل
     user, _ = accounts_services.GetOrCreateUserByPhoneService(phone_number)
-
-    # ۳. احراز هویت و ایجاد Session
     login(request, user)
+    
+    # ذخیره شماره در سشن برای دسترسی سریع‌تر در گام‌های بعدی
+    request.session['phone_number'] = phone_number
 
     return {
         'status': 'success',

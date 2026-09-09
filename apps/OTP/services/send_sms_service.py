@@ -1,19 +1,35 @@
-import requests
 from django.conf import settings
+from melipayamak import Api
 
 def SendSMSService(to_phone: str, text: str) -> bool:
-    """ارسال مستقیم پیامک از طریق وب‌سرویس REST ملی پیامک"""
-    url = "http://api.payamak-panel.com/post/Send.asmx/SendSimpleSMS2"
-    payload = {
-        'username': settings.MELIPAYAMAK_USERNAME,
-        'password': settings.MELIPAYAMAK_PASSWORD,
-        'from': settings.MELIPAYAMAK_FROM,
-        'to': to_phone,
-        'text': text,
-        'isflash': False
-    }
+    """
+    ارسال پیامک با استفاده از پکیج رسمی ملی‌پیامک
+    """
     try:
-        response = requests.post(url, data=payload, timeout=10)
-        return response.status_code == 200
-    except requests.RequestException:
+        # گرفتن اطلاعات اکانت از تنظیمات پروژه
+        username = settings.MELIPAYAMAK_USERNAME
+        password = settings.MELIPAYAMAK_PASSWORD
+        _from = settings.MELIPAYAMAK_FROM
+
+        print(username, password)
+        
+        # راه‌اندازی کلاس API
+        api = Api(username, password)
+        sms = api.sms()
+        
+        # ارسال پیامک
+        response = sms.send(to_phone, _from, text)
+        
+        print("=== DEBUG MeliPayamak Package ===")
+        print("Response:", response)
+        print("=================================")
+        
+        # معمولا اگر ارسال موفق باشه، یک دیکشنری یا رشته حاوی کد پیگیری (RecId) برمی‌گرده
+        # اگر خطا بده داخل همون response مشخص میشه
+        if response:
+            return True
+        return False
+        
+    except Exception as e:
+        print("MeliPayamak Package Error:", e)
         return False
