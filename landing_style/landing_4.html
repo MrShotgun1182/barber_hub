@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %}
+
+{% block title %}صفحه اصلی | Barber Hub{% endblock %}
+
+{% block content %}
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10 sm:space-y-12">
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center bg-white border border-gray-200/70 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="space-y-4 text-right order-1">
+            <span class="inline-block px-3 py-1 text-xs font-semibold bg-amber-50 text-amber-700 rounded-md border border-amber-200/50">
+                تجربه اصلاح حرفه‌ای
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-snug">
+                به <span class="text-amber-600">Barber Hub</span> خوش آمدید
+            </h1>
+            <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                ما در مجموعه Barber Hub با ایجاد فضایی آرامش‌بخش و استفاده از متدهای به روز، آماده ارائه بهترین خدمات اصلاح و استایل به شما هستیم.
+            </p>
+            <div class="pt-2">
+                <a href="#" class="inline-block px-5 py-2.5 bg-gray-900 hover:bg-amber-600 text-white text-sm font-medium rounded-xl transition-colors duration-200 shadow-sm">
+                    رزرو سریع نوبت
+                </a>
+            </div>
+        </div>
+
+        <div class="order-2 flex justify-center">
+            <div class="w-full max-w-xs sm:max-w-sm overflow-hidden rounded-xl border border-gray-100 shadow-xs">
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80" 
+                     alt="Barber Hub Hero" 
+                     class="w-full h-44 sm:h-52 object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+        </div>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center bg-white border border-gray-200/70 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="order-2 md:order-1 flex justify-center">
+            <div class="w-full max-w-xs sm:max-w-sm overflow-hidden rounded-xl border border-gray-100 shadow-xs">
+                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=600&q=80" 
+                     alt="سالن Barber Hub" 
+                     class="w-full h-44 sm:h-52 object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+        </div>
+
+        <div class="order-1 md:order-2 space-y-3 text-right">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
+                محیطی مدرن و تجهیزات استریل
+            </h2>
+            <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                رعایت کامل بهداشت و استفاده از ابزارهای ضدعفونی‌شده اولویت ماست. محیط سالن طوری طراحی شده تا در طول حضور، حس راحتی و آرامش داشته باشی.
+            </p>
+        </div>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center bg-white border border-gray-200/70 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="space-y-3 text-right order-1">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
+                درباره آرایشگر
+            </h2>
+            <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                با چند سال تجربه تخصصی در اصلاح کلاسیک و مدرن، تلاش می‌کنم استایل و فرم موها دقیقاً متناسب با چهره و سلیقه شما باشه.
+            </p>
+            <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                هدف من ارائه کیفیتیه که باهاش حس بهتری داشته باشی و با رضایت کامل از سالن بیرون بری.
+            </p>
+        </div>
+
+        <div class="order-2 flex justify-center">
+            <div class="w-full max-w-xs sm:max-w-sm overflow-hidden rounded-xl border border-gray-100 shadow-xs">
+                <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=600&q=80" 
+                     alt="آرایشگر Barber Hub" 
+                     class="w-full h-44 sm:h-52 object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock %}

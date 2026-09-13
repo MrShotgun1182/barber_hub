@@ -1,0 +1,134 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}آرایشگاه باربر هاب | نسخه مدرن و لوکس{% endblock %}
+
+{% block content %}
+
+<section class="min-h-[90vh] flex items-center justify-center bg-cream-50 px-6 py-16 md:py-24">
+    <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <div class="order-2 md:order-1 text-right space-y-6">
+            <div class="inline-flex items-center gap-2 bg-sage-50 text-sage-800 px-4 py-2 rounded-full text-xs md:text-sm font-bold border border-sage-200 shadow-xs">
+                <span>✂️</span>
+                <span>اصالت و استایل از سال ۱۳۹۰</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-sage-900">
+                خوش آمدید به <span class="text-sage-500 relative inline-block">باربر هاب
+                    <svg class="absolute -bottom-2 w-full h-3 text-sage-200" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M0 15 Q 50 0 100 15" stroke="currentColor" stroke-width="6" fill="none"/>
+                    </svg>
+                </span>
+            </h1>
+            
+            <p class="text-base md:text-lg text-dark-muted leading-relaxed font-normal">
+                در باربر هاب، ما فقط مو نمی‌زنیم؛ ما استایل شما را می‌سازیم. با تیمی از حرفه‌ای‌ترین آرایشگران و استفاده از جدیدترین تکنیک‌های روز دنیا، تجربه‌ای متفاوت از اصلاح و آرایش مو را برای شما رقم می‌زنیم. از اصلاح کلاسیک تا مدل‌های مدرن، همه چیز اینجاست تا بهترین نسخه از خودتان را ببینید.
+            </p>
+            
+            <div class="pt-2 flex items-center gap-4">
+                <a href="#booking" class="inline-flex items-center justify-center bg-sage-500 hover:bg-sage-600 text-cream-50 font-bold py-3.5 px-9 rounded-full text-base transition-all duration-300 shadow-lg shadow-sage-500/25 hover:shadow-xl hover:-translate-y-1">
+                    🗓️ رزرو نوبت آنلاین
+                </a>
+            </div>
+        </div>
+
+        <div class="order-1 md:order-2 flex justify-center">
+            <div class="relative w-full max-w-md">
+                <div class="absolute -inset-3 bg-sage-200/80 rounded-3xl rotate-3 blur-xs"></div>
+                <img 
+                    src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80" 
+                    alt="آرایشگاه باربر هاب" 
+                    class="relative rounded-2xl shadow-2xl w-full object-cover h-[400px] md:h-[480px] border border-cream-200"
+                >
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="min-h-[90vh] flex items-center justify-center bg-cream-100 px-6 py-16 md:py-24 border-y border-cream-200">
+    <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <div class="flex justify-center">
+            <div class="relative w-full max-w-md">
+                <div class="absolute -inset-3 bg-cream-300 rounded-3xl -rotate-3 blur-xs"></div>
+                <img 
+                    src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80" 
+                    alt="فضای داخلی آرایشگاه" 
+                    class="relative rounded-2xl shadow-2xl w-full object-cover h-[400px] md:h-[480px] border border-cream-200"
+                >
+            </div>
+        </div>
+
+        <div class="text-right space-y-6">
+            <div class="inline-flex items-center gap-2 bg-cream-200 text-sage-800 px-4 py-2 rounded-full text-xs md:text-sm font-bold shadow-xs">
+                <span>🏠</span>
+                <span> فضایی دنج، آرام و صمیمی</span>
+            </div>
+            
+            <h2 class="text-3xl md:text-4xl font-black text-sage-900 leading-tight">
+                درباره <span class="text-sage-500">آرایشگاه ما</span>
+            </h2>
+            
+            <p class="text-base md:text-lg text-dark-muted leading-relaxed">
+                باربر هاب از سال ۱۳۹۰ فعالیت خود را آغاز کرده و همواره در تلاش بوده تا با به‌روزترین تجهیزات و متدهای روز، بهترین خدمات را به مشتریان عزیز ارائه دهد. فضای دنج و صمیمی آرایشگاه ما، همراه با موسیقی ملایم و پذیرایی، تجربه‌ای آرام‌بخش را برای شما به ارمغان می‌آورد.
+            </p>
+            
+            <p class="text-base md:text-lg text-dark-muted leading-relaxed">
+                ما به بهداشت و کیفیت اهمیت ویژه‌ای می‌دهیم. تمامی ابزارها پس از هر بار استفاده استریل شده و از مواد مصرفی با برندهای معتبر جهانی استفاده می‌کنیم. هدف ما جلب رضایت کامل شما و ایجاد ظاهری شیک و مدرن است.
+            </p>
+            
+            <div class="flex gap-3 flex-wrap pt-2">
+                <span class="bg-cream-50 text-sage-800 border border-cream-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold shadow-2xs">✨ تجهیزات مدرن</span>
+                <span class="bg-cream-50 text-sage-800 border border-cream-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold shadow-2xs">🧼 بهداشت استریل</span>
+                <span class="bg-cream-50 text-sage-800 border border-cream-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold shadow-2xs">☕ پذیرایی اختصاصی</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="min-h-[90vh] flex items-center justify-center bg-cream-50 px-6 py-16 md:py-24">
+    <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <div class="text-right space-y-6">
+            <div class="inline-flex items-center gap-2 bg-sage-50 text-sage-800 px-4 py-2 rounded-full text-xs md:text-sm font-bold border border-sage-200 shadow-xs">
+                <span>👨‍🎨</span>
+                <span>آرایشگر ارشد و بنیان‌گذار</span>
+            </div>
+            
+            <h2 class="text-3xl md:text-4xl font-black text-sage-900 leading-tight">
+                آشنایی با <span class="text-sage-500">آرایشگر ما</span>
+            </h2>
+            
+            <p class="text-base md:text-lg text-dark-muted leading-relaxed">
+                علی رضایی، بنیان‌گذار و آرایشگر ارشد باربر هاب، با بیش از ۱۵ سال سابقه درخشان در زمینه اصلاح و آرایش مو، توانسته است سبک منحصربه‌فردی را خلق کند که ترکیبی از هنر کلاسیک و مدرنیته است. او دوره‌های تخصصی خود را در لندن و استانبول گذرانده و به عنوان یکی از برترین آرایشگران شهر شناخته می‌شود.
+            </p>
+            
+            <p class="text-base md:text-lg text-dark-muted leading-relaxed">
+                علی معتقد است هر چهره داستان خودش را دارد و وظیفه یک آرایشگر حرفه‌ای، کشف و برجسته‌سازی زیبایی طبیعی هر فرد است. او با دقت به جزئیات و صبر و حوصله‌ای که در کار دارد، همیشه مشتریانش را با لبخند رضایت بدرقه می‌کند. اگر به دنبال استایلی هستید که کاملاً منحصر به فرد باشد، علی مرد مناسب این کار است.
+            </p>
+            
+            <div class="pt-2 flex flex-wrap gap-4">
+                <a href="#" class="inline-flex items-center justify-center border-2 border-sage-500 text-sage-700 hover:bg-sage-500 hover:text-cream-50 font-bold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-xs hover:shadow-md">
+                    🖼️ مشاهده نمونه کارها
+                </a>
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <div class="relative w-full max-w-md">
+                <div class="absolute -inset-3 bg-sage-200/80 rounded-3xl rotate-2 blur-xs"></div>
+                <img 
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80" 
+                    alt="آرایشگر حرفه‌ای" 
+                    class="relative rounded-2xl shadow-2xl w-full object-cover h-[400px] md:h-[480px] border border-cream-200"
+                >
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

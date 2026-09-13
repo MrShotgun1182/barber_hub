@@ -1,39 +1,165 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}صفحه اصلی | Barber Hub{% endblock %}
+{% block title %}Legend | سالن تخصصی و مدرن آقایان لجند{% endblock %}
 
 {% block content %}
-<section class="min-h-[80vh] flex items-center justify-center px-6 py-12">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
-        
-        <!-- بخش متنی و دکمه دریافت نوبت -->
-        <div class="flex flex-col items-start gap-6 text-right">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-                تجربه‌ای سریع و آنلاین برای <span class="text-sage-600">رزرو نوبت پیرایش</span>
-            </h1>
-            <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
-                با باربر هاب، بدون معطلی نوبت خود را آنلاین تنظیم کرده و بهترین خدمات پیرایش را دریافت کنید.
-            </p>
-            <div class="pt-2">
-                <a href="{% url 'booking:otp_page' %}" class="inline-flex items-center justify-center px-8 py-4 bg-sage-600 hover:bg-sage-700 text-white font-semibold text-lg rounded-2xl shadow-md transition-all">
-                    دریافت نوبت
-                </a>
-            </div>
-        </div>
+<div class="min-h-screen bg-cream-50 text-dark-main font-sans">
 
-        <!-- جایگاه قرارگیری تصویر SVG -->
-        <div class="w-full flex justify-center items-center">
-            <div class="w-full max-w-lg aspect-square bg-cream-100 rounded-3xl border-2 border-dashed border-sage-200 flex items-center justify-center p-8">
-                <!-- SVG پیش‌فرض -->
-                <svg class="w-full h-full text-sage-500 opacity-80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 40 L140 160 M140 40 L60 160" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
-                    <circle cx="50" cy="35" r="18" stroke="currentColor" stroke-width="10"/>
-                    <circle cx="150" cy="35" r="18" stroke="currentColor" stroke-width="10"/>
-                </svg>
-            </div>
+<section class="py-12 lg:py-20 bg-cream-100 border-b border-cream-200">
+  <div class="container mx-auto px-4 md:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
+      
+      <div class="space-y-6 text-right">
+        
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-dark-main leading-tight sm:leading-snug">
+          به <span class="text-sage-600">Legend</span> خوش آمدید؛<br>
+          جایی که استایل شما حرف اول را می‌زند
+        </h1>
+        
+        <p class="text-base sm:text-lg text-dark-muted leading-relaxed">
+          فرقی نمی‌کند دنبال یک فِید تمیز، اصلاح ریش کلاسیک یا یک تغییر استایل کلی باشی؛ در لجند بهترین آرایشگران منتظر شما هستند تا تجربه آنلاین رزرو نوبت بدون معطلی را رقم بزنند.
+        </p>
+        
+        <div class="pt-2 flex flex-wrap gap-4 items-center">
+          <a href="#" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-sage-500 hover:bg-sage-600 text-white font-bold rounded-2xl shadow-lg shadow-sage-500/20 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0">
+            <span>💈</span>
+            <span>رزرو آنلاین نوبت</span>
+          </a>
         </div>
+      </div>
+
+      <div class="grid grid-cols-2 grid-rows-2 gap-3 sm:gap-4">
+        <div class="overflow-hidden rounded-2xl shadow-md border border-cream-200 aspect-square group">
+          <img src="{% static 'images/behrad/behrad2.jpg' %}" alt="فضای داخلی آرایشگاه" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="overflow-hidden rounded-2xl shadow-md border border-cream-200 aspect-square group">
+          <img src="https://placehold.co/200x200/efe6d5/293b30?text=Haircut+Style" alt="اصلاح مو مردانه" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="overflow-hidden rounded-2xl shadow-md border border-cream-200 aspect-square group">
+          <img src="https://placehold.co/200x200/efe6d5/293b30?text=Barber+Tools" alt="ابزار آرایشگری" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="overflow-hidden rounded-2xl shadow-md border border-cream-200 aspect-square group">
+          <img src="{% static 'images/behrad/behrad3.jpg' %}" alt="استایل و پیرایش ریش" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+      </div>
 
     </div>
+  </div>
 </section>
+
+<section class="py-12 lg:py-16 bg-cream-50 border-b border-cream-200">
+  <div class="container mx-auto px-4 md:px-8">
+    
+    <div class="grid grid-cols-10 gap-3 sm:gap-6 items-stretch">
+      
+      <div class="col-span-3 overflow-hidden rounded-3xl border border-cream-200 shadow-lg group aspect-[9/16] w-full">
+        <img src="https://placehold.co/450x800/efe6d5/293b30?text=Right+Photo+(30%25)" alt="تصویر آرایشگاه سمت راست" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+      </div>
+
+      <div class="col-span-4 bg-cream-100 border border-cream-300 rounded-3xl p-5 sm:p-8 shadow-md flex flex-col justify-between text-center space-y-4 h-full">
+        <div class="space-y-3">
+          <h3 class="text-lg sm:text-2xl font-extrabold text-dark-main leading-snug">
+            مجموعه تخصصی <br>
+            <span class="text-sage-600">Legend</span>
+          </h3>
+        </div>
+
+        <p class="text-xs sm:text-sm text-dark-muted leading-relaxed my-auto">
+          تجربه‌ای متفاوت از پیرایش آقایان در فضایی مدرن و آرامش‌بخش. خدمات آنلاین تخصصی با برنامه‌ریزی دقیق و بدون اتلاف وقت.
+        </p>
+
+        <div class="pt-2">
+          <a href="#" class="inline-flex items-center justify-center gap-2 w-full py-3 bg-sage-500 hover:bg-sage-600 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all duration-300">
+            مشاهده بیشتر
+          </a>
+        </div>
+      </div>
+
+      <div class="col-span-3 overflow-hidden rounded-3xl border border-cream-200 shadow-lg group aspect-[9/16] w-full">
+        <img src="https://placehold.co/450x800/efe6d5/293b30?text=Left+Photo+(30%25)" alt="تصویر آرایشگاه سمت چپ" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="py-16 lg:py-24 bg-cream-100 border-b border-cream-200">
+  <div class="container mx-auto px-4 md:px-8">
+    
+    <div class="text-center max-w-xl mx-auto mb-12 space-y-3">
+
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-dark-main">
+        هنر و کیفیت در <span class="text-sage-600">Legend</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <div class="lg:col-span-5 bg-cream-100 border border-cream-300 rounded-3xl p-6 sm:p-8 shadow-lg space-y-6 text-right order-2 lg:order-1">
+        
+        <div class="space-y-3">
+          <span class="text-xs font-bold text-sage-600 tracking-wider uppercase">آرایشگر اصلی مجموعه لجند</span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-dark-main">
+           بهراد ....
+          </h3>
+        </div>
+
+        <p class="text-xs sm:text-sm text-dark-muted leading-relaxed">
+          با بیش از ۸ سال سابقه تخصصی در ارائه جدیدترین فِیدها، اصلاح‌های کلاسیک و گریم. هدف ما ایجاد یک تجربه VIP و اختصاصی برای هر مشتری است.
+        </p>
+
+        <div class="space-y-2 pt-1">
+          <span class="text-xs font-bold text-dark-main block">مهارت‌های برجسته:</span>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-xl bg-sage-50 text-sage-800 text-xs font-medium border border-sage-200">
+              فید اختصاصی & هیرکات
+            </span>
+            <span class="px-3 py-1 rounded-xl bg-sage-50 text-sage-800 text-xs font-medium border border-sage-200">
+              استایل و طراحی ریش
+            </span>
+            <span class="px-3 py-1 rounded-xl bg-sage-50 text-sage-800 text-xs font-medium border border-sage-200">
+              پاکسازی حرفه‌ای پوست
+            </span>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-cream-300 flex flex-col sm:flex-row gap-3">
+          <a href="#" class="inline-flex items-center justify-center gap-2 flex-1 py-3.5 bg-sage-500 hover:bg-sage-600 text-white text-xs sm:text-sm font-bold rounded-2xl shadow-md shadow-sage-500/20 transition-all duration-300 hover:-translate-y-0.5">
+            <span>📷</span>
+            <span>مشاهده گالری نمونه‌کارها</span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="lg:col-span-7 grid grid-cols-12 gap-4 h-full order-1 lg:order-2">
+        
+        <div class="col-span-7 relative rounded-3xl overflow-hidden border border-cream-300 shadow-xl group aspect-[3/4]">
+          <img src="{% static 'images/behrad/behrad1.jpg' %}" alt="استاد آرایشگر" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cream-50/90 text-sage-800 border border-cream-200 backdrop-blur-md shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>آماده پذیرش</span>
+          </span>
+        </div>
+
+        <div class="col-span-5 flex flex-col gap-4">
+          <div class="relative rounded-2xl overflow-hidden border border-cream-300 shadow-md group aspect-square">
+            <img src="https://placehold.co/300x300/efe6d5/293b30?text=Work+1" alt="نمونه کار ۱" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+          </div>
+          <div class="relative rounded-2xl overflow-hidden border border-cream-300 shadow-md group aspect-square">
+            <img src="https://placehold.co/300x300/efe6d5/293b30?text=Work+2" alt="نمونه کار ۲" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+</div>
 {% endblock %}

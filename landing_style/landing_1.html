@@ -1,0 +1,102 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Barber Hub | سالن تخصصی و مدرن آقایان{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-cream-50 text-dark-main font-sans">
+
+    <section class="container mx-auto px-6 py-16 md:py-24">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+            
+            <div class="w-full md:w-1/2 space-y-6 text-center md:text-right">
+                <span class="inline-block bg-sage-100 text-sage-800 text-sm font-semibold px-4 py-1.5 rounded-full border border-sage-200">
+                    🌿 تجربه یک استایل متفاوت و ماندگار
+                </span>
+                
+                <h1 class="text-4xl md:text-6xl font-black text-sage-900 leading-tight">
+                    به <span class="text-sage-500">Barber Hub</span> خوش آمدید
+                </h1>
+                
+                <p class="text-dark-muted text-lg leading-relaxed">
+                    در باربر هاب، ما زیبایی و پرستیژ شما را به اولویت اول تبدیل کرده‌ایم. با بهره‌گیری از متدهای روز اصلاح، استایلینگ مو و ریش، و محیطی آرام که برای استراحت شما طراحی شده، تجربه‌ای فراتر از یک آرایشگاه معمولی را برایتان رقم می‌زنیم.
+                </p>
+                
+                <div class="pt-4 flex flex-wrap justify-center md:justify-start gap-4">
+                    <a href="#booking" 
+                       class="px-8 py-4 bg-sage-500 hover:bg-sage-600 text-white font-bold rounded-xl shadow-lg shadow-sage-500/20 transition-all duration-300 transform hover:-translate-y-1">
+                        🗓️ رزرو آنلاین نوبت
+                    </a>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <div class="absolute -inset-1 bg-sage-200/60 rounded-3xl blur-sm"></div>
+                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=800" 
+                         alt="Barber Hub Hero" 
+                         class="relative rounded-3xl object-cover w-full h-[400px] shadow-md border border-cream-200">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="bg-cream-100 py-16 md:py-24 border-y border-cream-200">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                
+                <div class="w-full md:w-1/2 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute -inset-1 bg-sage-200/50 rounded-3xl blur-sm"></div>
+                        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800" 
+                             alt="Barber Shop Interior" 
+                             class="relative rounded-3xl object-cover w-full h-[380px] shadow-md border border-cream-200">
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 space-y-6 text-center md:text-right">
+                    <h2 class="text-3xl md:text-4xl font-bold text-sage-900">
+                        درباره مجموعه <span class="text-sage-500">باربر هاب</span>
+                    </h2>
+                    
+                    <p class="text-dark-muted text-lg leading-relaxed">
+                        سالن ما با به‌کارگیری برترین ابزارهای استاندارد جهانی، رعایت دقیق بهداشت و ایجاد فضایی کاملاً مدرن و صمیمی، بستری را فراهم کرده تا هر مراجعه‌کننده با احساس رضایت کامل و ظاهری آراسته سالن را ترک کند. ما تجهیزات بروز و مواد مراقبت از پوست و موی درجه یک را با مهارت ترکیب کرده‌ایم.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-6 py-16 md:py-24">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+            
+            <div class="w-full md:w-1/2 space-y-6 text-center md:text-right">
+                <span class="text-sage-600 font-semibold tracking-wider text-sm uppercase">استاد کار و آرایشگر ارشد</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-sage-900">
+                    استایل خود را به دست حرفه‌ای‌ها بپارید
+                </h2>
+                
+                <p class="text-dark-muted text-base leading-relaxed">
+                    با بیش از ۱۰ سال تجربه تخصصی در زمینه کوتاهی کلاسیک و مدرن، فرم‌دهی ریش و پاکسازی تخصصی صورت، هدف ما خلق قالبی است که با فرم چهره و شخصیت فردی شما بیشترین هماهنگی را داشته باشد.
+                </p>
+                
+                <p class="text-dark-muted text-base leading-relaxed">
+                    هر مشتری برای ما یک پروژه اختصاصی است؛ قبل از هر اصلاح، مشاوره کوتاهی درباره نوع مو، جهت رشد و استایل مورد نظر شما انجام می‌شود تا دقیقاً همان کیفیتی را تحویل بگیرید که انتظارش را دارید.
+                </p>
+            </div>
+
+            <div class="w-full md:w-1/2 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <div class="absolute -inset-1 bg-sage-200/60 rounded-3xl blur-sm"></div>
+                    <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=800" 
+                         alt="Master Barber" 
+                         class="relative rounded-3xl object-cover w-full h-[420px] shadow-md border border-cream-200">
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+{% endblock %}
