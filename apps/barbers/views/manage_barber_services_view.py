@@ -9,7 +9,7 @@ def ManageBarberServicesView(request):
     """
     barber = getattr(request.user, 'barber_profile', None)
     if not barber:
-        return redirect('barbers:login')
+        return redirect('barbers:barbers_login')
 
     success_message = None
 
