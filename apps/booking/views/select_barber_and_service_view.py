@@ -4,9 +4,9 @@ from django.shortcuts import render
 from barbers import actions
 
 
-def SelectBarberServiceView(request):
+def SelectBarberAndServiceView(request):
     """
-    ویوی انتخاب آرایشگر و خدمت (گام دوم رزرو)
+    ویوی انتخاب آرایشگر و خدمت
     """
     options_data = actions.GetBookingOptionsAction()
 
@@ -18,4 +18,4 @@ def SelectBarberServiceView(request):
     context = {
         'barbers_json': json.dumps(options_data['barbers'], ensure_ascii=False)
     }
-    return render(request, 'barbers/select_service.html', context)
+    return render(request, 'booking/select_barber_and_service.html', context)

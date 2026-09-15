@@ -9,7 +9,8 @@ def GetTodayAppointmentsService() -> dict:
     today = date.today()
     today_appointments = (
         booking_models.AppointmentModel.objects.filter(date=today)
-        .select_related('customer__user', 'barber__user', 'service')
+        .select_related('customer__user', 'barber__user')
+        .prefetch_related('services__service')
         .order_by('start_time')
     )
 
