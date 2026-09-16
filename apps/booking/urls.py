@@ -9,5 +9,5 @@ urlpatterns = [
     path('api/verify/', views.VerifyOTPView, name='verify_otp'),
     path('select-barber/', views.SelectBarberAndServiceView, name='select-barber'),
     path('select-datetime/', views.SelectDatetimeView, name='select-datetime'),
-    path('review/', views.ReviewBookingView, name='review'),
+    path('review/', views.ReviewBookingView, name='review_booking'),
 ]

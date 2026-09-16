@@ -1,112 +1,78 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'core/base.html' %}
 
-{% block title %}پیش‌نمایش فاکتور و ثبت نهایی | Barber Hub{% endblock %}
+{% block title %}رزرو نوبت | بررسی نهایی و ثبت{% endblock %}
 
 {% block content %}
-<div class="min-h-[85vh] flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-2xl space-y-6">
+<div class="max-w-2xl mx-auto px-4 py-8" x-data="reviewWizard()">
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-extrabold text-gray-800">بررسی نهایی فاکتور 🧾</h1>
+        <p class="text-gray-500 mt-2">مرحله سوم: اطلاعات نوبت رو چک کن و تایید نهایی رو بزن</p>
+    </div>
 
-        <!-- Wizard Steps Bar -->
-        <div class="bg-cream-100 border border-cream-200 rounded-2xl p-4 shadow-sm flex items-center justify-between text-xs sm:text-sm font-medium text-dark-muted">
-            <div class="flex items-center gap-2 text-sage-600">
-                <span class="w-6 h-6 rounded-full bg-sage-200 text-sage-800 flex items-center justify-center font-bold text-xs">✓</span>
-                <span>۱. انتخاب آرایشگر</span>
-            </div>
-            <div class="w-8 h-[2px] bg-sage-200"></div>
-            <div class="flex items-center gap-2 text-sage-600">
-                <span class="w-6 h-6 rounded-full bg-sage-200 text-sage-800 flex items-center justify-center font-bold text-xs">✓</span>
-                <span>۲. خدمات</span>
-            </div>
-            <div class="w-8 h-[2px] bg-sage-200"></div>
-            <div class="flex items-center gap-2 text-sage-600">
-                <span class="w-6 h-6 rounded-full bg-sage-200 text-sage-800 flex items-center justify-center font-bold text-xs">✓</span>
-                <span>۳. زمان نوبت</span>
-            </div>
-            <div class="w-8 h-[2px] bg-sage-200"></div>
-            <div class="flex items-center gap-2 text-sage-800 font-bold">
-                <span class="w-6 h-6 rounded-full bg-sage-500 text-white flex items-center justify-center text-xs">۴</span>
-                <span>۴. فاکتور نهایی</span>
-            </div>
+    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-gray-100">
+        
+        <div x-show="loading" class="py-16 text-center text-gray-400 font-medium">
+            <svg class="animate-spin h-8 w-8 text-indigo-600 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            در حال بارگذاری اطلاعات فاکتور...
         </div>
 
-        <!-- Main Card -->
-        <div class="bg-cream-100 border border-cream-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-sage-900/5 transition-all">
+        <div x-show="!loading">
             
-            <div class="text-center mb-8">
-                <h1 class="text-2xl font-bold text-sage-800 tracking-tight mb-2">پیش‌نمایش فاکتور و ثبت نهایی</h1>
-                <p class="text-sm text-dark-muted">لطفاً جزئیات نوبت رزرو خود را بررسی و در صورت تأیید، روی ثبت نهایی کلیک کنید.</p>
-            </div>
-
-            <!-- Error/Warning Alert Box -->
-            <div id="alertBox" class="hidden mb-6 p-4 rounded-2xl text-sm font-medium bg-red-50 text-red-700 border border-red-200 flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span id="alertMessage">خطایی رخ داده است.</span>
-            </div>
-
-            <!-- Success Card -->
-            <div id="successCard" class="hidden p-8 rounded-3xl bg-sage-50 border border-sage-200 text-center space-y-5 animate-fade-in">
-                <div class="w-20 h-20 bg-sage-500 text-white rounded-full flex items-center justify-center mx-auto text-3xl font-bold shadow-lg shadow-sage-500/30">
-                    ✓
+            <div class="bg-gray-50 rounded-xl p-5 mb-6 border border-gray-200 space-y-3">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">آرایشگر انتخاب‌شده:</span>
+                    <span class="font-bold text-gray-800" x-text="summary.barber_name"></span>
                 </div>
-                <h2 class="text-2xl font-bold text-sage-800">نوبت شما با موفقیت ثبت شد!</h2>
-                <p class="text-sm text-dark-muted">شماره پیگیری اختصاصی نوبت شما: <span id="appointmentCode" class="font-extrabold text-sage-800 dir-ltr inline-block"></span></p>
-                <div class="pt-4 flex flex-col sm:flex-row justify-center gap-3">
-                    <a href="{% url 'customers:dashboard' %}" class="py-3 px-6 bg-sage-500 hover:bg-sage-600 text-white font-semibold rounded-2xl shadow-md shadow-sage-500/20 transition-all text-sm">
-                        مشاهده نوبت‌های من
-                    </a>
+                <hr class="border-gray-200">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">تاریخ نوبت:</span>
+                    <span class="font-bold text-gray-800" x-text="bookingDate"></span>
+                </div>
+                <hr class="border-gray-200">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">ساعت حضور:</span>
+                    <span class="font-bold text-indigo-600" x-text="startTime + ' الی ' + endTime"></span>
                 </div>
             </div>
 
-            <!-- Invoice Content Wrapper -->
-            <div id="invoiceContent" class="space-y-6">
+            <div class="mb-6">
+                <h3 class="font-bold text-gray-700 mb-3">خدمات انتخابی:</h3>
+                <div class="space-y-2">
+                    <template x-for="service in summary.services || []" :key="service.service_id">
+                        <div class="flex justify-between items-center p-3 bg-white border border-gray-200 rounded-xl">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm" x-text="service.name"></h4>
+                                <span class="text-xs text-gray-400" x-text="service.duration_minutes + ' دقیقه'"></span>
+                            </div>
+                            <span class="font-bold text-emerald-600 text-sm" x-text="numberWithCommas(service.price) + ' تومان'"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="border-t pt-4 mb-8 flex justify-between items-center">
+                <span class="text-gray-600 font-medium">مجموع قابل پرداخت:</span>
+                <span class="font-extrabold text-gray-900 text-xl" x-text="numberWithCommas(summary.total_price || 0) + ' تومان'"></span>
+            </div>
+
+            <div class="flex items-center justify-between gap-4">
+                <a :href="'{% url 'booking:select-datetime' %}?barber=' + barberId + '&services=' + serviceIds.join(',')" 
+                   class="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-xl transition-all duration-200">
+                    ← مرحله قبل
+                </a>
                 
-                <!-- Invoice Details Box -->
-                <div class="bg-cream-50 border border-cream-300 rounded-2xl p-5 space-y-4">
-                    <div class="flex justify-between items-center pb-3 border-b border-cream-200">
-                        <span class="text-xs text-dark-muted">آرایشگر انتخاب‌شده:</span>
-                        <span id="barberName" class="font-bold text-sage-800 text-sm">در حال دریافت...</span>
-                    </div>
-
-                    <div class="flex justify-between items-center pb-3 border-b border-cream-200">
-                        <span class="text-xs text-dark-muted">تاریخ و زمان نوبت:</span>
-                        <span id="dateTimeText" class="font-bold text-sage-800 text-sm dir-ltr">در حال دریافت...</span>
-                    </div>
-
-                    <div>
-                        <span class="text-xs text-dark-muted block mb-2">لیست خدمات درخواست‌شده:</span>
-                        <ul id="servicesList" class="space-y-2">
-                            <!-- Dynamically filled by JS -->
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Total Bill Box -->
-                <div class="p-4 rounded-2xl bg-sage-50 border border-sage-200 flex items-center justify-between">
-                    <div>
-                        <span class="text-xs text-dark-muted block">مجموع زمان ارائه خدمت: <strong id="totalDuration" class="text-sage-800 font-bold">0 دقیقه</strong></span>
-                        <span class="text-xs text-dark-muted block mt-0.5">پرداخت حضوری در محل سالن</span>
-                    </div>
-                    <div class="text-left">
-                        <span class="text-xs text-dark-muted block">مبلغ قابل پرداخت:</span>
-                        <span id="totalPrice" class="text-xl font-extrabold text-sage-800">0 تومان</span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="pt-4 border-t border-cream-200 flex items-center justify-between gap-4">
-                    <button type="button" id="backBtn" class="px-5 py-3.5 rounded-2xl bg-cream-200 text-dark-muted hover:text-sage-800 text-sm font-semibold transition-all cursor-pointer">
-                        تغییر زمان
-                    </button>
-                    
-                    <button type="button" id="submitBookingBtn"
-                            class="flex-1 py-3.5 px-4 bg-sage-500 hover:bg-sage-600 text-white font-semibold rounded-2xl shadow-md shadow-sage-500/20 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2">
-                        <span>تأیید و ثبت نهایی نوبت</span>
-                    </button>
-                </div>
-
+                <button @click="submitBooking"
+                        :disabled="submitting"
+                        class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-200 transition-all duration-200 flex items-center gap-2">
+                    <svg x-show="submitting" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span x-text="submitting ? 'در حال ثبت...' : 'تایید و ثبت نهایی نوبت ✓'"></span>
+                </button>
             </div>
 
         </div>
@@ -114,131 +80,113 @@
     </div>
 </div>
 
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // خوانش اطلاعات ذخیره شده در sessionStorage
-    const barberId = sessionStorage.getItem('barber_id');
-    const serviceIds = sessionStorage.getItem('barber_service_ids');
-    const bookingDate = sessionStorage.getItem('booking_date');
-    const startTime = sessionStorage.getItem('start_time');
-    const endTime = sessionStorage.getItem('end_time');
-
-    // هدایت کاربر به گام‌های قبلی در صورت ناقص بودن داده‌ها
-    if (!barberId || !serviceIds || !bookingDate || !startTime) {
-        window.location.href = "{% url 'booking:select_service' %}";
-        return;
-    }
-
-    const barberNameEl = document.getElementById('barberName');
-    const dateTimeTextEl = document.getElementById('dateTimeText');
-    const servicesListEl = document.getElementById('servicesList');
-    const totalDurationEl = document.getElementById('totalDuration');
-    const totalPriceEl = document.getElementById('totalPrice');
-    const submitBtn = document.getElementById('submitBookingBtn');
-    const backBtn = document.getElementById('backBtn');
-    const invoiceContent = document.getElementById('invoiceContent');
-    const successCard = document.getElementById('successCard');
-    const appointmentCode = document.getElementById('appointmentCode');
-    const alertBox = document.getElementById('alertBox');
-    const alertMessage = document.getElementById('alertMessage');
-
-    dateTimeTextEl.textContent = `${bookingDate} | ${startTime} - ${endTime}`;
-
-    backBtn.addEventListener('click', () => {
-        window.history.back();
-    });
-
-    function formatPrice(price) {
-        return new Intl.NumberFormat('fa-IR').format(price);
-    }
-
-    function showAlert(msg) {
-        alertMessage.textContent = msg;
-        alertBox.classList.remove('hidden');
-    }
-
-    function hideAlert() {
-        alertBox.classList.add('hidden');
-    }
-
-    // ۱. فراخوانی اکشن استعلام خلاصه‌ی فاکتور از سرور
-    fetch(`?action=get_summary&barber_id=${barberId}&service_ids=${encodeURIComponent(serviceIds)}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'error') {
-                showAlert(data.message);
-                return;
-            }
-
-            barberNameEl.textContent = data.barber_name;
-            totalDurationEl.textContent = `${data.total_duration} دقیقه`;
-            totalPriceEl.textContent = `${formatPrice(data.total_price)} تومان`;
-
-            servicesListEl.innerHTML = '';
-            data.services.forEach(s => {
-                const li = document.createElement('li');
-                li.className = 'flex justify-between items-center text-xs bg-cream-100 p-3 rounded-xl border border-cream-200';
-                li.innerHTML = `
-                    <span class="font-medium text-dark-main">${s.name} <span class="text-dark-muted">(${s.duration} دقیقه)</span></span>
-                    <span class="font-bold text-sage-800">${formatPrice(s.price)} تومان</span>
-                `;
-                servicesListEl.appendChild(li);
-            });
-        })
-        .catch(() => {
-            showAlert('خطا در دریافت اطلاعات فاکتور. لطفاً صفحه را مجدداً بارگذاری کنید.');
-        });
-
-    // ۲. ارسال درخواست ثبت نهایی نوبت (POST)
-    submitBtn.addEventListener('click', () => {
-        hideAlert();
-        submitBtn.disabled = true;
-        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
-        submitBtn.innerHTML = `<span>در حال ثبت نوبت...</span>`;
-
-        const payload = {
-            barber_id: barberId,
-            barber_service_ids: JSON.parse(serviceIds),
-            booking_date: bookingDate,
-            start_time: startTime,
-            end_time: endTime
-        };
-
-        fetch("", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
+    function reviewWizard() {
+        return {
+            barberId: null,
+            serviceIds: [],
+            bookingDate: '',
+            startTime: '',
+            endTime: '',
+            summary: {},
+            loading: true,
+            submitting: false,
+            
+            init() {
+                const urlParams = new URLSearchParams(window.location.search);
+                this.barberId = urlParams.get('barber');
+                const servicesParam = urlParams.get('services');
+                this.bookingDate = urlParams.get('date');
+                this.startTime = urlParams.get('start_time');
+                this.endTime = urlParams.get('end_time');
+                
+                if (servicesParam) {
+                    this.serviceIds = servicesParam.split(',').map(Number);
+                }
+                
+                if (!this.barberId || this.serviceIds.length === 0 || !this.bookingDate || !this.startTime) {
+                    alert('اطلاعات رزرو ناقص است. لطفاً از ابتدا اقدام کنید.');
+                    window.location.href = "{% url 'booking:select-barber' %}";
+                    return;
+                }
+                
+                this.fetchSummary();
             },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // پاکسازی حافظه مرورگر پس از ثبت موفق
-                sessionStorage.removeItem('barber_id');
-                sessionStorage.removeItem('barber_service_ids');
-                sessionStorage.removeItem('booking_date');
-                sessionStorage.removeItem('start_time');
-                sessionStorage.removeItem('end_time');
-
-                invoiceContent.classList.add('hidden');
-                appointmentCode.textContent = `#BH-${data.appointment_id}`;
-                successCard.classList.remove('hidden');
-            } else {
-                showAlert(data.message);
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-                submitBtn.innerHTML = `<span>تأیید و ثبت نهایی نوبت</span>`;
+            
+            fetchSummary() {
+                const params = new URLSearchParams({
+                    action: 'get_summary',
+                    barber_id: this.barberId,
+                    service_ids: JSON.stringify(this.serviceIds)
+                });
+                
+                fetch(`{% url 'booking:review_booking' %}?${params.toString()}`, {
+                    headers: {
+                        'x-requested-with': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    this.loading = false;
+                    if (data.status === 'success') {
+                        this.summary = data;
+                    } else {
+                        alert(data.message || 'خطا در دریافت اطلاعات فاکتور');
+                    }
+                })
+                .catch(err => {
+                    this.loading = false;
+                    console.error('Error fetching summary:', err);
+                });
+            },
+            
+            submitBooking() {
+                this.submitting = true;
+                
+                // تهیه پکیج داده‌ها برای ارسال به متد POST ویو
+                const payload = {
+                    barber_id: this.barberId,
+                    barber_service_ids: this.serviceIds,
+                    booking_date: this.bookingDate,
+                    start_time: this.startTime,
+                    end_time: this.endTime
+                };
+                
+                // دریافت CSRF Token از کوکی‌های جنگو برای درخواست امن POST
+                const csrftoken = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+                
+                fetch(`{% url 'booking:review_booking' %}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                        'x-requested-with': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    this.submitting = false;
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        // هدایت به صفحه پروفایل یا داشبورد مشتری پس از موفقیت
+                        window.location.href = "/"; // یا مسیر صفحه موفقیت/داشبورد
+                    } else {
+                        alert(data.message || 'خطا در ثبت نوبت');
+                    }
+                })
+                .catch(err => {
+                    this.submitting = false;
+                    console.error('Error submitting booking:', err);
+                    alert('خطای ارتباط با سرور رخ داد.');
+                });
+            },
+            
+            numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
-        })
-        .catch(() => {
-            showAlert('خطا در برقراری ارتباط با سرور. مجدداً تلاش کنید.');
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-            submitBtn.innerHTML = `<span>تأیید و ثبت نهایی نوبت</span>`;
-        });
-    });
-});
+        }
+    }
 </script>
 {% endblock %}

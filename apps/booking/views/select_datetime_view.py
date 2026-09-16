@@ -37,4 +37,4 @@ def SelectDatetimeView(request):
         )
         return JsonResponse(result)
 
-    return render(request, 'appointments/select_datetime.html')
+    return render(request, 'booking/select_datetime.html')

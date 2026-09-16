@@ -3,82 +3,73 @@
 {% block title %}رزرو نوبت | انتخاب آرایشگر و خدمت{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto py-10 px-4" x-data="bookingWizard()">
-    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
+<div class="max-w-4xl mx-auto px-4 py-8" x-data="bookingWizard()">
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-extrabold text-gray-800">رزرو آنلاین نوبت 💈</h1>
+        <p class="text-gray-500 mt-2">مرحله اول: آرایشگر و خدمت مورد نظرت رو انتخاب کن</p>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-gray-100">
         
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">انتخاب آرایشگر و خدمت مورد نظر</h1>
-            <p class="text-sm text-gray-500">لطفاً ابتدا هنرمند مورد نظرت و بعد خدماتش رو انتخاب کن تا بریم مرحله بعد!</p>
+        <div class="mb-8">
+            <label class="block text-lg font-bold text-gray-700 mb-4">۱. انتخاب آرایشگر حرفه‌ای</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <template x-for="barber in barbers" :key="barber.barber_id">
+                    <div @click="selectBarber(barber)"
+                         :class="selectedBarber && selectedBarber.barber_id === barber.barber_id ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
+                         class="cursor-pointer border rounded-xl p-5 transition-all duration-200 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-bold text-gray-800 text-lg" x-text="barber.name"></h3>
+                                <span class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-medium" x-text="barber.username"></span>
+                            </div>
+                            <p class="text-gray-500 text-sm line-clamp-2 mb-4" x-text="barber.bio || 'بدون توضیحات'"></p>
+                        </div>
+                        <div class="text-xs text-indigo-600 font-semibold flex items-center gap-1">
+                            <span x-text="barber.services.length + ' خدمت فعال'"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
         </div>
 
-        <form method="POST" @submit.prevent="submitForm" class="space-y-8">
-            {% csrf_token %}
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">۱. انتخاب آرایشگر</label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <template x-for="barber in barbersData" :key="barber.id">
-                        <div @click="selectBarber(barber)"
-                             :class="selectedBarber && selectedBarber.id === barber.id ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-600/20' : 'border-gray-200 hover:border-gray-300 bg-white'"
-                             class="cursor-pointer border rounded-xl p-4 transition-all duration-200 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-gray-800 text-base" x-text="barber.user__username"></h3>
-                                <p class="text-xs text-gray-500 mt-1 line-clamp-2" x-text="barber.bio || 'توضیحاتی ثبت نشده است.'"></p>
-                            </div>
-                            <div class="mt-4 flex items-center justify-between text-xs font-medium">
-                                <span class="text-indigo-600" x-text="barber.services.length + ' خدمت فعال'"></span>
-                                <span class="w-4 h-4 rounded-full border flex items-center justify-center"
-                                      :class="selectedBarber && selectedBarber.id === barber.id ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-gray-300'">
-                                    <svg x-show="selectedBarber && selectedBarber.id === barber.id" class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
-                                </span>
+        <div x-show="selectedBarber" x-transition class="mb-8 border-t pt-6">
+            <label class="block text-lg font-bold text-gray-700 mb-4">۲. انتخاب خدمت(ها)</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <template x-for="service in selectedBarber?.services || []" :key="service.barber_service_id">
+                    <div @click="toggleService(service)"
+                         :class="isServiceSelected(service) ? 'border-emerald-600 bg-emerald-50/55 ring-2 ring-emerald-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
+                         class="cursor-pointer border rounded-xl p-4 transition-all duration-200 flex justify-between items-center shadow-sm">
+                        <div>
+                            <h4 class="font-bold text-gray-800" x-text="service.name"></h4>
+                            <p class="text-xs text-gray-500 mt-1" x-text="service.description"></p>
+                            <div class="flex items-center gap-3 mt-3 text-xs text-gray-600 font-medium">
+                                <span class="bg-gray-100 px-2 py-1 rounded-md" x-text="service.duration_minutes + ' دقیقه'"></span>
+                                <span class="text-emerald-600 font-bold" x-text="numberWithCommas(service.price) + ' تومان'"></span>
                             </div>
                         </div>
-                    </template>
-                </div>
-            </div>
-
-            <div x-show="selectedBarber" x-transition.opacity class="pt-4 border-t border-gray-100">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">۲. انتخاب خدمات آرایشگر</label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <template x-for="bs in availableServices" :key="bs.id">
-                        <div @click="toggleService(bs)"
-                             :class="isServiceSelected(bs.id) ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-600/20' : 'border-gray-200 hover:border-gray-300 bg-white'"
-                             class="cursor-pointer border rounded-xl p-4 transition-all duration-200 flex items-center justify-between">
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-sm" x-text="bs.service__name"></h4>
-                                <div class="text-xs text-gray-500 mt-1 flex items-center gap-3">
-                                    <span x-text="formatPrice(bs.custom_price || bs.service__base_price) + ' تومان'"></span>
-                                    <span>•</span>
-                                    <span x-text="(bs.custom_duration_minutes || bs.service__default_duration_minutes) + ' دقیقه'"></span>
-                                </div>
-                            </div>
-                            <div class="w-5 h-5 rounded-md border flex items-center justify-center transition-colors"
-                                 :class="isServiceSelected(bs.id) ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-gray-300'">
-                                <svg x-show="isServiceSelected(bs.id)" class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
-                            </div>
+                        <div class="flex items-center justify-center w-6 h-6 rounded-full border"
+                             :class="isServiceSelected(service) ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-gray-300'">
+                            <svg x-show="isServiceSelected(service)" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
                         </div>
-                    </template>
-                </div>
+                    </div>
+                </template>
             </div>
+        </div>
 
-            <div class="pt-6 border-t border-gray-100 flex items-center justify-between">
-                <div class="text-sm text-gray-600" x-show="selectedServices.length > 0">
-                    مجموع: <span class="font-bold text-indigo-600" x-text="formatPrice(totalPrice) + ' تومان'"></span>
-                    (<span x-text="totalDuration"></span> دقیقه)
-                </div>
-                <div x-show="selectedServices.length === 0" class="text-sm text-gray-400">
-                    هنوز خدمتی انتخاب نشده است
-                </div>
-
-                <button type="button" 
-                        @click="nextStep"
-                        :disabled="!selectedBarber || selectedServices.length === 0"
-                        class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors shadow-lg shadow-indigo-600/20">
-                    مرحله بعد ➔
-                </button>
+        <div class="border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-gray-600">
+                <span>مجموع هزینه: </span>
+                <span class="font-bold text-gray-900 text-lg" x-text="numberWithCommas(totalPrice) + ' تومان'"></span>
             </div>
+            <button @click="nextStep"
+                    :disabled="!selectedBarber || selectedServices.length === 0"
+                    :class="(!selectedBarber || selectedServices.length === 0) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200 shadow-lg'"
+                    class="w-full sm:w-auto px-8 py-3 text-white font-bold rounded-xl transition-all duration-200">
+                مرحله بعد: انتخاب تاریخ و ساعت ➔
+            </button>
+        </div>
 
-        </form>
     </div>
 </div>
 
@@ -86,62 +77,53 @@
 <script>
     function bookingWizard() {
         return {
-            barbersData: JSON.parse('{{ barbers_json|safe }}'),
+            barbers: JSON.parse('{{ barbers_json|safe }}'),
             selectedBarber: null,
             selectedServices: [],
-
+            
             selectBarber(barber) {
-                // اگر آرایشگر عوض شد، لیست خدمات انتخابی ریست بشه تا تداخلی پیش نیاد
-                if (!this.selectedBarber || this.selectedBarber.id !== barber.id) {
+                if (this.selectedBarber?.barber_id !== barber.barber_id) {
                     this.selectedBarber = barber;
-                    this.selectedServices = [];
+                    this.selectedServices = []; // با تغییر آرایشگر، خدمات انتخابی ریست شود
                 }
             },
-
-            get availableServices() {
-                return this.selectedBarber ? this.selectedBarber.services : [];
-            },
-
+            
             toggleService(service) {
-                const index = this.selectedServices.findIndex(s => s.id === service.id);
+                const index = this.selectedServices.findIndex(s => s.barber_service_id === service.barber_service_id);
                 if (index > -1) {
                     this.selectedServices.splice(index, 1);
                 } else {
                     this.selectedServices.push(service);
                 }
             },
-
-            isServiceSelected(serviceId) {
-                return this.selectedServices.some(s => s.id === serviceId);
+            
+            isServiceSelected(service) {
+                return this.selectedServices.some(s => s.barber_service_id === service.barber_service_id);
             },
-
+            
             get totalPrice() {
-                return this.selectedServices.reduce((sum, s) => {
-                    return sum + (s.custom_price || s.service__base_price);
-                }, 0);
+                return this.selectedServices.reduce((sum, service) => sum + service.price, 0);
             },
-
-            get totalDuration() {
-                return this.selectedServices.reduce((sum, s) => {
-                    return sum + (s.custom_duration_minutes || s.service__default_duration_minutes);
-                }, 0);
+            
+            numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
-
-            formatPrice(value) {
-                return new Intl.NumberFormat('fa-IR').format(value);
-            },
-
+            
             nextStep() {
-                // اینجا می‌تونی دیتای انتخاب شده (شناسه آرایشگر و آرایه خدمات) رو بفرستی مرحله بعد یا سابمیت کنی
-                console.log({
-                    barber_id: this.selectedBarber.id,
-                    services: this.selectedServices.map(s => s.id),
-                    total_price: this.totalPrice,
-                    total_duration: this.totalDuration
-                });
-                alert('اطلاعات با موفقیت ثبت شد! برویم سراغ گام بعدی رزرو 🚀');
+                if (!this.selectedBarber || this.selectedServices.length === 0) return;
+                
+                // جمع‌آوری شناسه‌ها برای ارسال به مرحله بعد
+                const barberId = this.selectedBarber.barber_id;
+                const serviceIds = this.selectedServices.map(s => s.barber_service_id).join(',');
+                
+                // ساخت URL با استفاده از نام مسیر جنگو (name pattern)
+                const targetUrl = `{% url 'booking:select-datetime' %}?barber=${barberId}&services=${serviceIds}`;
+                
+                // هدایت کاربر به صفحه انتخاب تاریخ و ساعت
+                window.location.href = targetUrl;
             }
         }
     }
 </script>
+
 {% endblock %}

@@ -6,3 +6,4 @@ from .get_customer_appointments_service import GetCustomerAppointmentsService
 from .update_appointment_status_service import UpdateAppointmentStatusService
 from .get_today_appointments_service import GetTodayAppointmentsService
 from .calculate_available_slots_service import CalculateAvailableSlotsService
+from .get_booking_summary_service import GetBookingSummaryService
