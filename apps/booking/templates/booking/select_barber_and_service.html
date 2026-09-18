@@ -1,75 +1,134 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}رزرو نوبت | انتخاب آرایشگر و خدمت{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-8" x-data="bookingWizard()">
-    <div class="mb-8 text-center">
-        <h1 class="text-3xl font-extrabold text-gray-800">رزرو آنلاین نوبت 💈</h1>
-        <p class="text-gray-500 mt-2">مرحله اول: آرایشگر و خدمت مورد نظرت رو انتخاب کن</p>
-    </div>
+<div class="min-h-screen flex items-center justify-center px-4 py-8" x-data="bookingWizard()">
+    <div class="w-full max-w-2xl bg-cream-100 shadow-2xl rounded-2xl overflow-hidden border border-cream-200 flex flex-col h-[80vh] max-h-[640px]">
 
-    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-gray-100">
-        
-        <div class="mb-8">
-            <label class="block text-lg font-bold text-gray-700 mb-4">۱. انتخاب آرایشگر حرفه‌ای</label>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <template x-for="barber in barbers" :key="barber.barber_id">
-                    <div @click="selectBarber(barber)"
-                         :class="selectedBarber && selectedBarber.barber_id === barber.barber_id ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
-                         class="cursor-pointer border rounded-xl p-5 transition-all duration-200 flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="font-bold text-gray-800 text-lg" x-text="barber.name"></h3>
-                                <span class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-medium" x-text="barber.username"></span>
+        <!-- ==================== ۳۰ درصد بالا: هدر با عکس پس‌زمینه و مراحل ==================== -->
+        <div class="relative flex-[0_0_30%]">
+            <!-- عکس پس‌زمینه (آرایشگاه) -->
+            <img src="{% static 'images/booking/step2.jpg' %}" 
+                 alt="پس‌زمینه آرایشگاه" 
+                 class="absolute inset-0 w-full h-full object-cover">
+            
+            <!-- کادر نیمه شفاف -->
+            <div class="absolute inset-0 bg-sage-900/60 flex items-center justify-center">
+                <!-- چهار دایره مراحل -->
+                <div class="flex items-center gap-2 md:gap-4">
+                    <!-- مرحله ۱ -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۱</div>
+                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">آرایشگر</span>
+                    </div>
+                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+
+                    <!-- مرحله ۲ (فعال) -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-300 border-2 border-cream-400 flex items-center justify-center text-sage-900 font-bold text-xs md:text-sm shadow-lg shadow-cream-300/40">۲</div>
+                        <span class="text-cream-300 text-[9px] md:text-[10px] mt-1 font-medium">انتخاب آرایشگر</span>
+                        <span class="text-cream-300 text-[9px] md:text-[10px] mt-1 font-medium">و خدمات</span>
+                    </div>
+                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+
+                    <!-- مرحله ۳ -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۳</div>
+                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">تایید</span>
+                    </div>
+                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+
+                    <!-- مرحله ۴ -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۴</div>
+                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">پرداخت</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ۷۰ درصد پایین: دو سطر ۵۰-۵۰ ==================== -->
+        <div class="flex flex-col flex-[0_0_70%]">
+
+            <!-- ===== ۵۰ درصد بالایی: لیست آرایشگرها ===== -->
+            <div class="overflow-y-auto p-4 border-b border-cream-200 bg-cream-50 flex-[0_0_50%]">
+                <h2 class="text-sm font-bold text-sage-800 mb-2.5">آرایشگر خود را انتخاب کنید</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <template x-for="barber in barbers" :key="barber.barber_id">
+                        <div @click="selectBarber(barber)"
+                             :class="selectedBarber && selectedBarber.barber_id === barber.barber_id ? 'border-sage-500 bg-sage-50 ring-2 ring-sage-500' : 'border-cream-200 hover:border-sage-200 bg-cream-100'"
+                             class="cursor-pointer border rounded-lg p-3 transition-all duration-200 flex flex-col justify-between shadow-sm">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <h3 class="font-bold text-sage-900 text-xs" x-text="barber.name"></h3>
+                                    <span class="text-[9px] bg-sage-100 text-sage-700 px-1.5 py-0.5 rounded-full font-medium" x-text="barber.username"></span>
+                                </div>
+                                <p class="text-dark-muted text-[10px] line-clamp-2 mb-1.5" x-text="barber.bio || 'بدون توضیحات'"></p>
                             </div>
-                            <p class="text-gray-500 text-sm line-clamp-2 mb-4" x-text="barber.bio || 'بدون توضیحات'"></p>
+                            <div class="text-[9px] text-sage-600 font-semibold">
+                                <span x-text="barber.services.length + ' خدمت'"></span>
+                            </div>
                         </div>
-                        <div class="text-xs text-indigo-600 font-semibold flex items-center gap-1">
-                            <span x-text="barber.services.length + ' خدمت فعال'"></span>
+                    </template>
+                </div>
+            </div>
+
+            <!-- ===== ۵۰ درصد پایینی: لیست خدمات ===== -->
+            <div class="overflow-y-auto p-4 bg-cream-100 flex-[0_0_50%]">
+                <template x-if="!selectedBarber">
+                    <div class="flex items-center justify-center h-full text-dark-muted text-xs">
+                        لطفاً ابتدا یک آرایشگر انتخاب کنید
+                    </div>
+                </template>
+
+                <template x-if="selectedBarber">
+                    <div>
+                        <h2 class="text-sm font-bold text-sage-800 mb-2.5">
+                            خدمات <span class="text-sage-600" x-text="selectedBarber.name"></span>
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <template x-for="service in selectedBarber.services" :key="service.barber_service_id">
+                                <div @click="toggleService(service)"
+                                     :class="isServiceSelected(service) ? 'border-sage-500 bg-sage-50 ring-2 ring-sage-500' : 'border-cream-200 hover:border-sage-200 bg-cream-50'"
+                                     class="cursor-pointer border rounded-lg p-2.5 transition-all duration-200 flex justify-between items-center shadow-sm">
+                                    <div>
+                                        <h4 class="font-bold text-sage-900 text-[11px]" x-text="service.name"></h4>
+                                        <p class="text-[9px] text-dark-muted mt-0.5" x-text="service.description"></p>
+                                        <div class="flex items-center gap-1.5 mt-1.5 text-[9px] text-dark-muted">
+                                            <span class="bg-cream-200 px-1.5 py-0.5 rounded" x-text="service.duration_minutes + ' دقیقه'"></span>
+                                            <span class="text-sage-600 font-bold" x-text="numberWithCommas(service.price) + ' تومان'"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-center w-4 h-4 rounded-full border shrink-0"
+                                         :class="isServiceSelected(service) ? 'bg-sage-500 border-sage-500 text-cream-50' : 'border-cream-300'">
+                                        <svg x-show="isServiceSelected(service)" class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- دکمه مرحله بعد -->
+                        <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 border-t border-cream-200">
+                            <div class="text-[11px] text-dark-muted">
+                                <span>مجموع: </span>
+                                <span class="font-bold text-sage-900 text-xs" x-text="numberWithCommas(totalPrice) + ' تومان'"></span>
+                            </div>
+                            <button @click="nextStep"
+                                    :disabled="selectedServices.length === 0"
+                                    :class="selectedServices.length === 0 ? 'opacity-50 cursor-not-allowed bg-cream-300' : 'bg-sage-500 hover:bg-sage-600 shadow-sage-200 shadow-md'"
+                                    class="w-full sm:w-auto px-4 py-2 text-cream-50 font-bold rounded-lg transition-all duration-200 text-[11px]">
+                                مرحله بعد ➔
+                            </button>
                         </div>
                     </div>
                 </template>
             </div>
-        </div>
 
-        <div x-show="selectedBarber" x-transition class="mb-8 border-t pt-6">
-            <label class="block text-lg font-bold text-gray-700 mb-4">۲. انتخاب خدمت(ها)</label>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <template x-for="service in selectedBarber?.services || []" :key="service.barber_service_id">
-                    <div @click="toggleService(service)"
-                         :class="isServiceSelected(service) ? 'border-emerald-600 bg-emerald-50/55 ring-2 ring-emerald-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
-                         class="cursor-pointer border rounded-xl p-4 transition-all duration-200 flex justify-between items-center shadow-sm">
-                        <div>
-                            <h4 class="font-bold text-gray-800" x-text="service.name"></h4>
-                            <p class="text-xs text-gray-500 mt-1" x-text="service.description"></p>
-                            <div class="flex items-center gap-3 mt-3 text-xs text-gray-600 font-medium">
-                                <span class="bg-gray-100 px-2 py-1 rounded-md" x-text="service.duration_minutes + ' دقیقه'"></span>
-                                <span class="text-emerald-600 font-bold" x-text="numberWithCommas(service.price) + ' تومان'"></span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-center w-6 h-6 rounded-full border"
-                             :class="isServiceSelected(service) ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-gray-300'">
-                            <svg x-show="isServiceSelected(service)" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                    </div>
-                </template>
-            </div>
         </div>
-
-        <div class="border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-sm text-gray-600">
-                <span>مجموع هزینه: </span>
-                <span class="font-bold text-gray-900 text-lg" x-text="numberWithCommas(totalPrice) + ' تومان'"></span>
-            </div>
-            <button @click="nextStep"
-                    :disabled="!selectedBarber || selectedServices.length === 0"
-                    :class="(!selectedBarber || selectedServices.length === 0) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200 shadow-lg'"
-                    class="w-full sm:w-auto px-8 py-3 text-white font-bold rounded-xl transition-all duration-200">
-                مرحله بعد: انتخاب تاریخ و ساعت ➔
-            </button>
-        </div>
-
     </div>
 </div>
 
@@ -84,7 +143,7 @@
             selectBarber(barber) {
                 if (this.selectedBarber?.barber_id !== barber.barber_id) {
                     this.selectedBarber = barber;
-                    this.selectedServices = []; // با تغییر آرایشگر، خدمات انتخابی ریست شود
+                    this.selectedServices = [];
                 }
             },
             
@@ -112,18 +171,14 @@
             nextStep() {
                 if (!this.selectedBarber || this.selectedServices.length === 0) return;
                 
-                // جمع‌آوری شناسه‌ها برای ارسال به مرحله بعد
                 const barberId = this.selectedBarber.barber_id;
                 const serviceIds = this.selectedServices.map(s => s.barber_service_id).join(',');
                 
-                // ساخت URL با استفاده از نام مسیر جنگو (name pattern)
                 const targetUrl = `{% url 'booking:select-datetime' %}?barber=${barberId}&services=${serviceIds}`;
                 
-                // هدایت کاربر به صفحه انتخاب تاریخ و ساعت
                 window.location.href = targetUrl;
             }
         }
     }
 </script>
-
 {% endblock %}

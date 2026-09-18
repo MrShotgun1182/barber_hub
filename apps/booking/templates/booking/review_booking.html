@@ -1,82 +1,131 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}رزرو نوبت | بررسی نهایی و ثبت{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-8" x-data="reviewWizard()">
-    <div class="mb-8 text-center">
-        <h1 class="text-3xl font-extrabold text-gray-800">بررسی نهایی فاکتور 🧾</h1>
-        <p class="text-gray-500 mt-2">مرحله سوم: اطلاعات نوبت رو چک کن و تایید نهایی رو بزن</p>
-    </div>
+<div class="min-h-screen flex items-center justify-center px-4 py-8" x-data="reviewWizard()">
+    <div class="w-full max-w-2xl bg-cream-100 shadow-2xl rounded-2xl overflow-hidden border border-cream-200 flex flex-col h-[85vh] max-h-[680px]">
 
-    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-gray-100">
-        
-        <div x-show="loading" class="py-16 text-center text-gray-400 font-medium">
-            <svg class="animate-spin h-8 w-8 text-indigo-600 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            در حال بارگذاری اطلاعات فاکتور...
-        </div>
-
-        <div x-show="!loading">
+        <!-- ==================== ۳۰ درصد بالا: هدر با عکس پس‌زمینه و مراحل ==================== -->
+        <div class="relative flex-[0_0_30%]" style="flex: 0 0 30%;">
+            <!-- عکس پس‌زمینه (آرایشگاه) -->
+            <img src="{% static 'images/behrad/behrad2.jpg' %}" 
+                 alt="پس‌زمینه آرایشگاه" 
+                 class="absolute inset-0 w-full h-full object-cover">
             
-            <div class="bg-gray-50 rounded-xl p-5 mb-6 border border-gray-200 space-y-3">
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-500">آرایشگر انتخاب‌شده:</span>
-                    <span class="font-bold text-gray-800" x-text="summary.barber_name"></span>
-                </div>
-                <hr class="border-gray-200">
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-500">تاریخ نوبت:</span>
-                    <span class="font-bold text-gray-800" x-text="bookingDate"></span>
-                </div>
-                <hr class="border-gray-200">
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-500">ساعت حضور:</span>
-                    <span class="font-bold text-indigo-600" x-text="startTime + ' الی ' + endTime"></span>
+            <!-- کادر نیمه شفاف -->
+            <div class="absolute inset-0 bg-sage-900/60 flex items-center justify-center">
+                <!-- چهار دایره مراحل -->
+                <div class="flex items-center gap-2 md:gap-4">
+                    <!-- مرحله ۱ -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۱</div>
+                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">آرایشگر</span>
+                    </div>
+                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+
+                    <!-- مرحله ۲ -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۲</div>
+                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">خدمات</span>
+                    </div>
+                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+
+                    <!-- مرحله ۳ -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۳</div>
+                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">تاریخ و ساعت</span>
+                    </div>
+                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+
+                    <!-- مرحله ۴ (فعال) -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-300 border-2 border-cream-400 flex items-center justify-center text-sage-900 font-bold text-xs md:text-sm shadow-lg shadow-cream-300/40">۴</div>
+                        <span class="text-cream-300 text-[9px] md:text-[10px] mt-1 font-medium">بررسی و ثبت</span>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="mb-6">
-                <h3 class="font-bold text-gray-700 mb-3">خدمات انتخابی:</h3>
-                <div class="space-y-2">
-                    <template x-for="service in summary.services || []" :key="service.service_id">
-                        <div class="flex justify-between items-center p-3 bg-white border border-gray-200 rounded-xl">
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-sm" x-text="service.name"></h4>
-                                <span class="text-xs text-gray-400" x-text="service.duration_minutes + ' دقیقه'"></span>
-                            </div>
-                            <span class="font-bold text-emerald-600 text-sm" x-text="numberWithCommas(service.price) + ' تومان'"></span>
+        <!-- ==================== ۷۰ درصد پایین: جزئیات فاکتور و عملیات ==================== -->
+        <div class="flex flex-col flex-[0_0_70%] overflow-y-auto p-5 bg-cream-50" style="flex: 0 0 70%;">
+            
+            <!-- حالت لودینگ -->
+            <div x-show="loading" class="py-16 text-center text-dark-muted text-xs font-medium my-auto">
+                <svg class="animate-spin h-7 w-7 text-sage-600 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                در حال بارگذاری اطلاعات فاکتور...
+            </div>
+
+            <!-- محتوای اصلی فاکتور -->
+            <div x-show="!loading" class="flex flex-col h-full justify-between">
+                <div>
+                    <!-- خلاصه اطلاعات نوبت (آرایشگر، تاریخ، ساعت) -->
+                    <div class="bg-cream-100 rounded-xl p-3.5 mb-4 border border-cream-200 space-y-2.5 shadow-sm">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-dark-muted font-medium">آرایشگر انتخاب‌شده:</span>
+                            <span class="font-bold text-sage-900" x-text="summary.barber_name"></span>
                         </div>
-                    </template>
+                        <hr class="border-cream-200">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-dark-muted font-medium">تاریخ نوبت:</span>
+                            <span class="font-bold text-sage-900" x-text="bookingDate"></span>
+                        </div>
+                        <hr class="border-cream-200">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-dark-muted font-medium">ساعت حضور:</span>
+                            <span class="font-bold text-sage-600" x-text="startTime + ' الی ' + endTime"></span>
+                        </div>
+                    </div>
+
+                    <!-- لیست خدمات انتخابی -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-sage-800 text-xs mb-2">خدمات انتخابی:</h3>
+                        <div class="space-y-1.5 max-h-28 overflow-y-auto pr-1">
+                            <template x-for="service in summary.services || []" :key="service.service_id">
+                                <div class="flex justify-between items-center p-2.5 bg-cream-100 border border-cream-200 rounded-lg">
+                                    <div>
+                                        <h4 class="font-bold text-sage-900 text-xs" x-text="service.name"></h4>
+                                        <span class="text-[10px] text-dark-muted" x-text="service.duration_minutes + ' دقیقه'"></span>
+                                    </div>
+                                    <span class="font-bold text-sage-700 text-xs" x-text="numberWithCommas(service.price) + ' تومان'"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="border-t pt-4 mb-8 flex justify-between items-center">
-                <span class="text-gray-600 font-medium">مجموع قابل پرداخت:</span>
-                <span class="font-extrabold text-gray-900 text-xl" x-text="numberWithCommas(summary.total_price || 0) + ' تومان'"></span>
-            </div>
+                <div>
+                    <!-- جمع کل فاکتور -->
+                    <div class="border-t border-cream-200 pt-3 mb-4 flex justify-between items-center bg-cream-100 px-3 py-2.5 rounded-lg border">
+                        <span class="text-sage-800 font-medium text-xs">مجموع قابل پرداخت:</span>
+                        <span class="font-extrabold text-sage-900 text-sm" x-text="numberWithCommas(summary.total_price || 0) + ' تومان'"></span>
+                    </div>
 
-            <div class="flex items-center justify-between gap-4">
-                <a :href="'{% url 'booking:select-datetime' %}?barber=' + barberId + '&services=' + serviceIds.join(',')" 
-                   class="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-xl transition-all duration-200">
-                    ← مرحله قبل
-                </a>
-                
-                <button @click="submitBooking"
-                        :disabled="submitting"
-                        class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-200 transition-all duration-200 flex items-center gap-2">
-                    <svg x-show="submitting" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span x-text="submitting ? 'در حال ثبت...' : 'تایید و ثبت نهایی نوبت ✓'"></span>
-                </button>
+                    <!-- دکمه‌های ناوبری و تایید نهایی -->
+                    <div class="flex items-center justify-between gap-3">
+                        <a :href="'{% url 'booking:select-datetime' %}?barber=' + barberId + '&services=' + serviceIds.join(',')" 
+                           class="px-4 py-2 border border-cream-300 hover:bg-cream-200/50 text-sage-800 font-bold rounded-lg transition-all duration-200 text-[11px]">
+                            ← مرحله قبل
+                        </a>
+                        
+                        <button @click="submitBooking"
+                                :disabled="submitting"
+                                class="px-5 py-2 bg-sage-600 hover:bg-sage-700 text-cream-50 font-bold rounded-lg shadow-sage-200 shadow-md transition-all duration-200 text-[11px] flex items-center gap-2">
+                            <svg x-show="submitting" class="animate-spin h-4 w-4 text-cream-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span x-text="submitting ? 'در حال ثبت...' : 'تایید و ثبت نهایی نوبت ✓'"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
         </div>
-
     </div>
 </div>
 
@@ -144,7 +193,6 @@
             submitBooking() {
                 this.submitting = true;
                 
-                // تهیه پکیج داده‌ها برای ارسال به متد POST ویو
                 const payload = {
                     barber_id: this.barberId,
                     barber_service_ids: this.serviceIds,
@@ -153,7 +201,6 @@
                     end_time: this.endTime
                 };
                 
-                // دریافت CSRF Token از کوکی‌های جنگو برای درخواست امن POST
                 const csrftoken = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
                 
                 fetch(`{% url 'booking:review_booking' %}`, {
@@ -170,8 +217,7 @@
                     this.submitting = false;
                     if (data.status === 'success') {
                         alert(data.message);
-                        // هدایت به صفحه پروفایل یا داشبورد مشتری پس از موفقیت
-                        window.location.href = "/"; // یا مسیر صفحه موفقیت/داشبورد
+                        window.location.href = "/";
                     } else {
                         alert(data.message || 'خطا در ثبت نوبت');
                     }
