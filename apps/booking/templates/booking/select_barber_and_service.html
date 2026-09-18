@@ -15,57 +15,56 @@
                  class="absolute inset-0 w-full h-full object-cover">
             
             <!-- کادر نیمه شفاف -->
-            <div class="absolute inset-0 bg-sage-900/60 flex items-center justify-center">
+            <div class="absolute inset-0 bg-sage-900/60 flex items-center justify-center px-2">
                 <!-- چهار دایره مراحل -->
-                <div class="flex items-center gap-2 md:gap-4">
+                <div class="flex items-center gap-1 sm:gap-2 md:gap-4">
                     <!-- مرحله ۱ -->
                     <div class="flex flex-col items-center">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۱</div>
-                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">آرایشگر</span>
+                        <div class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-[10px] sm:text-xs md:text-sm">۱</div>
+                        <span class="text-cream-100 text-[8px] sm:text-[9px] md:text-[10px] mt-0.5 font-medium">آرایشگر</span>
                     </div>
-                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+                    <div class="w-2 sm:w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
 
                     <!-- مرحله ۲ (فعال) -->
                     <div class="flex flex-col items-center">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-300 border-2 border-cream-400 flex items-center justify-center text-sage-900 font-bold text-xs md:text-sm shadow-lg shadow-cream-300/40">۲</div>
-                        <span class="text-cream-300 text-[9px] md:text-[10px] mt-1 font-medium">انتخاب آرایشگر</span>
-                        <span class="text-cream-300 text-[9px] md:text-[10px] mt-1 font-medium">و خدمات</span>
+                        <div class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-cream-300 border-2 border-cream-400 flex items-center justify-center text-sage-900 font-bold text-[10px] sm:text-xs md:text-sm shadow-lg shadow-cream-300/40">۲</div>
+                        <span class="text-cream-300 text-[8px] sm:text-[9px] md:text-[10px] mt-0.5 font-medium text-center leading-tight">انتخاب آرایشگر<br>و خدمات</span>
                     </div>
-                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+                    <div class="w-2 sm:w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
 
                     <!-- مرحله ۳ -->
                     <div class="flex flex-col items-center">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۳</div>
-                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">تایید</span>
+                        <div class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-[10px] sm:text-xs md:text-sm">۳</div>
+                        <span class="text-cream-100 text-[8px] sm:text-[9px] md:text-[10px] mt-0.5 font-medium">تاریخ و ساعت</span>
                     </div>
-                    <div class="w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
+                    <div class="w-2 sm:w-4 md:w-8 h-0.5 bg-cream-200/30"></div>
 
                     <!-- مرحله ۴ -->
                     <div class="flex flex-col items-center">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-xs md:text-sm">۴</div>
-                        <span class="text-cream-100 text-[9px] md:text-[10px] mt-1 font-medium">پرداخت</span>
+                        <div class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-cream-50/25 border-2 border-cream-200 flex items-center justify-center text-cream-50 font-bold text-[10px] sm:text-xs md:text-sm">۴</div>
+                        <span class="text-cream-100 text-[8px] sm:text-[9px] md:text-[10px] mt-0.5 font-medium">پرداخت</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ==================== ۷۰ درصد پایین: دو سطر ۵۰-۵۰ ==================== -->
-        <div class="flex flex-col flex-[0_0_70%]">
+        <div class="flex flex-col flex-[0_0_70%] overflow-hidden bg-cream-50">
 
             <!-- ===== ۵۰ درصد بالایی: لیست آرایشگرها ===== -->
-            <div class="overflow-y-auto p-4 border-b border-cream-200 bg-cream-50 flex-[0_0_50%]">
-                <h2 class="text-sm font-bold text-sage-800 mb-2.5">آرایشگر خود را انتخاب کنید</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="overflow-y-auto p-3 md:p-4 border-b border-cream-200 bg-cream-50 flex-[0_0_50%]">
+                <h2 class="text-xs md:text-sm font-bold text-sage-800 mb-2">آرایشگر خود را انتخاب کنید</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <template x-for="barber in barbers" :key="barber.barber_id">
                         <div @click="selectBarber(barber)"
                              :class="selectedBarber && selectedBarber.barber_id === barber.barber_id ? 'border-sage-500 bg-sage-50 ring-2 ring-sage-500' : 'border-cream-200 hover:border-sage-200 bg-cream-100'"
-                             class="cursor-pointer border rounded-lg p-3 transition-all duration-200 flex flex-col justify-between shadow-sm">
+                             class="cursor-pointer border rounded-lg p-2.5 transition-all duration-200 flex flex-col justify-between shadow-sm">
                             <div>
                                 <div class="flex items-center justify-between mb-1">
                                     <h3 class="font-bold text-sage-900 text-xs" x-text="barber.name"></h3>
                                     <span class="text-[9px] bg-sage-100 text-sage-700 px-1.5 py-0.5 rounded-full font-medium" x-text="barber.username"></span>
                                 </div>
-                                <p class="text-dark-muted text-[10px] line-clamp-2 mb-1.5" x-text="barber.bio || 'بدون توضیحات'"></p>
+                                <p class="text-dark-muted text-[10px] line-clamp-2 mb-1" x-text="barber.bio || 'بدون توضیحات'"></p>
                             </div>
                             <div class="text-[9px] text-sage-600 font-semibold">
                                 <span x-text="barber.services.length + ' خدمت'"></span>
@@ -76,56 +75,58 @@
             </div>
 
             <!-- ===== ۵۰ درصد پایینی: لیست خدمات ===== -->
-            <div class="overflow-y-auto p-4 bg-cream-100 flex-[0_0_50%]">
-                <template x-if="!selectedBarber">
-                    <div class="flex items-center justify-center h-full text-dark-muted text-xs">
-                        لطفاً ابتدا یک آرایشگر انتخاب کنید
-                    </div>
-                </template>
+            <div class="overflow-y-auto p-3 md:p-4 bg-cream-100 flex-[0_0_50%] flex flex-col justify-between">
+                <div>
+                    <template x-if="!selectedBarber">
+                        <div class="flex items-center justify-center py-6 text-dark-muted text-xs">
+                            لطفاً ابتدا یک آرایشگر انتخاب کنید ✂️
+                        </div>
+                    </template>
 
-                <template x-if="selectedBarber">
-                    <div>
-                        <h2 class="text-sm font-bold text-sage-800 mb-2.5">
-                            خدمات <span class="text-sage-600" x-text="selectedBarber.name"></span>
-                        </h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                            <template x-for="service in selectedBarber.services" :key="service.barber_service_id">
-                                <div @click="toggleService(service)"
-                                     :class="isServiceSelected(service) ? 'border-sage-500 bg-sage-50 ring-2 ring-sage-500' : 'border-cream-200 hover:border-sage-200 bg-cream-50'"
-                                     class="cursor-pointer border rounded-lg p-2.5 transition-all duration-200 flex justify-between items-center shadow-sm">
-                                    <div>
-                                        <h4 class="font-bold text-sage-900 text-[11px]" x-text="service.name"></h4>
-                                        <p class="text-[9px] text-dark-muted mt-0.5" x-text="service.description"></p>
-                                        <div class="flex items-center gap-1.5 mt-1.5 text-[9px] text-dark-muted">
-                                            <span class="bg-cream-200 px-1.5 py-0.5 rounded" x-text="service.duration_minutes + ' دقیقه'"></span>
-                                            <span class="text-sage-600 font-bold" x-text="numberWithCommas(service.price) + ' تومان'"></span>
+                    <template x-if="selectedBarber">
+                        <div>
+                            <h2 class="text-xs md:text-sm font-bold text-sage-800 mb-2">
+                                خدمات <span class="text-sage-600" x-text="selectedBarber.name"></span>
+                            </h2>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <template x-for="service in selectedBarber.services" :key="service.barber_service_id">
+                                    <div @click="toggleService(service)"
+                                         :class="isServiceSelected(service) ? 'border-sage-500 bg-sage-50 ring-2 ring-sage-500' : 'border-cream-200 hover:border-sage-200 bg-cream-50'"
+                                         class="cursor-pointer border rounded-lg p-2 transition-all duration-200 flex justify-between items-center shadow-sm">
+                                        <div>
+                                            <h4 class="font-bold text-sage-900 text-[11px]" x-text="service.name"></h4>
+                                            <p class="text-[9px] text-dark-muted mt-0.5 line-clamp-1" x-text="service.description"></p>
+                                            <div class="flex items-center gap-1.5 mt-1 text-[9px] text-dark-muted">
+                                                <span class="bg-cream-200 px-1.5 py-0.5 rounded" x-text="service.duration_minutes + ' دقیقه'"></span>
+                                                <span class="text-sage-600 font-bold" x-text="numberWithCommas(service.price) + ' تومان'"></span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-center w-4 h-4 rounded-full border shrink-0"
+                                             :class="isServiceSelected(service) ? 'bg-sage-500 border-sage-500 text-cream-50' : 'border-cream-300'">
+                                            <svg x-show="isServiceSelected(service)" class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                            </svg>
                                         </div>
                                     </div>
-                                    <div class="flex items-center justify-center w-4 h-4 rounded-full border shrink-0"
-                                         :class="isServiceSelected(service) ? 'bg-sage-500 border-sage-500 text-cream-50' : 'border-cream-300'">
-                                        <svg x-show="isServiceSelected(service)" class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- دکمه مرحله بعد -->
-                        <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 border-t border-cream-200">
-                            <div class="text-[11px] text-dark-muted">
-                                <span>مجموع: </span>
-                                <span class="font-bold text-sage-900 text-xs" x-text="numberWithCommas(totalPrice) + ' تومان'"></span>
+                                </template>
                             </div>
-                            <button @click="nextStep"
-                                    :disabled="selectedServices.length === 0"
-                                    :class="selectedServices.length === 0 ? 'opacity-50 cursor-not-allowed bg-cream-300' : 'bg-sage-500 hover:bg-sage-600 shadow-sage-200 shadow-md'"
-                                    class="w-full sm:w-auto px-4 py-2 text-cream-50 font-bold rounded-lg transition-all duration-200 text-[11px]">
-                                مرحله بعد ➔
-                            </button>
                         </div>
+                    </template>
+                </div>
+
+                <!-- فوتر و دکمه مرحله بعد -->
+                <div class="mt-3 pt-2 border-t border-cream-200 flex items-center justify-between gap-2 bg-cream-100 shrink-0">
+                    <div class="text-[10px] sm:text-[11px] text-dark-muted">
+                        <span>مجموع: </span>
+                        <span class="font-bold text-sage-900 text-xs" x-text="numberWithCommas(totalPrice) + ' تومان'"></span>
                     </div>
-                </template>
+                    <button @click="nextStep"
+                            :disabled="selectedServices.length === 0"
+                            :class="selectedServices.length === 0 ? 'opacity-50 cursor-not-allowed bg-cream-300 text-dark-muted' : 'bg-sage-500 hover:bg-sage-600 text-cream-50 shadow-sage-200 shadow-md'"
+                            class="px-5 py-2 font-bold rounded-lg transition-all duration-200 text-[10px] sm:text-[11px]">
+                        مرحله بعد ➔
+                    </button>
+                </div>
             </div>
 
         </div>
