@@ -4,17 +4,25 @@
 {% block title %}رزرو نوبت | انتخاب تاریخ و ساعت{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center px-4 py-8" x-data="datetimeWizard()">
-    <div class="w-full max-w-2xl bg-cream-100 shadow-2xl rounded-2xl overflow-hidden border border-cream-200 flex flex-col h-[85vh] max-h-[680px]">
+<!-- کانتینر کل صفحه با پس‌زمینه عکس آرایشگاه و مات‌کنندگی ۲۰ درصدی -->
+<div class="min-h-screen relative flex items-center justify-center px-4 py-8 overflow-hidden bg-sage-950" x-data="datetimeWizard()">
+    
+    <!-- لایه عکس پس‌زمینه کل صفحه با افکت مات (Blur) و لایه تیره برای کنتراست عالی -->
+    <div class="absolute inset-0 bg-cover bg-center filter blur-[5px] opacity-85 scale-105" style="background-image: url('{% static 'images/barber_shop/barber_shop10.jpg' %}')"></div>
+    <div class="absolute inset-0 bg-sage-950/40"></div>
+    <div class="absolute inset-0 bg-sage-950/40"></div>
 
-        <!-- ==================== هدر با عکس پس‌زمینه و مراحل (فشرده‌تر در موبایل) ==================== -->
+    <!-- کادر اصلی ویزارد با ظاهر استاندارد خودش -->
+    <div class="relative z-10 w-full max-w-2xl bg-cream-100 shadow-2xl rounded-2xl overflow-hidden border border-cream-200 flex flex-col h-[85vh] max-h-[680px]">
+
+        <!-- ==================== هدر با مراحل (فشرده‌تر در موبایل) ==================== -->
         <div class="relative flex-[0_0_25%] md:flex-[0_0_30%]" style="min-height: 80px;">
-            <!-- عکس پس‌زمینه (آرایشگاه) -->
+            <!-- عکس پس‌زمینه هدر -->
             <img src="{% static 'images/booking/step3.jpg' %}" 
-                 alt="پس‌زمینه آرایشگاه" 
+                 alt="پس‌زمینه هدر" 
                  class="absolute inset-0 w-full h-full object-cover">
             
-            <!-- کادر نیمه شفاف -->
+            <!-- کادر نیمه شفاف روی هدر -->
             <div class="absolute inset-0 bg-sage-900/65 flex items-center justify-center px-2">
                 <!-- چهار دایره مراحل -->
                 <div class="flex items-center gap-1 sm:gap-2 md:gap-4">
@@ -106,7 +114,7 @@
                 </div>
             </div>
 
-            <!-- ===== بخش دوم: سانس‌های قابل رزرو (طراحی میکرو کارت‌ها برای موبایل) و دکمه‌های استاتیک پایین ===== -->
+            <!-- ===== بخش دوم: سانس‌های قابل رزرو و دکمه‌های استاتیک پایین ===== -->
             <div class="w-full md:w-1/2 p-3 md:p-4 flex flex-col justify-between bg-cream-100 overflow-hidden flex-1">
                 
                 <!-- محتوای اسکرول‌خور سانس‌ها -->
@@ -127,7 +135,7 @@
                         <span x-text="selectedDate ? 'متأسفانه در این تاریخ سانسی موجود نیست.' : 'لطفاً ابتدا یک تاریخ را انتخاب کنید.'"></span>
                     </div>
 
-                    <!-- گرید اسلات‌های زمانی (۴ ستونه در موبایل برای عدم نیاز به اسکرول تا ۱۴+ سانس) -->
+                    <!-- گرید اسلات‌های زمانی -->
                     <div x-show="!loading && slots.length > 0" class="grid grid-cols-4 sm:grid-cols-3 gap-1.5">
                         <template x-for="slot in slots" :key="slot.start_time">
                             <button @click="selectedSlot = slot"
@@ -139,15 +147,13 @@
                     </div>
                 </div>
 
-                <!-- فوتر و دکمه‌های ناوبری (استاتیک و چسبیده به پایین کادر در موبایل) -->
+                <!-- فوتر و دکمه‌های ناوبری -->
                 <div class="pt-2 border-t border-cream-200 flex items-center justify-between gap-[10%] bg-cream-100 shrink-0">
-                    <!-- دکمه مرحله قبل (۳۰ درصد فضا) -->
                     <a href="{% url 'booking:select-barber' %}" 
                        class="w-[30%] px-2 py-2 border border-cream-300 hover:bg-cream-200/50 text-sage-800 font-bold rounded-lg transition-all duration-200 text-[10px] text-center md:hidden flex items-center justify-center">
                         ← مرحله قبل
                     </a>
                     
-                    <!-- دکمه مرحله بعد (۶۰ درصد فضا) -->
                     <button @click="nextStep"
                             :disabled="!selectedSlot"
                             :class="!selectedSlot ? 'opacity-50 cursor-not-allowed bg-cream-300 text-dark-muted' : 'bg-sage-500 hover:bg-sage-600 text-cream-50 shadow-sage-200 shadow-md'"
@@ -252,7 +258,6 @@
                         shortDateStr: `${d.getDate()} ${months[d.getMonth()]}`
                     });
                 }
-                0
                 return daysList;
             },
 
