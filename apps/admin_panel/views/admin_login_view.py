@@ -24,7 +24,7 @@ def AdminLoginView(request):
 
         return render(
             request,
-            'accounts/admin_login.html',
+            'admin_panel/login.html',
             {'error': result['error']},
         )
 

@@ -10,4 +10,9 @@ urlpatterns = [
     path('select-barber/', views.SelectBarberAndServiceView, name='select-barber'),
     path('select-datetime/', views.SelectDatetimeView, name='select-datetime'),
     path('review/', views.ReviewBookingView, name='review_booking'),
+    path(
+        'confirmation/<int:appointment_id>/',
+        views.BookingConfirmationView,
+        name='booking_confirmation',
+    ),
 ]

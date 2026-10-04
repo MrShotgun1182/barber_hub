@@ -53,7 +53,7 @@ services:
     command: >
       sh -c "cd /app/frontend && npm install && npm run build && npm run dev &
              cd /app && python manage.py migrate &&
-             python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin1234', role='MANAGER')\" &&
+             python manage.py shell -c \"from django.contrib.auth import get_user_model; from admin_panel.models import AdminPanelModel; User = get_user_model(); user, created = User.objects.get_or_create(username='admin', defaults={'email': 'admin@example.com', 'role': 'MANAGER', 'is_staff': True, 'is_superuser': True}); created and user.set_password('admin1234'); created and user.save(); AdminPanelModel.objects.get_or_create(user=user)\" &&
              python manage.py runserver 0.0.0.0:8000"
 
   # 4. پردازشگر تاسک‌های غیرهمزمان Celery Worker

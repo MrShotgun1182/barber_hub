@@ -74,10 +74,11 @@
 </div>
 
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{{ barbers|json_script:"barbers-data" }}
 <script>
     function bookingWizard() {
         return {
-            barbers: JSON.parse('{{ barbers_json|safe }}'),
+            barbers: JSON.parse(document.getElementById('barbers-data').textContent),
             selectedBarber: null,
             selectedServices: [],
             

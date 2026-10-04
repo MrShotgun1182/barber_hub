@@ -50,7 +50,9 @@
                         <td class="py-3 px-3 text-dark-main">
                             {{ appointment.customer.user.get_full_name|default:appointment.customer.user.username }}
                         </td>
-                        <td class="py-3 px-3 text-dark-muted">{{ appointment.service.name }}</td>
+                        <td class="py-3 px-3 text-dark-muted">
+                            {% for barber_service in appointment.services.all %}{{ barber_service.service.name }}{% if not forloop.last %}، {% endif %}{% empty %}—{% endfor %}
+                        </td>
                         <td class="py-3 px-3">
                             {% if appointment.status == 'COMPLETED' %}
                                 <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">انجام شده</span>
@@ -101,7 +103,9 @@
                         <div class="font-bold text-dark-main">
                             {{ appointment.customer.user.get_full_name|default:appointment.customer.user.username }}
                         </div>
-                        <div class="text-xs text-dark-muted mt-0.5">{{ appointment.service.name }}</div>
+                        <div class="text-xs text-dark-muted mt-0.5">
+                            {% for barber_service in appointment.services.all %}{{ barber_service.service.name }}{% if not forloop.last %}، {% endif %}{% empty %}—{% endfor %}
+                        </div>
                     </div>
                     <span class="text-xs font-semibold bg-cream-200 text-dark-main px-2.5 py-1 rounded-md">
                         {{ appointment.start_time|time:"H:i" }}

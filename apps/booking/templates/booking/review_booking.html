@@ -169,9 +169,8 @@
                 .then(data => {
                     this.submitting = false;
                     if (data.status === 'success') {
-                        alert(data.message);
-                        // هدایت به صفحه پروفایل یا داشبورد مشتری پس از موفقیت
-                        window.location.href = "/"; // یا مسیر صفحه موفقیت/داشبورد
+                        // هدایت به صفحه تاییدیه رزرو با شناسه نوبت ثبت‌شده
+                        window.location.href = "{% url 'booking:booking_confirmation' 0 %}".replace('/0/', '/' + data.appointment_id + '/');
                     } else {
                         alert(data.message || 'خطا در ثبت نوبت');
                     }

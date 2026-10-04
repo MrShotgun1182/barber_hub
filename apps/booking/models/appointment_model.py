@@ -52,6 +52,13 @@ class AppointmentModel(models.Model):
         verbose_name = 'رزرو نوبت'
         verbose_name_plural = 'رزروهای نوبت'
         ordering = ['-date', '-start_time']
+        # ایندکس ترکیبی برای تسریع کوئری‌های بررسی تداخل زمانی و داشبوردها
+        indexes = [
+            models.Index(
+                fields=['barber', 'date', 'status'],
+                name='appt_barber_date_status_idx',
+            ),
+        ]
 
     def __str__(self):
         return f"{self.customer.user.username} - {self.barber.user.username} - {self.date} {self.start_time}"

@@ -1,3 +1,4 @@
 from .get_available_slots_action import GetAvailableSlotsAction
 from .get_booking_summary_action import GetBookingSummaryAction
+from .get_appointment_confirmation_action import GetAppointmentConfirmationAction
 from .submit_booking_action import SubmitBookingAction

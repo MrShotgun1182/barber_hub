@@ -83,8 +83,10 @@
                     this.serviceIds = servicesParam.split(',').map(Number);
                 }
                 
-                // تنظیم تاریخ امروز به صورت پیش‌فرض (YYYY-MM-DD)
-                const today = new Date().toISOString().split('T')[0];
+                // تنظیم تاریخ امروز به صورت پیش‌فرض (YYYY-MM-DD) بر اساس وقت محلی مرورگر
+                // (toISOString تاریخ UTC می‌دهد و در ساعات ابتدایی شب به وقت تهران روز قبل را برمی‌گرداند)
+                const now = new Date();
+                const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                 this.selectedDate = today;
                 
                 if (this.barberId && this.serviceIds.length > 0) {

@@ -91,6 +91,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+
+# مسیر ورود پیش‌فرض برای @login_required (صفحه OTP مشتری)
+LOGIN_URL = 'booking:otp_page'
 STATICFILES_DIRS = [
     os.path.normpath(os.path.join(BASE_DIR, 'frontend', 'static')),
 ]
