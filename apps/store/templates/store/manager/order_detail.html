@@ -1,0 +1,95 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}سفارش {{ order.order_number }} | پنل مدیریت{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-3xl">
+    <div class="mb-4">
+        <a href="{% url 'store:manage_order_list' %}" class="text-sage-600 hover:underline">&larr; بازگشت به سفارش‌ها</a>
+    </div>
+
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">سفارش {{ order.order_number }}</h1>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="bg-blue-100 text-blue-700 rounded p-3 mb-4">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="bg-white rounded-lg shadow p-6 mb-6 grid grid-cols-2 gap-y-3">
+        <span class="text-gray-700">مشتری:</span>
+        <span class="font-bold">{{ order.customer_full_name|default:order.customer.user.get_full_name|default:order.customer.user.username }}</span>
+        <span class="text-gray-700">شماره تماس:</span>
+        <span>{{ order.customer_phone|default:order.customer.user.phone_number|default:'—' }}</span>
+        <span class="text-gray-700">وضعیت فعلی:</span>
+        <span class="font-bold {% if order.status == 'CANCELLED' %}text-red-500{% endif %}">{{ order.get_status_display }}</span>
+        <span class="text-gray-700">مبلغ کل:</span>
+        <span class="font-bold text-sage-600">{{ order.total_amount }} تومان</span>
+        <span class="text-gray-700">تاریخ ثبت:</span>
+        <span>{{ order.created_at|date:"Y/m/d H:i" }}</span>
+        {% if order.customer_note %}
+        <span class="text-gray-700">یادداشت مشتری:</span>
+        <span class="text-gray-600">{{ order.customer_note }}</span>
+        {% endif %}
+    </div>
+
+    <!-- اقلام سفارش -->
+    <div class="bg-white rounded-lg shadow mb-6">
+        <p class="font-bold text-gray-900 p-4 border-b border-gray-200">اقلام سفارش</p>
+        <div class="divide-y">
+            {% for item in order.items.all %}
+            <div class="flex justify-between p-4">
+                <div>
+                    <p class="font-bold text-gray-900">{{ item.product_title }}</p>
+                    <p class="text-sm text-gray-500">{{ item.quantity }} × {{ item.unit_price }} تومان</p>
+                </div>
+                <p class="font-bold text-gray-900">{{ item.line_total }} تومان</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- پرداخت‌ها -->
+    {% if order.payments.all %}
+    <div class="bg-white rounded-lg shadow mb-6">
+        <p class="font-bold text-gray-900 p-4 border-b border-gray-200">پرداخت‌ها</p>
+        <div class="divide-y">
+            {% for payment in order.payments.all %}
+            <div class="flex justify-between p-4 text-sm">
+                <span>
+                    {{ payment.get_status_display }}
+                    {% if payment.ref_id %} — کد پیگیری: <span class="font-bold">{{ payment.ref_id }}</span>{% endif %}
+                    {% if payment.failure_message %} — {{ payment.failure_message }}{% endif %}
+                </span>
+                <span class="text-gray-500">{{ payment.created_at|date:"Y/m/d H:i" }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- تغییر وضعیت -->
+    {% if order.status != 'DELIVERED' and order.status != 'CANCELLED' %}
+    <div class="bg-white rounded-lg shadow p-6">
+        <p class="font-bold text-gray-900 mb-3">تغییر وضعیت سفارش</p>
+        <form method="post" action="{% url 'store:manage_order_status' order.id %}" class="flex gap-3">
+            {% csrf_token %}
+            <select name="status" required class="border border-gray-300 rounded px-3 py-2">
+                {% if order.status == 'PENDING_PAYMENT' or order.status == 'PLACED' %}
+                <option value="VIEWED">بررسی‌شده</option>
+                {% endif %}
+                {% if order.status == 'VIEWED' %}
+                <option value="READY_FOR_PICKUP">آماده تحویل</option>
+                {% endif %}
+                {% if order.status == 'READY_FOR_PICKUP' %}
+                <option value="DELIVERED">تحویل‌شده</option>
+                {% endif %}
+                <option value="CANCELLED" class="text-red-600">لغوشده</option>
+            </select>
+            <button type="submit" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">ثبت تغییر</button>
+        </form>
+        <p class="text-xs text-gray-500 mt-2">مسیر مجاز: ثبت‌شده → بررسی‌شده → آماده تحویل → تحویل‌شده. لغو سفارش پرداخت‌شده به معنی بازگشت وجه نیست.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

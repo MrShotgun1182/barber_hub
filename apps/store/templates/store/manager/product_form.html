@@ -1,0 +1,78 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}فرم محصول | پنل مدیریت{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-2xl">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">
+        {% if product %}ویرایش محصول «{{ product.title }}»{% else %}محصول جدید{% endif %}
+    </h1>
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-3 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="bg-white rounded-lg shadow p-6 space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="title" class="block text-gray-700 font-bold mb-1">عنوان محصول <span class="text-red-500">*</span></label>
+            <input type="text" id="title" name="title" required value="{{ product.title|default:'' }}"
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">
+        </div>
+        <div>
+            <label for="description" class="block text-gray-700 font-bold mb-1">توضیحات و مشخصات</label>
+            <textarea id="description" name="description" rows="4"
+                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">{{ product.description|default:'' }}</textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label for="price" class="block text-gray-700 font-bold mb-1">قیمت (تومان) <span class="text-red-500">*</span></label>
+                <input type="number" id="price" name="price" min="0" required value="{{ product.price|default:'' }}"
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">
+            </div>
+            <div>
+                <label for="category" class="block text-gray-700 font-bold mb-1">دسته‌بندی <span class="text-red-500">*</span></label>
+                <select id="category" name="category" required
+                        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if product.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div>
+            <label for="images" class="block text-gray-700 font-bold mb-1">تصاویر محصول</label>
+            <input type="file" id="images" name="images" accept="image/*" multiple
+                   class="w-full border border-gray-300 rounded px-3 py-2">
+            <p class="text-xs text-gray-500 mt-1">می‌توانید چند تصویر انتخاب کنید؛ اولین تصویر، تصویر اصلی است.</p>
+        </div>
+
+        {% if product and product.images.count %}
+        <div>
+            <p class="text-gray-700 font-bold mb-2">تصاویر فعلی:</p>
+            <div class="flex gap-2 flex-wrap">
+                {% for image in product.images.all %}
+                <img src="{{ image.url }}" alt="{{ product.title }}" class="w-16 h-16 rounded object-cover border border-gray-200">
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="flex gap-6">
+            <label class="flex items-center gap-2 text-gray-700">
+                <input type="checkbox" name="is_published" {% if product.is_published %}checked{% endif %} class="w-4 h-4">
+                انتشار در فروشگاه
+            </label>
+            <label class="flex items-center gap-2 text-gray-700">
+                <input type="checkbox" name="is_orderable" {% if product.is_orderable or not product %}checked{% endif %} class="w-4 h-4">
+                قابل سفارش
+            </label>
+        </div>
+
+        <div class="flex gap-3">
+            <button type="submit" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">ذخیره</button>
+            <a href="{% url 'store:manage_product_list' %}" class="border border-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-100">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

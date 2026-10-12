@@ -1,0 +1,83 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}محصولات | پنل مدیریت{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-5xl">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">محصولات فروشگاه</h1>
+        <a href="{% url 'store:manage_product_new' %}" class="bg-sage-500 text-cream-100 px-4 py-2 rounded hover:bg-sage-600">محصول جدید</a>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="bg-blue-100 text-blue-700 rounded p-3 mb-4">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-3 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    {% if products %}
+    <div class="bg-white rounded-lg shadow overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+            <tr class="bg-gray-50 text-gray-600 text-right">
+                <th class="p-3">تصویر</th>
+                <th class="p-3">عنوان</th>
+                <th class="p-3">دسته‌بندی</th>
+                <th class="p-3">قیمت (تومان)</th>
+                <th class="p-3">وضعیت انتشار</th>
+                <th class="p-3">قابل سفارش</th>
+                <th class="p-3">عملیات</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y">
+            {% for product in products %}
+            <tr>
+                <td class="p-3">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.url }}" alt="{{ product.title }}" class="w-12 h-12 rounded object-cover">
+                    {% else %}
+                    <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">—</div>
+                    {% endif %}
+                </td>
+                <td class="p-3 font-bold text-gray-900">{{ product.title }}</td>
+                <td class="p-3 text-gray-600">{{ product.category.name }}</td>
+                <td class="p-3 text-gray-900">{{ product.price }}</td>
+                <td class="p-3">
+                    <form method="post" action="{% url 'store:manage_product_toggle' product.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="field" value="is_published">
+                        <button type="submit" class="text-xs px-2 py-1 rounded {% if product.is_published %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-500{% endif %}">
+                            {% if product.is_published %}منتشرشده{% else %}منتشرنشده{% endif %}
+                        </button>
+                    </form>
+                </td>
+                <td class="p-3">
+                    <form method="post" action="{% url 'store:manage_product_toggle' product.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="field" value="is_orderable">
+                        <button type="submit" class="text-xs px-2 py-1 rounded {% if product.is_orderable %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-600{% endif %}">
+                            {% if product.is_orderable %}قابل سفارش{% else %}غیرقابل سفارش{% endif %}
+                        </button>
+                    </form>
+                </td>
+                <td class="p-3 space-x-2 space-x-reverse whitespace-nowrap">
+                    <a href="{% url 'store:manage_product_edit' product.id %}" class="text-sage-600 hover:underline">ویرایش</a>
+                    <form method="post" action="{% url 'store:manage_product_delete' product.id %}" class="inline" onsubmit="return confirm('این محصول حذف شود؟ (حذف نرم — تاریخچه سفارش‌ها حفظ می‌شود)');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700">حذف</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-gray-500 bg-white rounded-lg shadow p-8 text-center">هنوز محصولی ثبت نشده است.</p>
+    {% endif %}
+</div>
+{% endblock %}

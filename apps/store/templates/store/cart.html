@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+
+{% block title %}سبد خرید | Barber Hub{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto p-4">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">سبد خرید شما</h1>
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-4 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    {% if items %}
+    <div class="bg-white rounded-lg shadow divide-y">
+        {% for item in items %}
+        <div class="flex items-center justify-between p-4" data-item-row="{{ item.item_id }}">
+            <div class="flex-1">
+                <a href="{% url 'store:product_detail' item.product_id %}" class="font-bold text-gray-900 hover:underline">{{ item.product_title }}</a>
+                <p class="text-sm text-gray-500">{{ item.unit_price }} تومان</p>
+                {% if not item.is_orderable %}
+                <p class="text-sm text-red-500">این محصول دیگر قابل سفارش نیست؛ لطفاً حذفش کنید.</p>
+                {% endif %}
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" class="qty-dec w-8 h-8 border border-gray-300 rounded" data-item-id="{{ item.item_id }}">-</button>
+                <input type="number" min="0" value="{{ item.quantity }}" data-item-id="{{ item.item_id }}"
+                       class="qty-input w-16 border border-gray-300 rounded text-center">
+                <button type="button" class="qty-inc w-8 h-8 border border-gray-300 rounded" data-item-id="{{ item.item_id }}">+</button>
+            </div>
+            <div class="w-28 text-left font-bold text-gray-900 line-total" data-item-id="{{ item.item_id }}">{{ item.line_total }} تومان</div>
+            <button type="button" class="remove-item text-red-500 hover:text-red-700" data-item-id="{{ item.item_id }}">حذف</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="flex justify-between items-center mt-6 bg-white rounded-lg shadow p-4">
+        <span class="text-gray-700">مجموع ({{ items_count }} قلم):</span>
+        <span class="text-xl font-bold text-sage-600" id="cart-total">{{ total }} تومان</span>
+    </div>
+
+    <div class="flex justify-between mt-6">
+        <a href="{% url 'store:store_home' %}" class="border border-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-100">ادامه خرید</a>
+        <a href="{% url 'store:checkout' %}" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">ثبت سفارش و پرداخت</a>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg shadow p-12 text-center">
+        <p class="text-gray-500 mb-6">سبد خرید شما خالی است.</p>
+        <a href="{% url 'store:store_home' %}" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">رفتن به فروشگاه</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function postJson(url, body) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify(body),
+        }).then(res => res.json());
+    }
+
+    function setQuantity(itemId, quantity) {
+        postJson(`/store/cart/item/${itemId}/update/`, { quantity: quantity }).then(data => {
+            if (data.status !== 'success') { alert(data.message); return; }
+            if (data.message.includes('حذف')) {
+                document.querySelector(`[data-item-row="${itemId}"]`)?.remove();
+            } else {
+                document.querySelector(`.qty-input[data-item-id="${itemId}"]`).value = quantity;
+            }
+            document.getElementById('cart-total').textContent = data.total + ' تومان';
+            if (data.items_count === 0) window.location.reload();
+        });
+    }
+
+    document.querySelectorAll('.qty-inc').forEach(btn =>
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.itemId;
+            const input = document.querySelector(`.qty-input[data-item-id="${id}"]`);
+            setQuantity(id, parseInt(input.value) + 1);
+        })
+    );
+
+    document.querySelectorAll('.qty-dec').forEach(btn =>
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.itemId;
+            const input = document.querySelector(`.qty-input[data-item-id="${id}"]`);
+            const next = parseInt(input.value) - 1;
+            setQuantity(id, next < 0 ? 0 : next);
+        })
+    );
+
+    document.querySelectorAll('.qty-input').forEach(input =>
+        input.addEventListener('change', () => {
+            const next = parseInt(input.value);
+            if (isNaN(next) || next < 0) { input.value = 1; return; }
+            setQuantity(input.dataset.itemId, next);
+        })
+    );
+
+    document.querySelectorAll('.remove-item').forEach(btn =>
+        btn.addEventListener('click', () => {
+            postJson(`/store/cart/item/${btn.dataset.itemId}/remove/`, {}).then(data => {
+                if (data.status !== 'success') { alert(data.message); return; }
+                document.querySelector(`[data-item-row="${btn.dataset.itemId}"]`)?.remove();
+                document.getElementById('cart-total').textContent = data.total + ' تومان';
+                if (data.items_count === 0) window.location.reload();
+            });
+        })
+    );
+</script>
+{% endblock %}

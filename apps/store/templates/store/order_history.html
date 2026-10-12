@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block title %}سفارش‌های من | Barber Hub{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto p-4">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">سفارش‌های من</h1>
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-4 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    {% if orders %}
+    <div class="bg-white rounded-lg shadow divide-y">
+        {% for order in orders %}
+        <a href="{% url 'store:order_detail' order.id %}" class="block p-4 hover:bg-gray-50">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="font-bold text-gray-900">{{ order.order_number }}</p>
+                    <p class="text-sm text-gray-500">{{ order.created_at|date:"Y/m/d H:i" }}</p>
+                </div>
+                <div class="text-left">
+                    <p class="font-bold text-sage-600">{{ order.total_amount }} تومان</p>
+                    <p class="text-sm {% if order.status == 'CANCELLED' %}text-red-500{% elif order.status == 'READY_FOR_PICKUP' %}text-green-600 font-bold{% else %}text-gray-600{% endif %}">
+                        {{ order.get_status_display }}{% if order.is_paid %} — پرداخت‌شده{% endif %}
+                    </p>
+                </div>
+            </div>
+            {% if order.status == 'READY_FOR_PICKUP' %}
+            <p class="text-sm text-green-700 mt-2">سفارش شما آماده تحویل است؛ لطفاً برای دریافت به سالن مراجعه کنید.</p>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg shadow p-12 text-center">
+        <p class="text-gray-500 mb-6">هنوز سفارشی ثبت نکرده‌اید.</p>
+        <a href="{% url 'store:store_home' %}" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">رفتن به فروشگاه</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
