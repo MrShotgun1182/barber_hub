@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+
+{% block title %}رزرو نوبت | تاییدیه رزرو{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="mb-8 text-center">
+        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-9 h-9 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h1 class="text-3xl font-extrabold text-gray-800">نوبت شما ثبت شد ✅</h1>
+        <p class="text-gray-500 mt-2">کد پیگیری نوبت شما: <span class="font-bold text-gray-800">#{{ appointment.id }}</span></p>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-gray-100">
+        <div class="bg-gray-50 rounded-xl p-5 mb-6 border border-gray-200 space-y-3">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">آرایشگر:</span>
+                <span class="font-bold text-gray-800">
+                    {{ appointment.barber.user.get_full_name|default:appointment.barber.user.username }}
+                </span>
+            </div>
+            <hr class="border-gray-200">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">تاریخ نوبت:</span>
+                <span class="font-bold text-gray-800">{{ appointment.date|date:"Y/m/d" }}</span>
+            </div>
+            <hr class="border-gray-200">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">ساعت حضور:</span>
+                <span class="font-bold text-indigo-600">
+                    {{ appointment.start_time|time:"H:i" }} الی {{ appointment.end_time|time:"H:i" }}
+                </span>
+            </div>
+            <hr class="border-gray-200">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">وضعیت:</span>
+                <span class="font-bold text-yellow-700">{{ appointment.get_status_display }}</span>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="font-bold text-gray-700 mb-3">خدمات انتخابی:</h3>
+            <div class="space-y-2">
+                {% for barber_service in appointment.services.all %}
+                <div class="flex justify-between items-center p-3 bg-white border border-gray-200 rounded-xl">
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm">{{ barber_service.service.name }}</h4>
+                        <span class="text-xs text-gray-400">
+                            {% if barber_service.custom_duration_minutes %}{{ barber_service.custom_duration_minutes }}{% else %}{{ barber_service.service.default_duration_minutes }}{% endif %} دقیقه
+                        </span>
+                    </div>
+                    <span class="font-bold text-emerald-600 text-sm">
+                        {% if barber_service.custom_price %}{{ barber_service.custom_price }}{% else %}{{ barber_service.service.base_price }}{% endif %} تومان
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="border-t pt-4 mb-8 flex justify-between items-center">
+            <span class="text-gray-600 font-medium">مجموع قابل پرداخت:</span>
+            <span class="font-extrabold text-gray-900 text-xl">{{ appointment.total_price }} تومان</span>
+        </div>
+
+        <div class="flex items-center justify-center">
+            <a href="{% url 'landing' %}"
+               class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all duration-200">
+                بازگشت به صفحه اصلی
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,3 +4,4 @@ from .otp_page_view import OTPPageView
 from .select_barber_and_service_view import SelectBarberAndServiceView
 from .select_datetime_view import SelectDatetimeView
 from .review_booking_view import ReviewBookingView
+from .booking_confirmation_view import BookingConfirmationView

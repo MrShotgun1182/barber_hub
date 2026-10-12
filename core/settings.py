@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'admin_panel',
     'booking',
     'salon_services',
+    'store',
     'OTP',
 ]
 
@@ -91,6 +92,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+
+# فایل‌های آپلودی (تصاویر محصولات فروشگاه)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'media'))
+
+# مسیر ورود پیش‌فرض برای @login_required (صفحه OTP مشتری)
+LOGIN_URL = 'booking:otp_page'
 STATICFILES_DIRS = [
     os.path.normpath(os.path.join(BASE_DIR, 'frontend', 'static')),
 ]
@@ -104,6 +112,15 @@ load_dotenv(BASE_DIR / '.env')
 MELIPAYAMAK_USERNAME = os.getenv('MELIPAYAMAK_USERNAME')
 MELIPAYAMAK_PASSWORD = os.getenv('MELIPAYAMAK_PASSWORD')
 MELIPAYAMAK_FROM = os.getenv('MELIPAYAMAK_FROM')
+
+# تنظیمات درگاه پرداخت زرین‌پال (حالت sandbox برای توسعه)
+ZARINPAL_MERCHANT_ID = os.getenv('ZARINPAL_MERCHANT_ID', '')
+ZARINPAL_SANDBOX = os.getenv('ZARINPAL_SANDBOX', '1') == '1'
+ZARINPAL_CALLBACK_URL = os.getenv(
+    'ZARINPAL_CALLBACK_URL',
+    'http://localhost:8000/store/payment/callback/',
+)
+ZARINPAL_CURRENCY = 'IRT'
 
 # ==============================================================================
 # ⚡ Celery & Redis Configuration

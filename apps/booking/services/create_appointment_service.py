@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.db import transaction
 from booking import models as booking_models
+from booking.services.check_slot_availability_service import CheckSlotAvailabilityService
 from barbers import models as barbers_models
 from customers import models as customers_models
 
@@ -50,14 +51,17 @@ def CreateAppointmentService(
         start_time_obj = datetime.strptime(start_time_str, '%H:%M').time()
         end_time_obj = datetime.strptime(end_time_str, '%H:%M').time()
 
-        # ۵. بررسی مجدد تداخل زمانی (جلوگیری از Double Booking در رزرو هم‌زمان)
-        has_overlap = booking_models.AppointmentModel.objects.filter(
+        # ۵. قفل ردیف آرایشگر برای جلوگیری قطعی از Double Booking در رزرو هم‌زمان.
+        # قفل روی ردیف آرایشگر، همه‌ی رزروهای هم‌زمان همان آرایشگر را سریالایز می‌کند
+        # تا الگوی «بررسی سپس ثبت» در شرایط رقابتی قابل اتکا شود.
+        barbers_models.BarberModel.objects.select_for_update().get(id=barber.id)
+
+        has_overlap = not CheckSlotAvailabilityService(
             barber=barber,
-            date=date_obj,
-            status__in=['PENDING', 'CONFIRMED'],
-            start_time__lt=end_time_obj,
-            end_time__gt=start_time_obj,
-        ).exists()
+            appointment_date=date_obj,
+            start_time=start_time_obj,
+            end_time=end_time_obj,
+        )
 
         if has_overlap:
             raise ValueError(

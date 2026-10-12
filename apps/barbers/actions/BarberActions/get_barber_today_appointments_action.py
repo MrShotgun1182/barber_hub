@@ -17,7 +17,7 @@ def GetBarberTodayAppointmentsAction(user: Any) -> Dict[str, Any]:
             'count': 0,
         }
 
-    today = timezone.now().date()
+    today = timezone.localdate()
 
     appointments = booking_services.GetBarberAppointmentsService(
         barber=barber,

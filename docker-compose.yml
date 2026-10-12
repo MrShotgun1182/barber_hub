@@ -45,6 +45,9 @@ services:
       - DB_PORT=5432
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - ZARINPAL_MERCHANT_ID=${ZARINPAL_MERCHANT_ID:-}
+      - ZARINPAL_SANDBOX=${ZARINPAL_SANDBOX:-1}
+      - ZARINPAL_CALLBACK_URL=${ZARINPAL_CALLBACK_URL:-http://localhost:8000/store/payment/callback/}
     depends_on:
       db:
         condition: service_healthy
@@ -53,7 +56,7 @@ services:
     command: >
       sh -c "cd /app/frontend && npm install && npm run build && npm run dev &
              cd /app && python manage.py migrate &&
-             python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin1234', role='MANAGER')\" &&
+             python manage.py shell -c \"from django.contrib.auth import get_user_model; from admin_panel.models import AdminPanelModel; User = get_user_model(); user, created = User.objects.get_or_create(username='admin', defaults={'email': 'admin@example.com', 'role': 'MANAGER', 'is_staff': True, 'is_superuser': True}); created and user.set_password('admin1234'); created and user.save(); AdminPanelModel.objects.get_or_create(user=user)\" &&
              python manage.py runserver 0.0.0.0:8000"
 
   # 4. پردازشگر تاسک‌های غیرهمزمان Celery Worker
@@ -71,6 +74,9 @@ services:
       - DB_PORT=5432
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - ZARINPAL_MERCHANT_ID=${ZARINPAL_MERCHANT_ID:-}
+      - ZARINPAL_SANDBOX=${ZARINPAL_SANDBOX:-1}
+      - ZARINPAL_CALLBACK_URL=${ZARINPAL_CALLBACK_URL:-http://localhost:8000/store/payment/callback/}
     depends_on:
       db:
         condition: service_healthy

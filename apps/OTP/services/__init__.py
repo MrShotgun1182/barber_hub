@@ -1,3 +1,3 @@
 from .generate_otp_code_service import GenerateOTPCodeService
+from .verify_otp_service import VerifyOTPCodeService
 from .send_sms_service import SendSMSService
-from .generate_otp_code_service import GenerateOTPCodeService
