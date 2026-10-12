@@ -45,6 +45,9 @@ services:
       - DB_PORT=5432
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - ZARINPAL_MERCHANT_ID=${ZARINPAL_MERCHANT_ID:-}
+      - ZARINPAL_SANDBOX=${ZARINPAL_SANDBOX:-1}
+      - ZARINPAL_CALLBACK_URL=${ZARINPAL_CALLBACK_URL:-http://localhost:8000/store/payment/callback/}
     depends_on:
       db:
         condition: service_healthy
@@ -71,6 +74,9 @@ services:
       - DB_PORT=5432
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - ZARINPAL_MERCHANT_ID=${ZARINPAL_MERCHANT_ID:-}
+      - ZARINPAL_SANDBOX=${ZARINPAL_SANDBOX:-1}
+      - ZARINPAL_CALLBACK_URL=${ZARINPAL_CALLBACK_URL:-http://localhost:8000/store/payment/callback/}
     depends_on:
       db:
         condition: service_healthy
