@@ -1,87 +1,87 @@
-# CLAUDE.md — قوانین و راهنمای پروژه Barber Hub
+# CLAUDE.md — Rules and Developer Guide for Barber Hub Project
 
-این فایل مرجع قوانین، معماری و قراردادهای پروژه است. قبل از هر تغییری در کد، این فایل را بخوان.
-
----
-
-## ۱. معرفی پروژه
-
-**Barber Hub** یک سامانه رزرو نوبت آرایشگاه به زبان فارسی است:
-- مشتری با شماره موبایل و کد OTP وارد می‌شود، آرایشگر و خدمت را انتخاب می‌کند و نوبت رزرو می‌کند.
-- آرایشگر پنل اختصاصی (نوبت‌های امروز، خدمات، ساعات کاری) دارد.
-- مدیر (MANAGER) پنل مدیریت (خدمات پایه سالن، نوبت‌های امروز) دارد.
-
-زبان پروژه فارسی است: تمام `verbose_name`ها، docstringها، پیام‌های خطا و کامنت‌ها باید فارسی باشند.
+This file serves as the reference for rules, architecture, and conventions for the project. Read this file carefully before making any code modifications.
 
 ---
 
-## ۲. پشته فناوری (Tech Stack)
+## 1. Project Overview
 
-| بخش | فناوری |
+**Barber Hub** is a barbershop appointment booking system written in Persian:
+- Customers log in via mobile number and OTP code, select a barber and service, and book an appointment.
+- Barbers have a dedicated panel (today's appointments, services, working hours).
+- Managers (MANAGER) have an administration panel (salon base services, today's appointments).
+
+The project language is Persian: all `verbose_name` attributes, docstrings, error messages, and comments must remain in Persian.
+
+---
+
+## 2. Tech Stack
+
+| Component | Technology |
 | --- | --- |
-| بک‌اند | Django `>=5.0,<6.0` (ولیدیشن رمز غیرفعال است) |
-| دیتابیس | PostgreSQL 15 |
-| تسک غیرهمزمان | Celery + Redis |
-| پیامک | پکیج `melipayamak` |
-| فرانت‌اند | Tailwind CSS v4 (بدون فایل کانفیگ، تم داخل `input.css`) |
-| کانتینر | Docker + docker-compose |
+| Backend | Django `>=5.0,<6.0` (Password validation disabled) |
+| Database | PostgreSQL 15 |
+| Asynchronous Tasks | Celery + Redis |
+| SMS Provider | `melipayamak` package |
+| Frontend | Tailwind CSS v4 (No config file; theme inside `input.css`) |
+| Containerization | Docker + docker-compose |
 
 ---
 
-## ۳. دستورات کلیدی
+## 3. Key Commands
 
 ```bash
-# اجرای کل استک (وب + دیتابیس + redis + celery)
+# Run the complete stack (web + database + redis + celery)
 docker compose up --build
 
-# ساخت و اجرای مایگریشن‌ها
+# Generate and apply migrations
 python manage.py makemigrations
 python manage.py migrate
 
-# اجرای سرور توسعه
+# Run the development server
 python manage.py runserver
 
-# اجرای Celery worker (برای ارسال پیامک OTP)
+# Run Celery worker (for OTP SMS delivery)
 celery -A core worker --loglevel=info
 
-# فرانت‌اند: کامپایل Tailwind
+# Frontend: Compile Tailwind
 cd frontend
-npm run dev     # حالت watch → خروجی frontend/static/dist/output.css
-npm run build   # حالت minify برای پروداکشن
+npm run dev     # Watch mode → output to frontend/static/dist/output.css
+npm run build   # Minified build for production
 
-# تست‌ها
+# Tests
 python manage.py test
 ```
 
-> **نکته:** فایل CSS نهایی در `frontend/static/dist/output.css` ساخته می‌شود و در تمپلیت‌ها با `{% static 'dist/output.css' %}` لود می‌شود. پس از افزودن کلاس‌های جدید Tailwind، باید کامپایلر در حال اجرا باشد.
+> **Note:** The final compiled CSS file is generated at `frontend/static/dist/output.css` and loaded into templates via `{% static 'dist/output.css' %}`. When adding new Tailwind classes, ensure the compiler is actively running.
 
 ---
 
-## ۴. معماری لایه‌ای (قانون طلایی)
+## 4. Layered Architecture (Golden Rule)
 
-جریان داده **یک‌طرفه** است و هیچ لایه‌ای نباید لایه بالاتر را صدا بزند:
+Data flow is **strictly unidirectional**; no layer may invoke a higher layer:
 
 ```
 Request → View → Action → Service → Model/DB
 ```
 
-| لایه | مسئولیت | مجاز به |
+| Layer | Responsibility | Allowed Actions |
 | --- | --- | --- |
-| **View** | دریافت request، پارس ورودی، رندر تمپلیت یا JsonResponse | فقط فراخوانی Action |
-| **Action** | ارکستراسیون سرویس‌ها، اعتبارسنجی، مدیریت خطا، `transaction.atomic` | فراخوانی Service |
-| **Service** | منطق خالص دیتابیس و محاسبات | کار با Model/ORM |
-| **Model** | تعریف ساختار دیتابیس | — |
+| **View** | Receive request, parse input, render template or return JsonResponse | Call Actions only |
+| **Action** | Service orchestration, validation, error handling, `transaction.atomic` | Call Services |
+| **Service** | Pure database logic and business calculations | Interact with Model/ORM |
+| **Model** | Database schema definition | — |
 
-**قوانین سخت:**
-- ویو **نباید** مستقیم سرویس را صدا بزند؛ فقط Action.
-- ویو **نباید** مستقیم کوئری ORM بزند.
-- منطق کسب‌وکار در Action و Service است، نه در View و نه در Model.
-- Action برای عملیات چندگانه/اتمیک، `transaction.atomic()` را در خودش یا در سرویس صداکننده می‌پیچد.
+**Strict Rules:**
+- Views **must not** call Services directly; only Actions.
+- Views **must not** execute ORM queries directly.
+- Business logic belongs in Actions and Services, not in Views or Models.
+- Actions wrap multiple/atomic operations inside `transaction.atomic()` locally or within the calling service.
 
-**شکل خروجی اکشن‌ها:** اکشن‌ها معمولاً یک `dict` برمی‌گردانند و خطاها را درون خودشان catch می‌کنند تا به ویو نشت نکند:
+**Action Output Structure:** Actions typically return a `dict` and catch internal errors to prevent leakage to the view layer:
 
 ```python
-# الگوی متداول اکشن
+# Standard Action Pattern
 def SomeAction(...) -> dict:
     try:
         data = some_services.SomeService(...)
@@ -89,18 +89,18 @@ def SomeAction(...) -> dict:
     except ValueError as ve:
         return {'status': 'error', 'message': str(ve)}
     except Exception:
-        return {'status': 'error', 'message': 'خطایی رخ داد. مجدداً تلاش کنید.'}
+        return {'status': 'error', 'message': 'An error occurred. Please try again.'}
 ```
 
-> برخی اکشن‌های ورود، از کلید `success` (بولین) و `error` استفاده می‌کنند (مثل `BarberLoginAction`). الگوی غالب در پاسخ‌های API کلیدهای `status`/`message` است. هنگام افزودن اکشن جدید، به قرارداد اکشن‌های هم‌خانواده‌اش نگاه کن.
+> Note: Certain authentication actions use `success` (boolean) and `error` keys (e.g., `BarberLoginAction`). However, the dominant pattern across API responses uses `status`/`message` keys. Align with sibling actions when creating a new action.
 
 ---
 
-## ۵. قواعد نام‌گذاری
+## 5. Naming Conventions
 
-### نام فایل‌ها — snake_case با پسوند لایه
+### File Naming — snake_case with Layer Suffix
 
-| لایه | الگوی فایل | الگوی نام تابع/کلاس |
+| Layer | File Pattern | Function/Class Name Pattern |
 | --- | --- | --- |
 | Models | `[name]_model.py` | `[Name]Model` |
 | Services | `[action]_[name]_service.py` | `[Action][Name]Service` |
@@ -108,18 +108,18 @@ def SomeAction(...) -> dict:
 | Views | `[name]_view.py` | `[Name]View` |
 | Templates | `[name].html` | — |
 
-**مثال‌ها:**
-- `apps/booking/services/create_appointment_service.py` → تابع `CreateAppointmentService`
-- `apps/booking/actions/submit_booking_action.py` → تابع `SubmitBookingAction`
-- `apps/booking/views/select_datetime_view.py` → تابع `SelectDatetimeView`
+**Examples:**
+- `apps/booking/services/create_appointment_service.py` → Function `CreateAppointmentService`
+- `apps/booking/actions/submit_booking_action.py` → Function `SubmitBookingAction`
+- `apps/booking/views/select_datetime_view.py` → Function `SelectDatetimeView`
 
-### نکات مهم
-- توابع در ویو/اکشن/سرویس **PascalCase** هستند (نه snake_case)، حتی در ویوها. ویوها **تابع** هستند نه کلاس (استثنا: `django.views.generic.TemplateView` که فقط در `core/urls.py` استفاده شده).
-- **همه** فایل‌های `views/`، `actions/`، `services/`، `models/` یک `__init__.py` دارند که نمادها را re-export می‌کند. بعد از افزودن فایل جدید، حتماً آن را در `__init__.py` همان پوشه import کن.
-- در `admin_panel` پوشه اکشن‌ها با حرف بزرگ است: `Actions/` (ناسازگاری تاریخی). در بقیه اپ‌ها `actions/` است. الگوی همان اپ را رعایت کن.
+### Important Rules
+- Functions in views/actions/services use **PascalCase** (not snake_case), even in views. Views are defined as **functions**, not classes (exception: `django.views.generic.TemplateView`, which is used only in `core/urls.py`).
+- **All** directories under `views/`, `actions/`, `services/`, and `models/` contain an `__init__.py` file re-exporting symbols. Always import newly added files into the folder's `__init__.py`.
+- In `admin_panel`, the action directory is capitalized: `Actions/` (historical inconsistency). Other apps use `actions/`. Follow the convention of the respective app.
 
-### الگوی import
-پوشه `apps/` به `sys.path` اضافه شده (در `core/settings.py`). پس اپ‌ها با **نام خالی** import می‌شوند، نه با پیشوند `apps.`:
+### Import Pattern
+The `apps/` directory is added to `sys.path` (in `core/settings.py`). Apps should be imported **without** the `apps.` prefix:
 
 ```python
 from booking import services as booking_services
@@ -127,144 +127,144 @@ from barbers import models as barbers_models
 from accounts import services as accounts_services
 ```
 
-الگوی `import ... as ..._models` / `..._services` رایج است تا از تداخل نام جلوگیری شود. همین سبک را ادامه بده.
+Using the alias pattern `import ... as ..._models` / `..._services` is standard practice to prevent name collisions. Continue following this style.
 
 ---
 
-## ۶. ساختار پروژه
+## 6. Project Structure
 
 ```
 barber_hub/
-├── core/                      # تنظیمات ریشه: settings.py, urls.py, celery.py
-├── apps/                      # همه اپ‌ها (روی sys.path)
+├── core/                      # Root configuration: settings.py, urls.py, celery.py
+├── apps/                      # Application modules (on sys.path)
 │   ├── accounts/              # UserModel (AbstractUser + phone_number + role)
 │   ├── barbers/               # BarberModel, BarberServiceModel, WorkingHoursModel
 │   ├── customers/             # CustomerModel, CustomerHairstyleModel
-│   ├── admin_panel/           # AdminPanelModel (پروفایل مدیر) + پوشه Actions/ (بزرگ)
-│   ├── booking/               # AppointmentModel + فلوی ویزارد رزرو
-│   ├── salon_services/        # ServiceModel (خدمات پایه سالن)
-│   └── OTP/                   # OTPModel + Celery task ارسال پیامک
-├── frontend/                  # Tailwind + تمپلیت‌های سراسری + استاتیک
-│   ├── static/src/input.css   # تم و رنگ‌های سفارشی (cream/sage)
-│   ├── static/dist/output.css # خروجی کامپایل‌شده Tailwind
+│   ├── admin_panel/           # AdminPanelModel (Manager Profile) + Actions/ folder
+│   ├── booking/               # AppointmentModel + Booking Wizard Flow
+│   ├── salon_services/        # ServiceModel (Salon Base Services)
+│   └── OTP/                   # OTPModel + Celery SMS task
+├── frontend/                  # Tailwind + Global Templates + Static assets
+│   ├── static/src/input.css   # Custom theme & color definitions (cream/sage)
+│   ├── static/dist/output.css # Compiled Tailwind CSS output
 │   └── templates/core/        # base.html, barber_base.html, admin_base.html, landing.html
 └── manage.py
 ```
 
-هر اپ داخل `apps/` ساختار زیر را دارد:
-`models/`, `views/`, `actions/`, `services/`, `templates/<app>/`, `migrations/`, `admin.py`, `urls.py` (اختیاری).
+Each app under `apps/` follows this layout:
+`models/`, `views/`, `actions/`, `services/`, `templates/<app>/`, `migrations/`, `admin.py`, `urls.py` (optional).
 
-> **اپ‌های بدون `urls.py`:** `OTP`, `customers`, `salon_services`. این‌ها از طریق ویوهای اپ‌های دیگر (مثل `booking`) یا به‌صورت داخلی استفاده می‌شوند. در `core/urls.py` ثبت نمی‌شوند.
-
----
-
-## ۷. مدل‌های دامنه و روابط کلیدی
-
-- **`accounts.UserModel`** (سفارشی، `AUTH_USER_MODEL`): `AbstractUser` + `phone_number` (unique, ۱۱ رقم) + `role` در `{CUSTOMER, BARBER, MANAGER}`.
-- **`barbers.BarberModel`**: `OneToOne` به User با `related_name='barber_profile'`.
-- **`customers.CustomerModel`**: `OneToOne` به User با `related_name='customer_profile'`.
-- **`admin_panel.AdminPanelModel`**: `OneToOne` به User با `related_name='manager_profile'`.
-- **`salon_services.ServiceModel`**: خدمت پایه با `base_price` و `default_duration_minutes`.
-- **`barbers.BarberServiceModel`**: خدمت اختصاصی آرایشگر (`unique_together=(barber, service)`) با `custom_price` و `custom_duration_minutes` که اگر `null` باشند، مقادیر پایه `ServiceModel` اعمال می‌شوند.
-- **`barbers.WorkingHoursModel`**: ساعات کاری هفتگی؛ `day_of_week` از **۰=شنبه تا ۶=جمعه** (نگاشت پایتون: `(date.weekday() + 2) % 7`).
-- **`booking.AppointmentModel`**: نوبت با `ManyToMany` به `BarberServiceModel`، `total_price`/`total_duration_minutes` ذخیره‌شده، و `status` در `{PENDING, CONFIRMED, COMPLETED, CANCELLED}`.
-
-### اعتبارسنجی زمان
-در همه‌جا از فرمول استاندارد تداخل استفاده کن:
-`max(start1, start2) < min(end1, end2)` → تداخل دارد.
-فقط نوبت‌های با وضعیت `PENDING` و `CONFIRMED` در بررسی آزاد بودن اسلات لحاظ می‌شوند.
+> **Apps without `urls.py`:** `OTP`, `customers`, `salon_services`. These are consumed internally or through other app views (e.g., `booking`). They are not directly registered in `core/urls.py`.
 
 ---
 
-## ۸. فلوی رزرو (Wizard)
+## 7. Domain Models & Key Relationships
 
-چهار گام مجزا، هر گام **ویو/اکشن/سرویس اختصاصی** دارد. State در `sessionStorage` مرورگر نگه داشته می‌شود:
+- **`accounts.UserModel`** (Custom, `AUTH_USER_MODEL`): `AbstractUser` + `phone_number` (unique, 11 digits) + `role` in `{CUSTOMER, BARBER, MANAGER}`.
+- **`barbers.BarberModel`**: `OneToOne` to User with `related_name='barber_profile'`.
+- **`customers.CustomerModel`**: `OneToOne` to User with `related_name='customer_profile'`.
+- **`admin_panel.AdminPanelModel`**: `OneToOne` to User with `related_name='manager_profile'`.
+- **`salon_services.ServiceModel`**: Base service with `base_price` and `default_duration_minutes`.
+- **`barbers.BarberServiceModel`**: Barber-specific service mapping (`unique_together=(barber, service)`) with `custom_price` and `custom_duration_minutes`. If null, base `ServiceModel` values apply.
+- **`barbers.WorkingHoursModel`**: Weekly working schedules; `day_of_week` ranges from **0=Saturday to 6=Friday** (Python mapping: `(date.weekday() + 2) % 7`).
+- **`booking.AppointmentModel`**: Booking slot with `ManyToMany` to `BarberServiceModel`, stored `total_price`/`total_duration_minutes`, and `status` in `{PENDING, CONFIRMED, COMPLETED, CANCELLED}`.
+
+### Time Overlap Validation
+Always use the standard overlap formula:
+`max(start1, start2) < min(end1, end2)` → Overlaps exist.
+Only appointments with `PENDING` and `CONFIRMED` statuses are considered during slot availability calculations.
+
+---
+
+## 8. Booking Wizard Flow
+
+Divided into 4 isolated steps, each step having its **dedicated View/Action/Service**. State is maintained client-side in browser `sessionStorage`:
 
 1. **OTP** — `SendOTPView`/`VerifyOTPView` → `SendOTPAction`/`VerifyOTPAction`
-2. **انتخاب آرایشگر و خدمت** — `SelectBarberAndServiceView` → `GetBookingOptionsAction`
-3. **انتخاب تاریخ و سانس** — `SelectDatetimeView` → `GetAvailableSlotsAction` → `CalculateAvailableSlotsService`
-4. **بازبینی و ثبت نهایی** — `ReviewBookingView` → `SubmitBookingAction` → `CreateAppointmentService`
+2. **Barber & Service Selection** — `SelectBarberAndServiceView` → `GetBookingOptionsAction`
+3. **Date & Time Slot Selection** — `SelectDatetimeView` → `GetAvailableSlotsAction` → `CalculateAvailableSlotsService`
+4. **Review & Final Submission** — `ReviewBookingView` → `SubmitBookingAction` → `CreateAppointmentService`
 
-مسیرها در `apps/booking/urls.py` با `app_name = 'booking'` و نام‌گذاری namespace دار.
+Routes are configured in `apps/booking/urls.py` with `app_name = 'booking'` and namespaced path names.
 
-جزئیات کامل فلو در `appointment_std.md` آمده است.
-
----
-
-## ۹. OTP و پیامک
-
-- کد ۶ رقمی با `secrets` تولید می‌شود (`GenerateOTPCodeService`)، در `OTPModel` ذخیره و **اعتبار ۲ دقیقه** دارد.
-- ارسال پیامک **غیرهمزمان** با Celery است: `SendOTPSMSTask.delay(...)` → `SendSMSService` (پکیج `melipayamak`).
-- اعتبارنامه‌های پیامک از `.env` خوانده می‌شوند: `MELIPAYAMAK_USERNAME`, `MELIPAYAMAK_PASSWORD`, `MELIPAYAMAK_FROM`.
-- تأیید کد به‌صورت اتمیک `is_used=True` می‌کند تا استفاده مجدد ممکن نباشد.
+Detailed flow specifications are available in `appointment_std.md`.
 
 ---
 
-## ۱۰. URLها
+## 9. OTP & SMS System
 
-- `core/urls.py`: `admin/` (Django admin)، `accounts/`، `admin_panel/`، `barber/`، `booking/`، و `''` برای landing.
-- اپ‌ها `app_name` تعریف می‌کنند و URLها با namespace صدا زده می‌شوند: `{% url 'barbers:barbers_dashboard' %}`.
-- ویوها به‌صورت تابعی مستقیم ثبت می‌شوند: `path('...', views.SomeView, name='some_name')`.
-
----
-
-## ۱۱. تمپلیت‌ها و فرانت‌اند
-
-- تمپلیت‌های سراسری در `frontend/templates/core/` (`DIRS` در settings). تمپلیت‌های هر اپ در `apps/<app>/templates/<app>/`.
-- ارث‌بری: از `core/base.html` (و برای پنل‌ها `core/barber_base.html` / `core/admin_base.html`).
-- زبان پیش‌فرض `fa` و `dir="rtl"` است.
-- Tailwind v4: **فایل `tailwind.config.js` وجود ندارد**. محتوا خودکار از تمپلیت‌ها اسکن می‌شود و تم سفارشی داخل `frontend/static/src/input.css` با `@theme` تعریف شده (پالت `cream-*` و `sage-*`).
-- برای استفاده از رنگ‌های برند از کلاس‌هایی مثل `bg-sage-500`، `text-cream-100` استفاده کن.
+- 6-digit verification codes generated via `secrets` (`GenerateOTPCodeService`), saved in `OTPModel`, with a **2-minute expiration window**.
+- SMS delivery handled **asynchronously** via Celery: `SendOTPSMSTask.delay(...)` → `SendSMSService` (`melipayamak` package).
+- SMS provider credentials configured in `.env`: `MELIPAYAMAK_USERNAME`, `MELIPAYAMAK_PASSWORD`, `MELIPAYAMAK_FROM`.
+- Code verification sets `is_used=True` atomically to prevent reuse.
 
 ---
 
-## ۱۲. احراز هویت و دسترسی
+## 10. URL Routing
 
-- ورود مشتری: موبایل + OTP → `GetOrCreateUserByPhoneService` کاربر را با نقش `CUSTOMER` می‌سازد و `login()` می‌کند.
-- ورود آرایشگر: فقط کاربران با `role == 'BARBER'` و پروفایل `is_active=True` (اکشن `BarberLoginAction`).
-- ورود مدیر: `role == 'MANAGER'` یا `is_staff` یا `is_superuser` (اکشن `AdminLoginAction`).
-- ویوهای پنل‌ها با `@login_required` و بررسی دستی نقش محافظت می‌شوند. هنگام افزودن ویو جدید، محافظت دسترسی را فراموش نکن.
-
----
-
-## ۱۳. نکات و بدهی‌های فنی شناخته‌شده (Gotchas)
-
-این موارد را هنگام کار روی کد در نظر بگیر؛ **بدون درخواست صریح آن‌ها را «درست» نکن**، فقط آگاه باش:
-
-- `SECRET_KEY`، `DEBUG=True` و `AUTH_PASSWORD_VALIDATORS = []` در `settings.py` سخت‌کد شده‌اند (حالت توسعه). برای پروداکشن باید اصلاح شوند.
-- در `apps/OTP/` هم پکیج `models/` و هم فایل `apps/OTP/models.py` وجود دارد. پکیج برنده می‌شود و `models.py` عملاً کد مرده است — تغییرات را در `models/OTP_model.py` بده.
-- `apps/OTP/views.py` یک فایل است (نه پکیج `views/`) و `urls.py` ندارد؛ از طریق `booking` استفاده می‌شود.
-- `SendSMSService` شامل `print()`های دیباگ است که مقادیر حساس را چاپ می‌کنند.
-- پوشه `Actions/` (بزرگ) فقط در `admin_panel` — ناسازگار با بقیه اپ‌ها.
-- درخواست‌های AJAX/Fetch برای دریافت JSON، هدر `x-requested-with: XMLHttpRequest` یا پارامتر `?format=json` را می‌فرستند (الگوی `SelectBarberAndServiceView`).
+- `core/urls.py`: `admin/` (Django admin), `accounts/`, `admin_panel/`, `barber/`, `booking/`, and `''` for landing page.
+- Applications define `app_name`, and URLs are resolved via namespaces: `{% url 'barbers:barbers_dashboard' %}`.
+- Views are registered directly as function endpoints: `path('...', views.SomeView, name='some_name')`.
 
 ---
 
-## ۱۴. چک‌لیست افزودن قابلیت جدید
+## 11. Templates & Frontend
 
-1. مدل (در صورت نیاز) → `models/<name>_model.py` + ثبت در `models/__init__.py` + مایگریشن.
-2. سرویس‌ها → `services/<action>_<name>_service.py` + ثبت در `services/__init__.py`.
-3. اکشن → `actions/<operation>_<name>_action.py` + ثبت در `actions/__init__.py`.
-4. ویو → `views/<name>_view.py` + ثبت در `views/__init__.py`.
-5. مسیر → `urls.py` اپ با `name` مناسب.
-6. تمپلیت (در صورت نیاز) → `templates/<app>/<name>.html`.
-7. رعایت زبان فارسی در پیام‌ها و `verbose_name`ها.
+- Global templates reside in `frontend/templates/core/` (`DIRS` setting). App-specific templates reside in `apps/<app>/templates/<app>/`.
+- Template inheritance extends from `core/base.html` (or `core/barber_base.html` / `core/admin_base.html` for dashboards).
+- Default document language is `fa` with `dir="rtl"`.
+- Tailwind v4: **No `tailwind.config.js` exists**. Classes are auto-scanned from templates, and custom themes are defined inside `frontend/static/src/input.css` using `@theme` (`cream-*` and `sage-*` palettes).
+- Use brand colors via utility classes such as `bg-sage-500` or `text-cream-100`.
 
 ---
 
-## ۱۵. اسکیل‌های پروژه
+## 12. Authentication & Access Control
 
-اسکیل‌های اختصاصی این پروژه در `.claude/skills/` قرار دارند:
-
-- **`add-feature`** — چک‌لیست گام‌به‌گام افزودن قابلیت جدید (مدل → سرویس → اکشن → ویو → مسیر → تمپلیت) با یادآوری ثبت در `__init__.py`ها و فارسی‌نویسی.
-- **`run-stack`** — دستورات اجرای استک (Docker یا لوکال + Celery + Tailwind) و پیش‌نیازهای آن.
-- **`git-commit`** — فرآیند کامیت تمیز: انتخاب صریح فایل‌ها (بدون `git add .`)، بازبینی `git diff --staged`، پیام‌های Conventional Commits و جداسازی تغییرات بی‌ربط.
+- Customer Login: Phone + OTP → `GetOrCreateUserByPhoneService` creates user with `CUSTOMER` role and executes `login()`.
+- Barber Login: restricted to users with `role == 'BARBER'` and active profiles (`is_active=True`) via `BarberLoginAction`.
+- Manager Login: requires `role == 'MANAGER'`, `is_staff`, or `is_superuser` via `AdminLoginAction`.
+- Panel views are secured with `@login_required` and manual role checks. Always verify access controls when adding new view functions.
 
 ---
 
-## ۱۶. سبک کد
+## 13. Known Technical Debt & Gotchas
 
-- docstring فارسی یک‌خطی برای هر تابع اصلی (نقش لایه را توضیح دهد).
-- Type hint برای پارامترهای سرویس/اکشن (`barber_id: int`, `barber_service_ids: list[int]`, `-> dict`).
-- کامنت‌های شماره‌دار فارسی (`# ۱. ...`, `# ۲. ...`) برای مراحل داخل توابع طولانی.
-- نام متغیرها و توابع: انگلیسی. پیام‌ها/برچسب‌ها: فارسی.
+Keep these points in mind when working on the codebase; **do not alter or refactor them unless explicitly requested**:
+
+- `SECRET_KEY`, `DEBUG=True`, and `AUTH_PASSWORD_VALIDATORS = []` are hardcoded in `settings.py` for development mode. These require updating before production deployment.
+- In `apps/OTP/`, both a `models/` package and a standalone `apps/OTP/models.py` file exist. The package takes precedence, making `models.py` dead code — make changes inside `models/OTP_model.py`.
+- `apps/OTP/views.py` is a single file rather than a `views/` directory package and lacks a `urls.py`; it is invoked through the `booking` module.
+- `SendSMSService` contains debug `print()` statements that output sensitive information.
+- The `Actions/` folder in `admin_panel` uses uppercase naming, differing from other apps.
+- AJAX/Fetch requests expecting JSON send an `x-requested-with: XMLHttpRequest` header or a `?format=json` query parameter (pattern seen in `SelectBarberAndServiceView`).
+
+---
+
+## 14. Feature Implementation Checklist
+
+1. Model (if required) → `models/<name>_model.py` + register in `models/__init__.py` + run migrations.
+2. Services → `services/<action>_<name>_service.py` + register in `services/__init__.py`.
+3. Action → `actions/<operation>_<name>_action.py` + register in `actions/__init__.py`.
+4. View → `views/<name>_view.py` + register in `views/__init__.py`.
+5. Route → Register in the app's `urls.py` with an appropriate `name`.
+6. Template (if required) → `templates/<app>/<name>.html`.
+7. Ensure all error messages and `verbose_name` strings are written in Persian.
+
+---
+
+## 15. Project Skills
+
+Project-specific skill configurations are stored under `.claude/skills/`:
+
+- **`add-feature`** — Step-by-step checklist for adding new features (Model → Service → Action → View → Route → Template), reminding developers to export modules in `__init__.py` files and maintain Persian messaging.
+- **`run-stack`** — Commands for launching the application stack (Docker or local + Celery + Tailwind) along with environment prerequisites.
+- **`git-commit`** — Clean git commit workflow: explicit file staging (avoiding `git add .`), reviewing `git diff --staged`, adhering to Conventional Commits, and isolating unrelated changes.
+
+---
+
+## 16. Code Style Guidelines
+
+- Single-line Persian docstrings for every major function explaining the layer's responsibility.
+- Type annotations for all service and action parameters (`barber_id: int`, `barber_service_ids: list[int]`, `-> dict`).
+- Numbered Persian comments (`# ۱. ...`, `# ۲. ...`) detailing steps inside longer function blocks.
+- Variable and function names in English; user messages, strings, and labels in Persian.

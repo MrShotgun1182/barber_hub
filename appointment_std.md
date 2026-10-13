@@ -1,75 +1,100 @@
-# 🗺️ نقشه راه فنی: فرآیند چندمرحله‌ای رزرو نوبت مشتری (Wizard Booking Flow)
+# 🗺️ Technical Roadmap: Multi-Step Customer Booking Flow (Wizard Booking Flow)
 
-### 📌 ساختار کلی معماری
+### 📌 Overall Architecture
 
-* **استراتژی فرانت‌اند:** ذخیره‌سازی گام‌به‌گام وضعیت (State) در `sessionStorage` مرورگر برای ایجاد یک فرم چندمرحله‌ای (Wizard) سریع و بدون رفرش.
-* **معماری بک‌اند:** هر گام از این فرآیند به‌صورت کاملاً ایزوله دارای **View**، **Action** و **Service**های اختصاصی خود است تا منطق ورودی/خروجی هر مرحله تفکیک‌شده باقی بماند.
+- **Frontend Strategy:** Step-by-step state storage in the browser's `sessionStorage` to create a fast, page-refresh-free multi-step form (Wizard).
+    
+      
+    
+- **Backend Architecture:** Each step in this process features completely isolated dedicated **Views**, **Actions**, and **Services** to ensure input/output logic remains separated per step.
+    
+      
+    
 
----
+## 🎯 Step-by-Step Stages & Sample Request/Response Data
 
-## 🎯 مراحل گام‌به‌گام و نمونه داده‌های ورودی / خروجی
+### 🟢 Step 1: Mobile Number Entry & Authentication (OTP)
 
----
+In this step, the mobile number is received, a verification code is sent, and after confirmation, the user is authenticated.
 
-### 🟢 گام ۱: دریافت شماره موبایل و احراز هویت (OTP)
+  
 
-در این مرحله شماره موبایل دریافت شده، کد اعتبارسنجی ارسال و پس از تایید، کاربر احراز هویت می‌شود.
+- **Sample Request Payload:**
+    
+      
+    
 
-* **نمونه ورودی (Request Payload):**
+JSON
 
-```json
+```
 {
   "phone_number": "09123456789",
   "otp_code": "5842"
 }
-
 ```
 
-* **نمونه خروجی (Response Payload):**
+- **Sample Response Payload:**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "status": "success",
-  "message": "کد با موفقیت تایید شد",
+  "message": "Code verified successfully",
   "is_authenticated": true
 }
-
 ```
 
-* **ذخیره‌سازی در کش مرورگر (`sessionStorage`):**
+- **Browser Cache Storage (`sessionStorage`):**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "phone_number": "09123456789"
 }
-
 ```
 
----
+### 🟢 Step 2: Barber and Service Selection (Dynamic Filtering)
 
-### 🟢 گام ۲: انتخاب آرایشگر و خدمت (Dynamic Filtering)
+In this step, the list of barbers along with specific services offered by each barber is retrieved, and data is saved after user selection.
 
-در این مرحله لیست آرایشگران به همراه خدمات اختصاصی ارائه شده توسط هر آرایشگر دریافت شده و پس از انتخاب کاربر، داده‌ها ذخیره می‌شوند.
+  
 
-* **نمونه ورودی درخواست (Request):**
-درخواست دریافت داده‌های آرایشگران و خدمات (ارسال نیازمند پارامتر خاصی نیست).
-* **نمونه خروجی پاسخ (Response Payload):**
+- **Sample Request:**
+    
+    Request to fetch barber and service data (no special parameters required).
+    
+      
+    
+- **Sample Response Payload:**
+    
+      
+    
 
-```json
+JSON
+
+```
 [
   {
     "barber_id": 1,
-    "barber_name": "علی رسولی",
+    "barber_name": "Ali Rasouli",
     "services": [
       {
         "service_id": 10,
-        "name": "اصلاح سر و صورت",
+        "name": "Haircut & Beard Trim",
         "price": 250000,
         "duration_minutes": 45
       },
       {
         "service_id": 12,
-        "name": "داماد",
+        "name": "Groom Package",
         "price": 1200000,
         "duration_minutes": 120
       }
@@ -77,62 +102,78 @@
   },
   {
     "barber_id": 2,
-    "barber_name": "رضا مرادی",
+    "barber_name": "Reza Moradi",
     "services": [
       {
         "service_id": 10,
-        "name": "اصلاح سر",
+        "name": "Haircut",
         "price": 200000,
         "duration_minutes": 40
       }
     ]
   }
 ]
-
 ```
 
-* **ذخیره‌سازی در کش مرورگر (`sessionStorage`):**
+- **Browser Cache Storage (`sessionStorage`):**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "phone_number": "09123456789",
   "barber_id": 1,
   "service_id": 10
 }
-
 ```
 
----
+### 🟢 Step 3: Date & Available Time Slots Selection
 
-### 🟢 گام ۳: انتخاب روز و سانس‌های زمانی آزاد (Date & Time Slots)
+Based on the selected barber and service, working days and available slots are retrieved, and the user selects their desired time.
 
-بر اساس آرایشگر و خدمت انتخاب‌شده، روزهای کاری و سانس‌های آزاد دریافت شده و کاربر زمان موردنظر را انتخاب می‌کند.
+  
 
-* **نمونه ورودی درخواست (Request Query):**
+- **Sample Request Query:**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "barber_id": 1,
   "service_id": 10
 }
-
 ```
 
-* **نمونه خروجی پاسخ (Response Payload):**
+- **Sample Response Payload:**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "available_slots": {
     "2026-09-10": ["10:00", "10:45", "11:30", "16:00", "16:45"],
     "2026-09-11": ["11:00", "11:45", "17:00", "17:45"]
   }
 }
-
 ```
 
-* **ذخیره‌سازی در کش مرورگر (`sessionStorage`):**
+- **Browser Cache Storage (`sessionStorage`):**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "phone_number": "09123456789",
   "barber_id": 1,
@@ -140,18 +181,22 @@
   "booking_date": "2026-09-10",
   "start_time": "16:00"
 }
-
 ```
 
----
+### 🟢 Step 4: Information Preview & Final Booking Submit (Review & Final Submit)
 
-### 🟢 گام ۴: پیش‌نمایش اطلاعات و ثبت نهایی نوبت (Review & Final Submit)
+All collected information from the browser cache is displayed to the user, and upon clicking the final submit button, the entire structure is sent to the server for storage.
 
-کلیه اطلاعات جمع‌آوری شده از کش مرورگر به کاربر نمایش داده شده و با زدن دکمه ثبت نهایی، کل ساختار برای ذخیره به سرور ارسال می‌شود.
+  
 
-* **نمونه ورودی درخواست نهایی (Request Payload از کش مرورگر):**
+- **Sample Final Request Payload (from Browser Cache):**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "phone_number": "09123456789",
   "barber_id": 1,
@@ -159,26 +204,29 @@
   "booking_date": "2026-09-10",
   "start_time": "16:00"
 }
-
 ```
 
-* **نمونه خروجی پاسخ (Response Payload):**
+- **Sample Response Payload:**
+    
+      
+    
 
-```json
+JSON
+
+```
 {
   "status": "success",
-  "message": "نوبت شما با موفقیت ثبت شد.",
+  "message": "Your appointment has been successfully booked.",
   "appointment_id": 1048,
   "details": {
-    "barber_name": "علی رسولی",
-    "service_name": "اصلاح سر و صورت",
+    "barber_name": "Ali Rasouli",
+    "service_name": "Haircut & Beard Trim",
     "date": "2026-09-10",
     "start_time": "16:00",
     "end_time": "16:45",
     "final_price": 250000
   }
 }
-
 ```
 
-* **اقدام پس از پاسخ موفق:** پاک‌سازی `sessionStorage` و انتقال کاربر به صفحه «تاییدیه رزرو».
+- **Action after Successful Response:** Clear `sessionStorage` and redirect the user to the "Booking Confirmation" page.
