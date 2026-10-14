@@ -1,0 +1,30 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}فرم برچسب | پنل مدیریت{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-xl">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">
+        {% if tag %}ویرایش برچسب «{{ tag.name }}»{% else %}برچسب جدید{% endif %}
+    </h1>
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-3 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    <form method="post" class="bg-white rounded-lg shadow p-6 space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="name" class="block text-gray-700 font-bold mb-1">نام برچسب <span class="text-red-500">*</span></label>
+            <input type="text" id="name" name="name" required maxlength="50" value="{{ form_name }}"
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">
+            <p class="text-xs text-gray-500 mt-1">حداکثر ۵۰ کاراکتر؛ اسلاگ به‌صورت خودکار ساخته می‌شود.</p>
+        </div>
+
+        <div class="flex gap-3">
+            <button type="submit" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">ذخیره</button>
+            <a href="{% url 'tags:manage_tag_list' %}" class="border border-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-100">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

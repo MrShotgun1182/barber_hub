@@ -1,0 +1,77 @@
+{% extends 'core/barber_base.html' %}
+
+{% block title %}مقالات من | پنل آرایشگر{% endblock %}
+
+{% block barber_content %}
+<div class="p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">مقالات من</h1>
+        <a href="{% url 'articles_barber:barber_article_new' %}"
+           class="bg-sage-500 text-cream-100 px-4 py-2 rounded hover:bg-sage-600 transition">+ مقاله جدید</a>
+    </div>
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-3 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    {% if articles %}
+    <div class="bg-white rounded-lg shadow overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-600 text-right">
+                <tr>
+                    <th class="p-3">عنوان</th>
+                    <th class="p-3">وضعیت</th>
+                    <th class="p-3">بازدید</th>
+                    <th class="p-3">تاریخ ایجاد</th>
+                    <th class="p-3">عملیات</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for article in articles %}
+                <tr>
+                    <td class="p-3 font-medium text-gray-900">
+                        {{ article.title }}
+                        {% if article.status == 'REJECTED' and article.rejection_reason %}
+                        <div class="text-xs text-red-600 mt-1">دلیل رد: {{ article.rejection_reason }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="p-3">
+                        {% if article.status == 'PENDING' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">در انتظار تایید</span>
+                        {% elif article.status == 'PUBLISHED' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-700">منتشر شده</span>
+                        {% elif article.status == 'REJECTED' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-red-100 text-red-700">رد شده</span>
+                        {% elif article.status == 'ARCHIVED' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">بایگانی شده</span>
+                        {% else %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">{{ article.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-3 text-gray-600">{{ article.views_count }}</td>
+                    <td class="p-3 text-gray-600">{{ article.created_at|date:'Y/m/d' }}</td>
+                    <td class="p-3">
+                        <div class="flex gap-2">
+                            {% if article.status == 'PUBLISHED' %}
+                            <a href="{% url 'articles:article_detail' article.slug %}" target="_blank"
+                               class="text-sage-600 hover:text-sage-700 font-medium">مشاهده</a>
+                            {% endif %}
+                            <a href="{% url 'articles_barber:barber_article_edit' article.id %}"
+                               class="text-blue-600 hover:text-blue-700 font-medium">ویرایش</a>
+                            <form method="post" action="{% url 'articles_barber:barber_article_delete' article.id %}"
+                                  onsubmit="return confirm('آیا از حذف این مقاله مطمئن هستید؟');">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:text-red-700 font-medium">حذف</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500 py-12 bg-white rounded-lg shadow">هنوز مقاله‌ای ثبت نکرده‌اید. با دکمه «مقاله جدید» اولین مقاله خود را بنویسید.</p>
+    {% endif %}
+</div>
+{% endblock %}

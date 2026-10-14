@@ -1,0 +1,156 @@
+{% extends 'core/admin_base.html' %}
+
+{% block title %}بازبینی مقالات | پنل مدیریت{% endblock %}
+
+{% block admin_content %}
+<div class="p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-100">بازبینی مقالات</h1>
+        <a href="{% url 'articles_manager:manage_article_new' %}"
+           class="bg-sage-500 text-cream-100 px-4 py-2 rounded hover:bg-sage-600 transition">+ مقاله جدید</a>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <p class="{% if message.tags == 'error' %}bg-red-900/50 text-red-200{% else %}bg-green-900/50 text-green-200{% endif %} p-3 rounded mb-4">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+
+    {% if error_message %}
+    <p class="bg-red-900/50 text-red-200 p-3 rounded mb-4">{{ error_message }}</p>
+    {% endif %}
+
+    <!-- تب‌های وضعیت -->
+    <div class="flex flex-wrap gap-2 mb-4">
+        <a href="{% url 'articles_manager:manage_article_list' %}{% if search %}?search={{ search|urlencode }}{% endif %}"
+           class="px-4 py-1.5 rounded text-sm {% if not current_status %}bg-sage-500 text-cream-100{% else %}bg-slate-800 text-gray-300{% endif %}">همه</a>
+        <a href="{% url 'articles_manager:manage_article_list' %}?status=PENDING{% if search %}&amp;search={{ search|urlencode }}{% endif %}"
+           class="px-4 py-1.5 rounded text-sm {% if current_status == 'PENDING' %}bg-sage-500 text-cream-100{% else %}bg-slate-800 text-gray-300{% endif %}">در انتظار تایید</a>
+        <a href="{% url 'articles_manager:manage_article_list' %}?status=PUBLISHED{% if search %}&amp;search={{ search|urlencode }}{% endif %}"
+           class="px-4 py-1.5 rounded text-sm {% if current_status == 'PUBLISHED' %}bg-sage-500 text-cream-100{% else %}bg-slate-800 text-gray-300{% endif %}">منتشر شده</a>
+        <a href="{% url 'articles_manager:manage_article_list' %}?status=REJECTED{% if search %}&amp;search={{ search|urlencode }}{% endif %}"
+           class="px-4 py-1.5 rounded text-sm {% if current_status == 'REJECTED' %}bg-sage-500 text-cream-100{% else %}bg-slate-800 text-gray-300{% endif %}">رد شده</a>
+        <a href="{% url 'articles_manager:manage_article_list' %}?status=ARCHIVED{% if search %}&amp;search={{ search|urlencode }}{% endif %}"
+           class="px-4 py-1.5 rounded text-sm {% if current_status == 'ARCHIVED' %}bg-sage-500 text-cream-100{% else %}bg-slate-800 text-gray-300{% endif %}">بایگانی شده</a>
+    </div>
+
+    <!-- جستجو -->
+    <form method="get" class="flex gap-2 mb-6">
+        {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
+        <input type="text" name="search" value="{{ search }}" placeholder="جستجو در عنوان مقالات..."
+               class="flex-1 bg-slate-800 border border-slate-700 text-gray-100 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">
+        <button type="submit" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">جستجو</button>
+    </form>
+
+    {% if articles %}
+    <div class="bg-slate-800 rounded-lg shadow overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-700/50 text-gray-300 text-right">
+                <tr>
+                    <th class="p-3">عنوان</th>
+                    <th class="p-3">نویسنده</th>
+                    <th class="p-3">وضعیت</th>
+                    <th class="p-3">بازدید</th>
+                    <th class="p-3">آخرین تغییر</th>
+                    <th class="p-3">عملیات</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700">
+                {% for article in articles %}
+                <tr>
+                    <td class="p-3 font-medium text-gray-100">
+                        {% if article.status == 'PUBLISHED' %}
+                        <a href="{% url 'articles:article_detail' article.slug %}" target="_blank" class="hover:text-sage-400">{{ article.title }}</a>
+                        {% else %}
+                        {{ article.title }}
+                        {% endif %}
+                        {% if article.rejection_reason %}
+                        <div class="text-xs text-red-300 mt-1">دلیل رد: {{ article.rejection_reason }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="p-3 text-gray-300">{{ article.author.username }}</td>
+                    <td class="p-3">
+                        {% if article.status == 'PENDING' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-amber-900/60 text-amber-200">در انتظار تایید</span>
+                        {% elif article.status == 'PUBLISHED' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-green-900/60 text-green-200">منتشر شده</span>
+                        {% elif article.status == 'REJECTED' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-red-900/60 text-red-200">رد شده</span>
+                        {% elif article.status == 'ARCHIVED' %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-gray-700 text-gray-300">بایگانی شده</span>
+                        {% else %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-gray-700 text-gray-300">{{ article.get_status_display }}</span>
+                        {% endif %}
+                        {% if article.is_featured %}
+                        <span class="px-2 py-1 rounded-full text-xs bg-yellow-900/60 text-yellow-200 mr-1">ویژه</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-3 text-gray-300">{{ article.views_count }}</td>
+                    <td class="p-3 text-gray-400">{{ article.updated_at|date:'Y/m/d H:i' }}</td>
+                    <td class="p-3">
+                        <div class="flex flex-wrap gap-x-3 gap-y-1 items-center">
+                            {% if article.status == 'PENDING' %}
+                            <!-- انتشار -->
+                            <form method="post" action="{% url 'articles_manager:moderate_article' article.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="publish">
+                                <button type="submit" class="text-green-400 hover:text-green-300 font-medium">انتشار</button>
+                            </form>
+                            <!-- رد با دلیل (مودال) -->
+                            <button type="button" onclick="document.getElementById('reject-dialog-{{ article.id }}').showModal()"
+                                    class="text-red-400 hover:text-red-300 font-medium">رد</button>
+                            {% elif article.status == 'PUBLISHED' %}
+                            <!-- بایگانی -->
+                            <form method="post" action="{% url 'articles_manager:moderate_article' article.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="archive">
+                                <button type="submit" class="text-gray-400 hover:text-gray-300 font-medium">بایگانی</button>
+                            </form>
+                            {% endif %}
+
+                            <!-- تغییر وضعیت ویژه -->
+                            <form method="post" action="{% url 'articles_manager:toggle_article_featured' article.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-yellow-400 hover:text-yellow-300 font-medium"
+                                        title="{% if article.is_featured %}حذف از ویژه‌ها{% else %}علامت‌گذاری به عنوان ویژه{% endif %}">
+                                    {% if article.is_featured %}★ غیر ویژه{% else %}☆ ویژه{% endif %}
+                                </button>
+                            </form>
+
+                            <a href="{% url 'articles_manager:manage_article_edit' article.id %}" class="text-blue-400 hover:text-blue-300 font-medium">ویرایش</a>
+
+                            <form method="post" action="{% url 'articles_manager:manage_article_delete' article.id %}"
+                                  onsubmit="return confirm('آیا از حذف دائمی این مقاله مطمئن هستید؟');">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-400 hover:text-red-300 font-medium">حذف</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- مودال دلیل رد -->
+                <dialog id="reject-dialog-{{ article.id }}" class="p-0 rounded-lg backdrop:bg-black/50">
+                    <form method="post" action="{% url 'articles_manager:moderate_article' article.id %}" class="p-6 bg-white w-96">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reject">
+                        <h2 class="text-lg font-bold text-gray-900 mb-2">رد مقاله</h2>
+                        <p class="text-sm text-gray-500 mb-4">«{{ article.title }}»</p>
+                        <label for="reject-reason-{{ article.id }}" class="block text-sm font-medium text-gray-700 mb-1">دلیل رد <span class="text-red-500">*</span></label>
+                        <textarea id="reject-reason-{{ article.id }}" name="reason" rows="4" required
+                                  class="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                        <div class="flex gap-2 justify-start">
+                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">ثبت رد</button>
+                            <button type="button" onclick="document.getElementById('reject-dialog-{{ article.id }}').close()"
+                                    class="bg-gray-100 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">انصراف</button>
+                        </div>
+                    </form>
+                </dialog>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-400 py-12 bg-slate-800 rounded-lg">مقاله‌ای در این وضعیت یافت نشد.</p>
+    {% endif %}
+</div>
+{% endblock %}

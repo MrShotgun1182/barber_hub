@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'booking',
     'salon_services',
     'store',
+    'tags',
+    'articles',
     'OTP',
 ]
 

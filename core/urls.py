@@ -11,6 +11,10 @@ urlpatterns = [
     path('barber/', include('barbers.urls')),
     path('booking/', include('booking.urls')),
     path('store/', include('store.urls')),
+    path('articles/', include('articles.urls')),
+    path('barber/articles/', include('articles.urls_barber')),
+    path('admin_panel/articles/', include('articles.urls_manager')),
+    path('admin_panel/tags/', include('tags.urls')),
     path('', TemplateView.as_view(template_name='core/landing.html'), name='landing'),
 ]
 

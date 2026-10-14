@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}مقالات | Barber Hub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center text-gray-900 mb-6">مقالات و راهنماهای آرایشگری</h1>
+
+    {% if error_message %}
+    <p class="bg-red-100 text-red-700 p-3 rounded mb-4 text-center">{{ error_message }}</p>
+    {% endif %}
+
+    <!-- جستجو -->
+    <form method="get" action="{% url 'articles:article_list' %}" class="flex gap-2 mb-4">
+        <input type="text" name="search" value="{{ search }}" placeholder="جستجو در عنوان و متن مقالات..."
+               class="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sage-500">
+        <button type="submit" class="bg-sage-500 text-cream-100 px-6 py-2 rounded hover:bg-sage-600">جستجو</button>
+    </form>
+
+    <!-- فیلتر برچسب‌ها -->
+    <div class="flex flex-wrap gap-2 mb-4">
+        <a href="{% url 'articles:article_list' %}"
+           class="px-4 py-1 rounded-full text-sm {% if not selected_tag_slug %}bg-sage-500 text-cream-100{% else %}bg-white border border-gray-300 text-gray-700{% endif %}">
+            همه
+        </a>
+        {% for tag in tags %}
+        <a href="{% url 'articles:article_list' %}?tag={{ tag.slug }}"
+           class="px-4 py-1 rounded-full text-sm {% if selected_tag_slug == tag.slug %}bg-sage-500 text-cream-100{% else %}bg-white border border-gray-300 text-gray-700{% endif %}">
+            {{ tag.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- فیلتر نویسنده و مرتب‌سازی -->
+    <div class="flex flex-wrap items-center gap-3 mb-8">
+        <form method="get" action="{% url 'articles:article_list' %}" class="flex items-center gap-2">
+            {% if search %}<input type="hidden" name="search" value="{{ search }}">{% endif %}
+            {% if selected_tag_slug %}<input type="hidden" name="tag" value="{{ selected_tag_slug }}">{% endif %}
+            <label for="author" class="text-sm text-gray-600">نویسنده:</label>
+            <select id="author" name="author"
+                    class="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
+                <option value="">همه</option>
+                {% for author in authors %}
+                <option value="{{ author.author_id }}" {% if selected_author_id == author.author_id %}selected{% endif %}>{{ author.author__username }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="text-sm bg-gray-100 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-200">اعمال</button>
+        </form>
+
+        <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-600">مرتب‌سازی:</span>
+            <a href="{% url 'articles:article_list' %}?{% if search %}search={{ search|urlencode }}&amp;{% endif %}{% if selected_tag_slug %}tag={{ selected_tag_slug|urlencode }}&amp;{% endif %}sort=newest"
+               class="px-3 py-1 rounded {% if sort == 'newest' %}bg-sage-500 text-cream-100{% else %}bg-white border border-gray-300 text-gray-700{% endif %}">جدیدترین</a>
+            <a href="{% url 'articles:article_list' %}?{% if search %}search={{ search|urlencode }}&amp;{% endif %}{% if selected_tag_slug %}tag={{ selected_tag_slug|urlencode }}&amp;{% endif %}sort=views"
+               class="px-3 py-1 rounded {% if sort == 'views' %}bg-sage-500 text-cream-100{% else %}bg-white border border-gray-300 text-gray-700{% endif %}">پربازدیدترین</a>
+        </div>
+    </div>
+
+    <!-- مقالات ویژه -->
+    {% if featured %}
+    <section class="mb-10">
+        <h2 class="text-xl font-bold text-sage-600 mb-4">⭐ مقالات ویژه</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for article in featured %}
+            <a href="{% url 'articles:article_detail' article.slug %}" class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition block">
+                <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-36 object-cover">
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-900 mb-1">{{ article.title }}</h3>
+                    <p class="text-xs text-gray-500">{{ article.author.username }} · {{ article.views_count }} بازدید</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- شبکه مقالات -->
+    {% if articles %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for article in articles %}
+        <a href="{% url 'articles:article_detail' article.slug %}" class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition block">
+            <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <h3 class="font-bold text-gray-900 mb-1">{{ article.title }}</h3>
+                <p class="text-sm text-gray-500 mb-2">{{ article.author.username }} · {{ article.published_at|date:'Y/m/d' }}</p>
+                <div class="flex flex-wrap gap-1 mb-2">
+                    {% for tag in article.tags.all %}
+                    <span class="text-xs bg-cream-100 border border-cream-200 text-gray-600 px-2 py-0.5 rounded">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                <p class="text-xs text-gray-400">👁 {{ article.views_count }} بازدید</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500 py-12">مقاله‌ای یافت نشد.</p>
+    {% endif %}
+</div>
+{% endblock %}
