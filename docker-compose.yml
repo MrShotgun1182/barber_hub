@@ -8,8 +8,6 @@ services:
       - POSTGRES_DB=barber_db
       - POSTGRES_USER=barber_user
       - POSTGRES_PASSWORD=barber_pass
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U barber_user -d barber_db"]
       interval: 5s
