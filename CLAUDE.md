@@ -262,6 +262,14 @@ Project-specific skill configurations are stored under `.claude/skills/`:
 
 ---
 
+## 15b. Project Agents
+
+Project-specific agent configurations are stored under `.claude/agents/`:
+
+- **`page-design`** — Designs and redesigns Barber Hub pages to match the reference design in `home page - style/` (Zeal Barber template). Holds the extracted spacing/radius/typography scale, the reference-to-brand color mapping, the section-by-section recipe, and RTL rules. Delegate any page-design or restyling task to it.
+
+---
+
 ## 16. Code Style Guidelines
 
 - Single-line Persian docstrings for every major function explaining the layer's responsibility.

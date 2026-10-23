@@ -24,6 +24,80 @@
 
   /* فونت استاندارد */
   --font-sans: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+
+  /* --- توکن‌های ساختاری برگرفته از طرح مرجع (Zeal Barber) ---
+     رنگ‌ها همان پالت کرم/مریم‌گلی پروژه است؛ فقط مقیاس‌های ساختاری زیر اضافه شده‌اند. */
+
+  /* شعاع گوشه‌ها */
+  --radius-card: 1.875rem;   /* ۳۰px — کارت‌ها، بخش‌ها، تصاویر */
+  --radius-btn: 0.9375rem;   /* ۱۵px — دکمه‌ها و جعبه‌های آیکون */
+  --radius-input: 0.625rem;  /* ۱۰px — ورودی‌های فرم */
+
+  /* مقیاس فاصله‌ها */
+  --spacing-tiny: 0.125rem;
+  --spacing-small: 1.25rem;
+  --spacing-medium: 2rem;
+  --spacing-large: 3rem;
+  --spacing-xlarge: 4rem;
+  --spacing-huge: 6.25rem;
+  --spacing-xxlarge: 7.5rem;
+  --spacing-xhuge: 8rem;
+  --spacing-xxhuge: 12rem;
+
+  /* مقیاس تایپوگرافی */
+  --text-h1: 4rem;
+  --text-h1--line-height: 1.125;
+  --text-h2: 3rem;
+  --text-h2--line-height: 1;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.5;
+  --text-h5: 1rem;
+  --text-h5--line-height: 2.25;
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.625rem;
+  --text-small: 1rem;
+  --text-small--line-height: 1.625rem;
+
+  /* عرض کانتینرها */
+  --container-small: 67.625rem;   /* ۱۰۸۲px */
+  --container-medium: 75rem;      /* ۱۲۰۰px */
+  --container-large: 80rem;       /* ۱۲۸۰px */
+}
+
+@layer components {
+  /* دکمه اصلی — پرشده با رنگ برند */
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-btn px-8 py-4
+           bg-sage-500 text-white text-body font-bold
+           transition-colors duration-300 hover:bg-sage-600;
+  }
+
+  /* دکمه ثانویه — شیشه‌ای با حاشیه */
+  .btn-brand-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-btn px-8 py-4
+           bg-white/70 text-dark-main text-body font-bold border border-cream-300
+           backdrop-blur-sm transition-colors duration-300
+           hover:bg-sage-500 hover:text-white hover:border-sage-500;
+  }
+
+  /* سطح کارت — پس‌زمینه روشن، گوشه گرد، سایه ملایم */
+  .card-surface {
+    @apply bg-cream-100 border border-cream-200 rounded-card
+           shadow-[0_4px_30px_rgba(0,0,0,0.05)];
+  }
+
+  /* جعبه آیکون — مربع گرد با حاشیه برند */
+  .icon-box {
+    @apply flex items-center justify-center rounded-btn border border-sage-200
+           w-20 h-20 min-w-20 min-h-20 shrink-0;
+  }
+
+  /* ورودی فرم */
+  .form-field {
+    @apply w-full min-h-12 rounded-input bg-cream-100 border border-cream-200
+           px-4 py-3 text-body text-dark-main
+           focus:outline-none focus:border-sage-500 transition-colors;
+  }
 }
 
 @layer base {

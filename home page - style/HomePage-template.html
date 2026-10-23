@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://zeal-barber-template.webflow.io/#appointment -->
+<html data-wf-domain="zeal-barber-template.webflow.io" data-wf-page="66d807582304dbf9e17edfc7" data-wf-site="66d807572304dbf9e17edf64" data-wf-status="1" lang="en" class="w-mod-js w-mod-ix wf-lato-n4-active wf-oswald-n5-active wf-inriasans-n4-active wf-inriasans-n7-active wf-lato-n1-active wf-lato-i1-active wf-lato-n3-active wf-lato-i3-active wf-lato-i4-active wf-lato-n7-active wf-lato-i7-active wf-lato-n9-active wf-lato-i9-active wf-oswald-n3-active wf-oswald-n2-active wf-oswald-n4-active wf-oswald-n7-active wf-oswald-n6-active wf-inriasans-n3-active wf-active"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>.wf-force-outline-none[tabindex="-1"]:focus{outline:none;}</style><link href="https://cdn.prod.website-files.com/" rel="preconnect" crossorigin="anonymous"><title>Zeal Barber - Webflow HTML website template</title><meta content="Zeal Barber - Webflow HTML website template" property="og:title"><meta content="https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e98ff328db1d093c8947e0_zeal-barber-open-graphic.jpg" property="og:image"><meta content="Zeal Barber - Webflow HTML website template" name="twitter:title"><meta content="https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e98ff328db1d093c8947e0_zeal-barber-open-graphic.jpg" name="twitter:image"><meta content="width=device-width, initial-scale=1" name="viewport"><meta content="Webflow" name="generator"><link href="./HomePage-template_files/zeal-barber-template.webflow.ea40c05ab.css" rel="stylesheet" type="text/css"><link href="https://fonts.googleapis.com/" rel="preconnect"><link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin="anonymous"><script src="./HomePage-template_files/webfont.js.download" type="text/javascript"></script><link rel="stylesheet" href="./HomePage-template_files/css" media="all"><script type="text/javascript">WebFont.load({  google: {    families: ["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic","Oswald:200,300,400,500,600,700","Inria Sans:300,regular,700"]  }});</script><script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script><link href="https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e17894e0bd5e2704ad1aa7_Favicon-32-32.png" rel="shortcut icon" type="image/x-icon"><link href="https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e178c87baafefea2e6181b_Favicon-256x256.png" rel="apple-touch-icon"><style></style></head><body><div class="page-wrapper"><div class="global-styles w-embed"><style>
+
+/* Make text look crisper and more legible in all browsers */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus state style for keyboard navigation for the focusable elements */
+*[tabindex]:focus-visible,
+  input[type="file"]:focus-visible {
+   outline: 0.125rem solid #4d65ff;
+   outline-offset: 0.125rem;
+}
+
+/* Set color style to inherit */
+.inherit-color * {
+    color: inherit;
+}
+
+/* Get rid of top margin on first element in any rich text element */
+.w-richtext > :not(div):first-child, .w-richtext > div:first-child > :first-child {
+  margin-top: 0 !important;
+}
+
+/* Get rid of bottom margin on last element in any rich text element */
+.w-richtext>:last-child, .w-richtext ol li:last-child, .w-richtext ul li:last-child {
+	margin-bottom: 0 !important;
+}
+
+
+/* Make sure containers never lose their center alignment */
+.container-medium,.container-small, .container-large {
+	margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+/* 
+Make the following elements inherit typography styles from the parent and not have hardcoded values. 
+Important: You will not be able to style for example "All Links" in Designer with this CSS applied.
+Uncomment this CSS to use it in the project. Leave this message for future hand-off.
+*/
+/*
+a,
+.w-input,
+.w-select,
+.w-tab-link,
+.w-nav-link,
+.w-dropdown-btn,
+.w-dropdown-toggle,
+.w-dropdown-link {
+  color: inherit;
+  text-decoration: inherit;
+  font-size: inherit;
+}
+*/
+
+/* Apply "..." after 3 lines of text */
+.text-style-3lines {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+}
+
+/* Apply "..." after 2 lines of text */
+.text-style-2lines {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+/* These classes are never overwritten */
+.hide {
+  display: none !important;
+}
+
+@media screen and (max-width: 991px) {
+    .hide, .hide-tablet {
+        display: none !important;
+    }
+}
+  @media screen and (max-width: 767px) {
+    .hide-mobile-landscape{
+      display: none !important;
+    }
+}
+  @media screen and (max-width: 479px) {
+    .hide-mobile{
+      display: none !important;
+    }
+}
+ 
+.margin-0 {
+  margin: 0rem !important;
+}
+  
+.padding-0 {
+  padding: 0rem !important;
+}
+
+.spacing-clean {
+padding: 0rem !important;
+margin: 0rem !important;
+}
+
+.margin-top {
+  margin-right: 0rem !important;
+  margin-bottom: 0rem !important;
+  margin-left: 0rem !important;
+}
+
+.padding-top {
+  padding-right: 0rem !important;
+  padding-bottom: 0rem !important;
+  padding-left: 0rem !important;
+}
+  
+.margin-right {
+  margin-top: 0rem !important;
+  margin-bottom: 0rem !important;
+  margin-left: 0rem !important;
+}
+
+.padding-right {
+  padding-top: 0rem !important;
+  padding-bottom: 0rem !important;
+  padding-left: 0rem !important;
+}
+
+.margin-bottom {
+  margin-top: 0rem !important;
+  margin-right: 0rem !important;
+  margin-left: 0rem !important;
+}
+
+.padding-bottom {
+  padding-top: 0rem !important;
+  padding-right: 0rem !important;
+  padding-left: 0rem !important;
+}
+
+.margin-left {
+  margin-top: 0rem !important;
+  margin-right: 0rem !important;
+  margin-bottom: 0rem !important;
+}
+  
+.padding-left {
+  padding-top: 0rem !important;
+  padding-right: 0rem !important;
+  padding-bottom: 0rem !important;
+}
+  
+.margin-horizontal {
+  margin-top: 0rem !important;
+  margin-bottom: 0rem !important;
+}
+
+.padding-horizontal {
+  padding-top: 0rem !important;
+  padding-bottom: 0rem !important;
+}
+
+.margin-vertical {
+  margin-right: 0rem !important;
+  margin-left: 0rem !important;
+}
+  
+.padding-vertical {
+  padding-right: 0rem !important;
+  padding-left: 0rem !important;
+}
+
+</style></div><section data-w-id="fa68c949-49ee-fb97-eef1-d6776a07ddd3" class="header" style="will-change: background; background-color: rgba(0, 0, 0, 0); transform: translate3d(0px, 0rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"><a href="https://zeal-barber-template.webflow.io/" aria-current="page" class="nav-logo w-inline-block w--current"><img src="./HomePage-template_files/66e1216506baa38b0143da26_primary-logo.svg" loading="lazy" alt="" class="primary-logo"></a></section><main class="main-wrapper"><section data-w-id="54aebeb4-4130-8682-f6e7-6a8913e9f440" class="section-hero"><div class="hero-main-wrapper"><div data-w-id="33054662-c150-aee8-e5e6-a01e0fa2064b" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" class="hero-image-block"><img sizes="100vw" srcset="https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e038f36550184c0e6c4874_hero%20img%20(1)-p-500.webp 500w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e038f36550184c0e6c4874_hero%20img%20(1)-p-800.webp 800w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e038f36550184c0e6c4874_hero%20img%20(1)-p-1080.webp 1080w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e038f36550184c0e6c4874_hero%20img%20(1)-p-1600.webp 1600w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e038f36550184c0e6c4874_hero%20img%20(1).webp 2880w" alt="Hero Image" loading="lazy" src="./HomePage-template_files/66e038f36550184c0e6c4874_hero img (1).webp" class="hero-image"><div class="hero-image-overlay"></div></div><div class="hero-content"><h1 id="w-node-_33054662-c150-aee8-e5e6-a01e0fa2064f-e17edfc7" data-w-id="33054662-c150-aee8-e5e6-a01e0fa2064f" style="transform: translate3d(0px, 0rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;" class="heading-style-h1">Expert Grooming, <span class="heading-text-span">Bold Style at Zeal Barber </span></h1><div class="padding-bottom padding-small"></div><div data-w-id="33054662-c150-aee8-e5e6-a01e0fa20651" style="transform: translate3d(0px, 0rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;" class="max-width-medium is-home"><p class="text-size-regular text-color-secondary">Where precision meets passion. Experience premium grooming tailored just for you.</p></div><div class="button-group"><a href="https://zeal-barber-template.webflow.io/#appointment" class="button w-button" style="opacity: 1;">Book an Appointment</a><a href="https://zeal-barber-template.webflow.io/#services" class="button is-secondary w-button" style="opacity: 1;">browse services</a></div></div></div><div class="w-layout-blockcontainer container-medium w-container"><div class="hero-contact-wrapper" style=""><div class="common-grid-three-col"><div data-w-id="76d251db-28d1-09c6-02d7-42978ed0c643" class="hero-contact-card is-hero" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"><div class="services-icon-wrap"><img src="./HomePage-template_files/66e0489ae36cc1c76984ae30_Location.svg" loading="lazy" alt="" class="icon-40x40"></div><div class="services-heading-wrapper"><h3 class="heading-style-h3">Address</h3><div class="max-width-xsmall align-center"><div class="text-size-regular text-color-alternate">1234 Innov Drive 567, State 89012 Country</div></div></div></div><div data-w-id="76d251db-28d1-09c6-02d7-42978ed0c64c" class="hero-contact-card is-hero" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"><div class="services-icon-wrap"><img src="./HomePage-template_files/66e048fa9d08b49350e7d36e_Calling.svg" loading="lazy" alt="" class="icon-40x40"></div><div class="services-heading-wrapper"><h3 class="heading-style-h3">phone</h3><div class="flex vertical"><a href="tel:18005551234" class="link-style is-services">+1 (800) 555-1234</a><a href="tel:18005555678" class="link-style is-services">+1 (800) 555-5678</a></div></div></div><div id="w-node-_76d251db-28d1-09c6-02d7-42978ed0c657-8ed0c642" data-w-id="76d251db-28d1-09c6-02d7-42978ed0c657" class="hero-contact-card is-hero" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"><div class="services-icon-wrap"><img src="./HomePage-template_files/66e04899f45a3b89dfd6b823_Time Circle.svg" loading="lazy" alt="" class="icon-40x40"></div><div class="services-heading-wrapper"><h3 class="heading-style-h3">hours</h3><div class="max-width-custom is-contact"><div class="text-size-regular text-color-alternate">Mon – Sat: 9AM – 8PM <br>Sun: 9AM – 6PM</div></div></div></div></div></div></div></section><section class="section-about"><div class="padding-vertical padding-huge"><div class="w-layout-blockcontainer container-medium w-container"><div class="common-grid-two-col"><div id="w-node-b326c2b9-52aa-6c67-aec5-35cd2a86f744-e17edfc7" class="common-content-wrap"><h2 data-w-id="b9eaa09a-ff64-5fe2-f78c-ba6078606eb8" style="opacity: 0;" class="heading-style-h2">Professional barber services delivered to your doorstep</h2><div class="padding-bottom padding-small"></div><p data-w-id="d97c55b2-c264-0fdb-53dc-34a7cc144075" style="opacity: 0;" class="text-size-regular text-color-alternate">Experience the ultimate convenience and luxury of personalized grooming. From classic cuts to modern styles, our expert barbers bring the best of the salon to your home.</p><div class="padding-bottom padding-large"></div><div class="common-counter-wrap"><div data-w-id="a264d72f-0402-47a7-bc18-373e3c0186ae" style="opacity: 0;" class="counter-block"><div data-w-id="5aba6b3b-5ba7-8ce0-f3b7-deb93debc92e" class="flex"><div style="opacity: 0; transform: translate3d(0px, 0.9375rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" class="heading-style-h2 one">9</div><div style="opacity: 0; transform: translate3d(0px, 0.9375rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" class="heading-style-h2 two">8</div><div style="opacity: 0; transform: translate3d(0px, 0.9375rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" class="heading-style-h2 three">%</div></div><div class="padding-bottom padding-small"></div><div data-w-id="2be53823-0811-8810-95c5-d618059ada2c" style="opacity: 0;" class="text-size-alternate">Client Satisfaction</div></div><div data-w-id="74e5fdc7-5833-9bd8-70a8-cb4009a03606" style="opacity: 0;" class="counter-block"><div data-w-id="d78e904d-5be5-9b41-3f58-33f7115bc1f6" class="flex"><div class="heading-style-h2 one" style="opacity: 0; transform: translate3d(0px, 0.9375rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;">1</div><div class="heading-style-h2 two" style="opacity: 0; transform: translate3d(0px, 0.9375rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;">2</div><div class="heading-style-h2 three" style="opacity: 0; transform: translate3d(0px, 0.9375rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;">+</div></div><div class="padding-bottom padding-small"></div><div data-w-id="b5dc2324-4487-4aa4-fbfa-d451994f1577" style="opacity: 0;" class="text-size-alternate">Years of Expertise</div></div></div></div><div data-w-id="8f06a3d0-5f18-f20e-aaf0-c7b24dd77dc9" style="opacity: 0;" class="common-image-block"><img src="./HomePage-template_files/66e12d0d327f116fa1a13513_about-img.webp" loading="lazy" sizes="(max-width: 767px) 92vw, (max-width: 991px) 46vw, (max-width: 1279px) 47vw, 564px" srcset="https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e12d0d327f116fa1a13513_about-img-p-500.webp 500w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e12d0d327f116fa1a13513_about-img-p-800.webp 800w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e12d0d327f116fa1a13513_about-img-p-1080.webp 1080w, https://cdn.prod.website-files.com/66d807572304dbf9e17edf64/66e12d0d327f116fa1a13513_about-img.webp 1204w" alt="About Image" class="aspect-ratio-image"></div></div></div></div></section><section id="services" class="section-services"><div class="padding-vertical padding-xxlarge"><div class="w-layout-blockcontainer container-medium w-container"><div class="common-services-wrap"><div class="services-heading-wrap"><div data-w-id="0dea7d99-0d73-c7ca-00c1-243035c65918" style="transform: translate3d(0px, 1.875rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 0;" class="common-heading-wrap is-services"><h2 class="heading-style-h2 text-blue">Exceptional Grooming Services Tailored to You</h2><div class="padding-bottom padding-medium"></div><div class="max-width-medium"><p class="text-size-regular text-blue">At Zeal Barber, we offer grooming services to keep you sharp and confident. From classic cuts to fresh styles and premium beard care, our expert barbers have you covered.</p></div></div></div><div class="w-layout-grid common-grid-two-col services-grid"><div id="w-node-f975df92-ff82-7f2b-5044-e386c2f26e68-e17edfc7" data-w-id="f975df92-ff82-7f2b-5044-e386c2f26e68" style="opacity: 0;" class="flex is-services"><div class="icon-wrap"><img src="./HomePage-template_files/66e1368f745c48b34de24564_1.svg" loading="lazy" alt="Services Icon 01" class="icon-64x64"></div><div class="padding-bottom padding-medium"></div><div class="services-content-wrap"><h3 class="heading-style-h3">Adult haircut</h3><div class="text-size-small text-color-alternate">Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis</div><div class="padding-bottom padding-small"></div><div class="services-price"><div class="text-size-medium text-blue">$39 USD</div></div></div></div><div class="flex is-services-two"><div class="icon-wrap"><img src="./HomePage-template_files/66e1368ed54a37cc7db6c354_2.svg" loading="lazy" alt="Services Icon 02" class="icon-64x64"></div><div class="padding-bottom padding-medium"></div><div class="services-content-wrap"><h3 class="heading-style-h3">Neck Shave</h3><div class="text-size-small text-color-alternate">Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis</div><div class="padding-bottom padding-small"></div><div class="services-price"><div class="text-size-medium text-blue">$39 USD</div></div></div></div><div class="flex is-services-three"><div class="icon-wrap"><img src="./HomePage-template_files/66e1368ef1622ce81a1ccf62_3.svg" loading="lazy" alt="Services Icon 03" class="icon-64x64"></div><div class="padding-bottom padding-medium"></div><div class="services-content-wrap"><h3 class="heading-style-h3">Kids Haircut</h3><div class="text-size-small text-color-alternate">Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis</div><div class="padding-bottom padding-small"></div><div class="services-price"><div class="text-size-medium text-blue">$39 USD</div></div></div></div><div class="flex is-services-four"><div class="icon-wrap"><img src="./HomePage-template_files/66e1368e77419ca122237c96_4.svg" loading="lazy" alt="Services Icon 04" class="icon-64x64"></div><div class="padding-bottom padding-medium"></div><div class="services-content-wrap"><h3 class="heading-style-h3">Scalp Moisturizing</h3><div class="text-size-small text-color-alternate">Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis</div><div class="padding-bottom padding-small"></div><div class="services-price"><div class="text-size-medium text-blue">$39 USD</div></div></div></div><div class="flex is-services-five"><div class="icon-wrap"><img src="./HomePage-template_files/66e13690086f71672a680d85_6.svg" loading="lazy" alt="Services Icon 05" class="icon-64x64"></div><div class="padding-bottom padding-medium"></div><div class="services-content-wrap"><h3 class="heading-style-h3">Beard Trim</h3><div class="text-size-small text-color-alternate">Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis</div><div class="padding-bottom padding-small"></div><div class="services-price"><div class="text-size-medium text-blue">$39 USD</div></div></div></div><div class="flex is-services-six"><div class="icon-wrap"><img src="./HomePage-template_files/66e1368e59cc3bb79116a7e0_5.svg" loading="lazy" alt="Services Icon 06" class="icon-64x64"></div><div class="padding-bottom padding-medium"></div><div class="services-content-wrap"><h3 class="heading-style-h3">Beard Grooming</h3><div class="text-size-small text-color-alternate">Nulla egestas sapien integer mi fermentum tellus tristique consequatolm pulvinar sagittis</div><div class="padding-bottom padding-small"></div><div class="services-price"><div class="text-size-medium text-blue">$39 USD</div></div></div></div></div></div></div></div></section><section class="section-cta"><div class="position-relative"><div class="common-aspect-ratio-block"><div class="common-bg-overlay"></div></div></div><div class="w-layout-blockcontainer container-large w-container"><div class="global-absolute-content-wrap"><div class="max-width-huge text-align-center"><div data-w-id="45159b71-6852-6ec1-1f87-ac8ca1b6e103" class="heading-style-h1 booking" style="opacity: 0;">Indulge in Premium Barbering Services from the Comfort of Your Home</div><div class="padding-bottom padding-40"></div><a href="https://zeal-barber-template.webflow.io/#appointment" class="button w-button" style="opacity: 1;">Book an Appointment</a></div></div></div></section><section id="review" class="section-review"><div class="padding-global"><div class="w-layout-blockcontainer container-medium w-container"><div data-w-id="573cdebc-203a-5329-5946-c65ef297ce36" class="common-heading-wrap" style="transform: translate3d(0px, 1.875rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 0;"><h2 class="heading-style-h2">Why Zeal Barber?</h2><div class="padding-bottom padding-medium"></div><div class="max-width-medium"><p class="text-size-regular text-color-alternate" style="transform: translate3d(0px, 1.875rem, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 0;">Experience top-notch grooming with Zeal Barber. Our expert team delivers personalized, luxury services right at your doorstep for ultimate convenience and comfort.</p></div></div><div class="padding-bottom padding-xxlarge"></div><div class="common-grid-three-col"><div data-w-id="e8cbc694-2ab3-12b6-b4a4-39d1ab537baf" style="opacity: 0;" class="hero-contact-why-card"><div class="services-icon-why-wrap"><img src="./HomePage-template_files/66e40a03967edb2809fa99b8_Shield Done.svg" loading="lazy" alt="why" class="icon-64x64"><h3 class="heading-style-h3">Expert</h3><div class="headline-bottom"></div></div><div class="headline-bottom is-why"></div><div class="max-width-small"><p data-w-id="e8cbc694-2ab3-12b6-b4a4-39d1ab537bb8" style="opacity: 0;" class="text-size-regular text-color-alternate">Skilled professionals dedicated to delivering top-quality results.</p></div></div><div data-w-id="e8cbc694-2ab3-12b6-b4a4-39d1ab537bba" style="opacity: 0;" class="hero-contact-why-card"><div class="services-icon-why-wrap"><img src="./HomePage-template_files/66e409fd91b1c3d67a8ed5b9_Star.svg" loading="lazy" alt="why" class="icon-64x64"><h3 class="heading-style-h3">Premium</h3><div class="headline-bottom"></div></div><div class="headline-bottom is-why"></div><div class="max-width-small"><p data-w-id="e8cbc694-2ab3-12b6-b4a4-39d1ab537bc0" style="opacity: 0;" class="text-size-regular text-color-alternate">Only the best products used for a superior grooming experience.</p></div></div><div id="w-node-e8cbc694-2ab3-12b6-b4a4-39d1ab537bc2-e17edfc7" data-w-id="e8cbc694-2ab3-12b6-b4a4-39d1ab537bc2" style="opacity: 0;" class="hero-contact-why-card"><div class="services-icon-why-wrap"><img src="./HomePage-template_files/66e409fd63e121da9c7f204d_Heart2.svg" loading="lazy" alt="why" class="icon-64x64"><h3 class="heading-style-h3">Comfort</h3><div class="headline-bottom"></div></div><div class="headline-bottom is-why"></div><div class="max-width-small"><p data-w-id="e8cbc694-2ab3-12b6-b4a4-39d1ab537bc8" style="opacity: 0;" class="text-size-regular text-color-alternate">Relax in the comfort of your home while we handle the rest.</p></div></div></div></div></div></section><section id="testimonials" class="section-testimonials"><div class="padding-bottom padding-global"><div class="w-layout-blockcontainer container-medium w-container"><div data-w-id="c9cbed57-78d4-e090-7506-ff17abbdfe4b" style="opacity: 0;" class="testimonials-wrap"><div data-w-id="ee8d521b-9752-228c-4d90-80c4f425a2ac" style="opacity: 0;" class="testimonials-thumb-wrap"><img src="./HomePage-template_files/66f4f8796c3e7ab6417c2059_Img.png" loading="lazy" alt="Author" class="testimonials-thumb"></div><div class="testimonials-content-wrap"><div class="max-width-medium is-home"><h2 data-w-id="2f24f232-1db1-d0ac-1188-ccd488b40a89" style="opacity: 0;" class="heading-style-h2">A Game-Changer in Grooming!</h2></div><div class="padding-xxsmall"></div><div class="padding-bottom padding-small"></div><p data-w-id="900f3e99-8e9e-8b59-9ac4-44d157b171e6" style="opacity: 0;" class="text-size-regular testimonials">"Zeal Barber has redefined my grooming experience! The expert team provides impeccable service and attention to detail. Each visit feels like a personal pampering session, and I always leave looking and feeling my best. Highly recommend!"</p><div class="padding-xxsmall"></div><div class="padding-bottom padding-small"></div><h3 data-w-id="6e9f26e2-e3b5-1672-cbcf-f5839ca0533a" style="opacity: 0;" class="heading-style-h3 testimonials">James Carter</h3><div class="padding-xxsmall"></div><div data-w-id="6c26fa5c-e71f-fdc3-7660-c76b565f2910" style="opacity: 0;" class="text-size-regular text-color-alternate">CEO of InnovateTech</div><div class="testimonials-icon-wrap"><img src="./HomePage-template_files/66f4fad276ad61485c4d2f11_Quotes.svg" loading="lazy" alt="why" class="testimonials-icon"></div></div></div></div></div></section><section class="footer"><footer id="appointment" class="section-footer"><div class="position-relative"><div class="common-aspect-ratio-block is-footer"><div class="common-bg-overlay is-footer"></div></div></div><div class="global-absolute-content-wrap is-footer"><div class="container-large why"><div class="w-layout-grid common-grid-two-col is-footer"><div class="max-width-medium"><h2 data-w-id="12039fdd-5153-f015-6be3-658075f6d71a" class="heading-style-h2 text-color-secondary" style="opacity: 0;">Why We Stand Out</h2><div class="padding-bottom padding-medium"></div><p data-w-id="12039fdd-5153-f015-6be3-658075f6d71f" class="text-size-large text-color-secondary" style="opacity: 0;">Discover why Zeal Barber stands out. We provide personalized, luxury grooming with expert barbers, premium products, and unmatched convenience from the comfort of your home.</p><div class="padding-bottom padding-medium"></div><div class="cta-wrapper-block"><div class="flex gap-40"><div data-w-id="12039fdd-5153-f015-6be3-658075f6d724" class="icon-large-wrap" style="opacity: 0;"><img src="./HomePage-template_files/66e14b77adaebb2f2635c49e_phone-svg.svg" loading="lazy" alt="" class="icon-36x36"></div><div class="flex vertical"><h5 data-w-id="12039fdd-5153-f015-6be3-658075f6d727" class="heading-style-h5 text-color-secondary" style="opacity: 0;">Give us a Call</h5><a data-w-id="12039fdd-5153-f015-6be3-658075f6d729" href="tel:4754533465" class="text-size-regular text-color-secondary" style="opacity: 0;">(475) 453 - 3465</a></div></div><div class="flex gap-40"><div data-w-id="12039fdd-5153-f015-6be3-658075f6d72c" class="icon-large-wrap" style="opacity: 0;"><img src="./HomePage-template_files/66e956a64d433ab0e9983c83_mail-address.svg" loading="lazy" alt="" class="icon-36x36"></div><div class="flex vertical"><h5 data-w-id="12039fdd-5153-f015-6be3-658075f6d72f" class="heading-style-h5 text-color-secondary" style="opacity: 0;">Send us an email</h5><a data-w-id="12039fdd-5153-f015-6be3-658075f6d731" href="mailto:hello@zealbarber.com" class="text-size-regular text-color-secondary" style="opacity: 0;">hello@zealbarber.com</a></div></div></div></div><div data-w-id="12039fdd-5153-f015-6be3-658075f6d733" class="form-wrap" style="opacity: 0;"><div class="form-block w-form"><form id="wf-form-Appointment-Form" name="wf-form-Appointment-Form" data-name="Appointment Form" method="get" data-wf-page-id="66d807582304dbf9e17edfc7" data-wf-element-id="12039fdd-5153-f015-6be3-658075f6d735" aria-label="Appointment Form"><div class="filed-wrap"><div class="text-size-regular">Full name</div><input class="form-input w-input" maxlength="256" name="Full-Name" data-name="Full Name" placeholder="" type="text" id="Full-Name"></div><div class="filed-wrap"><div class="text-size-regular">Subject</div><input class="form-input w-input" maxlength="256" name="Subject" data-name="Subject" placeholder="" type="text" id="Subject"></div><div class="column-wrap"><div class="column-50 is-from"><div class="filed-wrap"><div class="text-size-regular">Phone Number</div><input class="form-input w-input" maxlength="256" name="Phone" data-name="Phone" placeholder="" type="tel" id="Phone"></div></div><div class="column-50 is-from"><div class="filed-wrap"><div class="text-size-regular">Email Address</div><input class="form-input w-input" maxlength="256" name="Email-Address" data-name="Email Address" placeholder="" type="email" id="Email-Address" required=""></div></div></div><div class="filed-wrap"><div class="text-size-regular">Please type your message here...</div><textarea id="Message" name="Message" maxlength="5000" data-name="Message" placeholder="" class="form-input is-text-area w-input"></textarea></div><input type="submit" data-wait="Please wait..." data-w-id="12039fdd-5153-f015-6be3-658075f6d73e" class="button is-form-submit w-button" value="book an appointment" style="opacity: 1;"></form><div class="form-message-success w-form-done" tabindex="-1" role="region" aria-label="Appointment Form success"><div class="text-size-regular">Thank you! Your submission has been received!</div></div><div class="form-message-error w-form-fail" tabindex="-1" role="region" aria-label="Appointment Form failure"><div class="text-size-regular">Oops! Something went wrong while submitting the form.</div></div></div></div></div></div></div><div class="footer-bg-overlay"></div></footer><div class="section-map"><div class="is-map w-embed w-iframe"><iframe src="./HomePage-template_files/embed.html" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div><div class="section-copyright"><div class="w-layout-blockcontainer container-large w-container"><div class="flex is-copyright"><div class="column-50"><div class="text-size-regular is-legal">Powered by <a href="https://webflow.com/" target="_blank" class="link-style is-legal">Webflow</a></div><div class="text-size-regular is-legal">Developed by <a href="https://www.zealousweb.com/" target="_blank" class="link-style is-legal">ZealousWeb</a></div><a href="https://zeal-barber-template.webflow.io/template/licenses" class="link-style is-legal">Licenses</a><a href="https://zeal-barber-template.webflow.io/template/instructions" class="link-style is-legal">Instructions</a></div><div class="column-50 is-copyright"><a data-w-id="8f83c5d3-770e-39a1-7524-e999af07bdc0" href="https://facebook.com/" target="_blank" class="social-icon-block w-inline-block"><img src="./HomePage-template_files/66daabcdca258aa5b1bb8671_facebook.svg" loading="lazy" alt="" class="icon-24x24" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"></a><a data-w-id="8f83c5d3-770e-39a1-7524-e999af07bdc2" href="https://twitter.com/" target="_blank" class="social-icon-block w-inline-block"><img src="./HomePage-template_files/66e997451e42f228c617178b_x (2).svg" loading="lazy" alt="Twitter/X" class="icon-24x24" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"></a><a data-w-id="8f83c5d3-770e-39a1-7524-e999af07bdc4" href="https://instagram.com/" target="_blank" class="social-icon-block w-inline-block"><img src="./HomePage-template_files/66daabcdacc773bb15203803_Instagram.svg" loading="lazy" alt="" class="icon-24x24" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"></a><a data-w-id="8f83c5d3-770e-39a1-7524-e999af07bdc6" href="https://pintrest.com/" target="_blank" class="social-icon-block w-inline-block"><img src="./HomePage-template_files/66daabcd46562def37fb389f_Vector.svg" loading="lazy" alt="" class="icon-24x24" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"></a><a data-w-id="8f83c5d3-770e-39a1-7524-e999af07bdc8" href="https://linkedin.com/" target="_blank" class="social-icon-block w-inline-block"><img src="./HomePage-template_files/66daabcdb99728e6cc2927af_linkedin.svg" loading="lazy" alt="" class="icon-24x24" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"></a></div></div></div></div></section></main></div><script src="./HomePage-template_files/jquery-3.5.1.min.dc5e7f18c8.js.download" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script><script src="./HomePage-template_files/webflow.d553101ad.js.download" type="text/javascript"></script><a class="w-webflow-badge" href="https://webflow.com/?utm_campaign=brandjs"><img src="./HomePage-template_files/webflow-badge-icon-d2.89e12c322e.svg" alt="" style="margin-right: 4px; width: 26px;"><img src="./HomePage-template_files/webflow-badge-text-d2.c82cec3b78.svg" alt="Made in Webflow"></a></body></html>
