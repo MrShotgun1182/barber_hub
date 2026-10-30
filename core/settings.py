@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-6+3slwc$259dkg^1*tv498%evsc*3=lt9v#z*vru)mtjwzo_h9
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["213.176.28.23"]
 
 # Application definition
 os.sys.path.insert(0, str(BASE_DIR / 'apps'))
