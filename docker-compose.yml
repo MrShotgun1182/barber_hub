@@ -8,8 +8,8 @@ services:
       - POSTGRES_DB=barber_db
       - POSTGRES_USER=barber_user
       - POSTGRES_PASSWORD=barber_pass
-    # نکته: پورت ۵۴۳۲ به میزبان نگاشت نمی‌شود؛ سرویس PostgreSQL ویندوز خودش پورت 5432 را گرفته
-    # و نگاشت باعث خطای «port is already allocated» می‌شود. وب و سلری از طریق شبکه‌ی کامپوز با db:5432 وصل می‌شوند.
+    # پورت 5432 به میزبان نگاشت نمی‌شود؛ سرویس‌های وب و سلری از طریق شبکه داخلی
+    # کامپوز با آدرس db:5432 به PostgreSQL متصل می‌شوند.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U barber_user -d barber_db"]
       interval: 5s
@@ -25,9 +25,12 @@ services:
       timeout: 5s
       retries: 5
 
-  # 3. وب‌سرور اصلی Django & Frontend
+  # 3. وب‌سرور اصلی Django و Frontend
   web:
-    build: .
+    image: barber_hub:latest
+    build:
+      context: .
+      network: host
     volumes:
       - .:/app
       - /app/frontend/node_modules
@@ -59,7 +62,10 @@ services:
 
   # 4. پردازشگر تاسک‌های غیرهمزمان Celery Worker
   celery_worker:
-    build: .
+    image: barber_hub:latest
+    build:
+      context: .
+      network: host
     volumes:
       - .:/app
       - /app/frontend/node_modules
